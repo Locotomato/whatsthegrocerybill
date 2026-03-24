@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GroceryEmailBanner from '../../components/GroceryEmailBanner'
+import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
   title: 'Grocery Prices by State 2025: Which States Pay Most & Least | What\'s the Grocery Bill?',
@@ -13,43 +14,44 @@ const STATE_DATA = [
   { state: 'California', tier: 'high', note: '+22% — regulations, labor costs, Prop 12 cage-free', color: '#fb923c' },
   { state: 'New York', tier: 'high', note: '+18% — NYC metro pulls the statewide average up', color: '#fb923c' },
   { state: 'Massachusetts', tier: 'high', note: '+16% — high cost of living statewide', color: '#fb923c' },
-  { state: 'Kansas', tier: 'low', note: '-12% below national avg — grain belt, low transport costs', color: '#4ade80' },
-  { state: 'Missouri', tier: 'low', note: '-11% — central location, low cost of living', color: '#4ade80' },
-  { state: 'Iowa', tier: 'low', note: '-10% — major egg + pork producer, low logistics costs', color: '#4ade80' },
-  { state: 'Arkansas', tier: 'low', note: '-9% — low cost of living, Walmart headquarters state', color: '#4ade80' },
-  { state: 'Mississippi', tier: 'low', note: '-9% — lowest overall cost of living in US', color: '#4ade80' },
+  { state: 'Kansas', tier: 'low', note: '-12% below national avg — grain belt, low transport costs', color: 'var(--red)' },
+  { state: 'Missouri', tier: 'low', note: '-11% — central location, low cost of living', color: 'var(--red)' },
+  { state: 'Iowa', tier: 'low', note: '-10% — major egg + pork producer, low logistics costs', color: 'var(--red)' },
+  { state: 'Arkansas', tier: 'low', note: '-9% — low cost of living, Walmart headquarters state', color: 'var(--red)' },
+  { state: 'Mississippi', tier: 'low', note: '-9% — lowest overall cost of living in US', color: 'var(--red)' },
 ]
 
 export default function GroceryPricesByState() {
   return (
-    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
+      <NavHeader active="prices" />
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 20px' }}>
-        <Link href="/guides" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
+        <Link href="/guides" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
 
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
           State-by-State Data
         </div>
-        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: '#f0fdf4' }}>
+        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: 'var(--text)' }}>
           Grocery Prices by State: 2025 Guide
         </h1>
-        <p style={{ color: '#9ca3af', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--subtle)', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
           A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here's how all 50 states compare — and why the gaps are so large.
         </p>
 
         <GroceryEmailBanner />
 
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#f0fdf4', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>
           {STATE_DATA.map((s) => (
             <div key={s.state} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               padding: '12px 16px', marginBottom: 8,
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: '#fafafa',
+              border: '1px solid var(--border)',
               borderRadius: 10, flexWrap: 'wrap', gap: 8,
             }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: '#f0fdf4', minWidth: 110 }}>{s.state}</span>
-              <span style={{ fontSize: 13, color: '#6b7280', flex: 1 }}>{s.note}</span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', minWidth: 110 }}>{s.state}</span>
+              <span style={{ fontSize: 13, color: 'var(--muted)', flex: 1 }}>{s.note}</span>
               <span style={{ fontSize: 14, fontWeight: 700, color: s.color }}>
                 {s.tier === 'highest' ? '🔴 Most Expensive' : s.tier === 'high' ? '🟠 Above Average' : '🟢 Below Average'}
               </span>
@@ -57,7 +59,7 @@ export default function GroceryPricesByState() {
           ))}
         </div>
 
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#f0fdf4', marginTop: 36, marginBottom: 12 }}>Why Do Grocery Prices Vary So Much by State?</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Do Grocery Prices Vary So Much by State?</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           <strong>Transportation costs</strong> are the biggest variable — Hawaii and Alaska pay a massive premium simply because everything has to be shipped long distances. In the continental US, states far from major distribution centers pay more.
         </p>
@@ -70,9 +72,9 @@ export default function GroceryPricesByState() {
 
         <GroceryEmailBanner />
 
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/grocery-prices" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>
-          <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>
+          <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>
         </div>
       </div>
     </main>

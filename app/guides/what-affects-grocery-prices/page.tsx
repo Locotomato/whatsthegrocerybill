@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GroceryEmailBanner from '../../components/GroceryEmailBanner'
+import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
   title: 'What Determines Grocery Prices? | What\'s the Grocery Bill?',
@@ -18,17 +19,18 @@ export default function WhatAffectsGroceryPrices() {
   ]
 
   return (
-    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
+      <NavHeader active="prices" />
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 20px' }}>
-        <Link href="/guides" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
+        <Link href="/guides" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
 
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
           How Grocery Pricing Works
         </div>
-        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: '#f0fdf4' }}>
+        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: 'var(--text)' }}>
           What Determines Grocery Prices?
         </h1>
-        <p style={{ color: '#9ca3af', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--subtle)', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
@@ -36,20 +38,20 @@ export default function WhatAffectsGroceryPrices() {
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f) => (
-            <div key={f.title} style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: '#f0fdf4', marginBottom: 10 }}>
+            <div key={f.title} style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 10 }}>
                 {f.emoji} {f.title}
               </h2>
-              <p style={{ color: '#9ca3af', lineHeight: 1.7, margin: 0 }}>{f.body}</p>
+              <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{f.body}</p>
             </div>
           ))}
         </div>
 
         <GroceryEmailBanner />
 
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>
-          <Link href="/guides/how-to-save-money-on-groceries" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ How to Save on Groceries</Link>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>
+          <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ How to Save on Groceries</Link>
         </div>
       </div>
     </main>

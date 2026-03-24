@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ALL_STATE_SLUGS, STATE_ABBR, toTitleCase } from '../../lib/stateData'
 import GroceryEmailBanner from '../components/GroceryEmailBanner'
+import NavHeader from '../components/NavHeader'
 
 export const revalidate = 3600
 
@@ -74,7 +75,7 @@ export default async function GroceryPricesIndex() {
   const cheapest = sortedPrices[0]
   const priciest = sortedPrices[sortedPrices.length - 1]
 
-  const C = { bg: '#0b0d14', card: '#111827', border: 'rgba(255,255,255,0.07)', red: '#ef4444', text: '#f1f5f9', muted: '#64748b', stone: '#94a3b8' }
+  const C = { bg: 'var(--bg)', card: '#ffffff', border: 'var(--border)', red: 'var(--red)', text: 'var(--text)', muted: 'var(--muted)', stone: 'var(--subtle)' }
   const F = "'Inter', system-ui, sans-serif"
 
   const jsonLd = {
@@ -94,6 +95,7 @@ export default async function GroceryPricesIndex() {
 
   return (
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: F }}>
+      <NavHeader active="prices" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 16px 80px' }}>
@@ -119,7 +121,7 @@ export default async function GroceryPricesIndex() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 36 }}>
           {[
             { label: 'National Avg / mo', value: `~$${nationalAvg.toLocaleString()}`, color: C.text },
-            { label: 'Most Affordable',   value: cheapest ? `~$${cheapest.toLocaleString()}` : '—', color: '#22c55e' },
+            { label: 'Most Affordable',   value: cheapest ? `~$${cheapest.toLocaleString()}` : '—', color: 'var(--green)' },
             { label: 'Most Expensive',    value: priciest ? `~$${priciest.toLocaleString()}` : '—', color: C.red },
           ].map(({ label, value, color }) => (
             <div key={label} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '16px 18px', textAlign: 'center' }}>
@@ -199,7 +201,7 @@ export default async function GroceryPricesIndex() {
                 }}>
                   <div style={{ fontSize: 18, marginBottom: 4 }}>{icon}</div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 4 }}>{label}</div>
-                  <div style={{ fontSize: 11, color: '#22c55e' }}>{note}</div>
+                  <div style={{ fontSize: 11, color: 'var(--green)' }}>{note}</div>
                 </div>
               </Link>
             ))}

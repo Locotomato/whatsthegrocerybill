@@ -225,7 +225,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
           marginBottom: 12,
         }}>
           {/* State avg */}
-          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '20px 22px' }}>
+          <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 22px' }}>
             <div style={{ fontSize: 11, color: C.muted, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
               {stateName} Avg Today
             </div>
@@ -255,7 +255,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
 
           {/* National avg */}
           {nationalAvg && (
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14, padding: '20px 22px' }}>
+            <div style={{ background: '#fafafa', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 22px' }}>
               <div style={{ fontSize: 11, color: C.muted, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                 National Avg
               </div>
@@ -268,7 +268,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
         </div>
 
         {/* Disclaimer */}
-        <p style={{ margin: '0 0 28px', fontSize: 12, color: '#475569', lineHeight: 1.5 }}>
+        <p style={{ margin: '0 0 28px', fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
           ⚠️ {club.name} does not publish real-time prices. Estimated price uses today&apos;s {stateName} AAA average minus {club.shortName}&apos;s typical {club.savingsLow}–{club.savingsHigh}¢/gal savings. Actual prices vary by location.
         </p>
 
@@ -295,7 +295,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
 
         {/* State gas tax context */}
         {gasTax && (
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '18px 20px', marginBottom: 28 }}>
+          <div style={{ background: '#fafafa', border: '1px solid var(--border)', borderRadius: 12, padding: '18px 20px', marginBottom: 28 }}>
             <h2 style={{ margin: '0 0 10px', fontSize: 15, fontWeight: 700 }}>
               {stateName} Gas Tax Context
             </h2>
@@ -311,7 +311,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
 
         {/* Location count */}
         {locationCount && (
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '16px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ background: '#fafafa', border: '1px solid var(--border)', borderRadius: 12, padding: '16px 20px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ fontSize: 32 }}>📍</div>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>
@@ -341,7 +341,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {faqLd.mainEntity.map((item, i) => (
-              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '14px 16px' }}>
+              <div key={i} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px' }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 6 }}>{item.name}</div>
                 <div style={{ fontSize: 13, color: C.stone, lineHeight: 1.7 }}>{item.acceptedAnswer.text}</div>
               </div>
@@ -358,7 +358,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {otherStates.map(s => (
                 <Link key={s} href={`/grocery-prices/${club.slug}/${s}`} style={{
-                  padding: '7px 13px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
+                  padding: '7px 13px', background: '#fff', border: '1px solid var(--border)',
                   borderRadius: 8, textDecoration: 'none', fontSize: 12, color: C.stone,
                 }}>
                   {toTitle(s)}
@@ -370,10 +370,10 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr, sta
 
         {/* Nav links */}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-          <Link href={`/grocery-prices/${club.slug}`} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
+          <Link href={`/grocery-prices/${club.slug}`} style={{ padding: '9px 18px', background: '#f8fafc', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
             ← All {club.name} States
           </Link>
-          <Link href={`/grocery-prices/${stateSlug}`} style={{ padding: '9px 18px', background: 'rgba(255,255,255,0.06)', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
+          <Link href={`/grocery-prices/${stateSlug}`} style={{ padding: '9px 18px', background: '#f8fafc', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
             {stateName} Grocery Prices
           </Link>
           <Link href="/" style={{ padding: '9px 18px', background: C.red, color: '#fff', borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>

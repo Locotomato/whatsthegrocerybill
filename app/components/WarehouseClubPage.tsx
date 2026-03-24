@@ -84,8 +84,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
 
         {/* Price hero */}
         <div style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: '#fff',
+          border: '1px solid var(--border)',
           borderRadius: 16,
           padding: '28px 28px',
           marginBottom: 16,
@@ -117,7 +117,7 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
         </div>
 
         {/* Disclaimer */}
-        <p style={{ margin: '0 0 28px', fontSize: 12, color: '#475569', lineHeight: 1.5 }}>
+        <p style={{ margin: '0 0 28px', fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
           ⚠️ {club.name} does not publish real-time Grocery Prices online. The estimated price above is based on historical savings data and today&apos;s national average from AAA. Actual prices vary by location.
         </p>
 
@@ -163,8 +163,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
 
         {/* Why cheaper */}
         <div style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#fafafa',
+          border: '1px solid var(--border)',
           borderRadius: 12,
           padding: '20px 22px',
           marginBottom: 28,
@@ -180,8 +180,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
         {/* Membership tiers */}
         {club.membershipTiers && (
           <div style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: '#fafafa',
+            border: '1px solid var(--border)',
             borderRadius: 12,
             padding: '20px 22px',
             marginBottom: 28,
@@ -202,8 +202,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
 
         {/* Notes */}
         <div style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#fafafa',
+          border: '1px solid var(--border)',
           borderRadius: 12,
           padding: '20px 22px',
           marginBottom: 36,
@@ -229,8 +229,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {club.faqs.map((faq, i) => (
               <div key={i} style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#fff',
+                border: '1px solid var(--border)',
                 borderRadius: 12,
                 padding: '16px 18px',
               }}>
@@ -257,8 +257,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
             {US_STATES.map(([name, slug]) => (
               <Link key={slug} href={`/grocery-prices/${slug}`} style={{ textDecoration: 'none' }}>
                 <div style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: '#fff',
+                  border: '1px solid var(--border)',
                   borderRadius: 8,
                   padding: '8px 12px',
                   fontSize: 13,
@@ -274,8 +274,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
 
         {/* Compare clubs CTA */}
         <div style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#fafafa',
+          border: '1px solid var(--border)',
           borderRadius: 12,
           padding: '18px 22px',
           marginBottom: 24,
@@ -293,8 +293,8 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
             ].filter(c => c.slug !== club.slug).map(c => (
               <Link key={c.slug} href={`/grocery-prices/${c.slug}`} style={{
                 padding: '7px 14px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: '#fff',
+                border: '1px solid var(--border)',
                 borderRadius: 8,
                 textDecoration: 'none',
                 fontSize: 13,
@@ -312,7 +312,7 @@ export default function WarehouseClubPage({ club, nationalAvg }: Props) {
           <Link href="/" style={{ padding: '10px 20px', background: C.red, color: '#fff', borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>
             🛒 National Grocery Price Map
           </Link>
-          <Link href="/news" style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.06)', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
+          <Link href="/news" style={{ padding: '10px 20px', background: '#f8fafc', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
             📰 Grocery Price News
           </Link>
         </div>

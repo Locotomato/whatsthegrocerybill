@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { STATE_CITIES, getCitiesForState } from '../../../../lib/cities'
 import { STATE_ABBR, toTitleCase } from '../../../../lib/stateData'
+import NavHeader from '../../../components/NavHeader'
 
 // Helper maps derived from stateData
 const STATE_NAMES: Record<string, string> = Object.fromEntries(
@@ -156,6 +157,7 @@ export default async function CityGasPricePage({ params }: Props) {
 
   return (
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: F }}>
+      <NavHeader active="prices" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 20px 80px' }}>
@@ -200,7 +202,7 @@ export default async function CityGasPricePage({ params }: Props) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {statePrice && (
-              <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '12px 18px' }}>
+              <div style={{ background: '#fff', borderRadius: 10, padding: '12px 18px' }}>
                 <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
                   {stateName} State Avg
                 </div>

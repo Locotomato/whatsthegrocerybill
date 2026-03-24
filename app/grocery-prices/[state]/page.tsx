@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import { slugToAbbr, toTitleCase, ALL_STATE_SLUGS } from '../../../lib/stateData'
+import NavHeader from '../../components/NavHeader'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600
@@ -128,56 +129,57 @@ export default async function StatePage({ params }: Props) {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: '#0c1409', color: '#f1f5f9' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
+      <NavHeader active="prices" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 20px 80px' }}>
 
         {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: 'flex', gap: 8, fontSize: 13, color: '#64748b', flexWrap: 'wrap' }}>
-          <Link href="/" style={{ color: '#64748b', textDecoration: 'none' }}>Home</Link>
+        <div style={{ marginBottom: 24, display: 'flex', gap: 8, fontSize: 13, color: 'var(--muted)', flexWrap: 'wrap' }}>
+          <Link href="/" style={{ color: 'var(--muted)', textDecoration: 'none' }}>Home</Link>
           <span>›</span>
-          <Link href="/grocery-prices" style={{ color: '#64748b', textDecoration: 'none' }}>Grocery Prices by State</Link>
+          <Link href="/grocery-prices" style={{ color: 'var(--muted)', textDecoration: 'none' }}>Grocery Prices by State</Link>
           <span>›</span>
-          <span style={{ color: '#94a3b8' }}>{stateName}</span>
+          <span style={{ color: 'var(--subtle)' }}>{stateName}</span>
         </div>
 
         {/* Header */}
         <h1 style={{ margin: '0 0 6px', fontSize: 'clamp(28px,5vw,42px)', fontWeight: 900, letterSpacing: '-0.02em' }}>
           {stateName} Grocery Prices
         </h1>
-        <p style={{ margin: '0 0 32px', fontSize: 15, color: '#64748b' }}>
+        <p style={{ margin: '0 0 32px', fontSize: 15, color: 'var(--muted)' }}>
           Cost index vs national average · Source: BLS CPI · Updated monthly
         </p>
 
         {/* Cost index hero card */}
         <div style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: '#fff',
+          border: '1px solid var(--border)',
           borderRadius: 16,
           padding: '28px 32px',
           marginBottom: 24,
           display: 'flex', alignItems: 'flex-start', gap: 32, flexWrap: 'wrap',
         }}>
           <div>
-            <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
               Cost Index
             </div>
-            <div style={{ fontSize: 'clamp(48px,10vw,72px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1, color: '#f8fafc' }}>
+            <div style={{ fontSize: 'clamp(48px,10vw,72px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1, color: 'var(--text)' }}>
               {index}
             </div>
-            <div style={{ fontSize: 14, color: '#64748b', marginTop: 6 }}>National avg = 100</div>
+            <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>National avg = 100</div>
           </div>
 
           <div style={{ paddingTop: 4 }}>
-            <div style={{ fontSize: 11, color: '#64748b', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>
+            <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>
               vs National Average
             </div>
             <div style={{ fontSize: 22, fontWeight: 700, color: isHigh ? '#ef4444' : isLow ? '#4ade80' : '#94a3b8' }}>
               {diff === 0 ? 'At avg' : diff > 0 ? `+${diff}% above avg` : `${diff}% below avg`}
             </div>
-            <div style={{ fontSize: 13, color: '#475569', marginTop: 6 }}>
+            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 6 }}>
               {isHigh ? '🧾 Higher cost state' : isLow ? '💰 Lower cost state' : '📊 Near national average'}
             </div>
           </div>
@@ -187,12 +189,12 @@ export default async function StatePage({ params }: Props) {
         {context && (
           <div style={{
             background: 'rgba(74,222,128,0.06)',
-            border: '1px solid rgba(74,222,128,0.15)',
+            border: '1px solid var(--red-border)',
             borderRadius: 12,
             padding: '16px 20px',
             marginBottom: 32,
             fontSize: 14,
-            color: '#94a3b8',
+            color: 'var(--subtle)',
             lineHeight: 1.7,
           }}>
             {context}
@@ -201,7 +203,7 @@ export default async function StatePage({ params }: Props) {
 
         {/* Key grocery items */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: '#f1f5f9' }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: 'var(--text)' }}>
             Key Grocery Items — National Averages
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 10 }}>
@@ -214,18 +216,18 @@ export default async function StatePage({ params }: Props) {
               { emoji: '🧈', name: 'Butter (lb)', price: '$5.11', trend: '↑ +15%' },
             ].map(item => (
               <div key={item.name} style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#fff',
+                border: '1px solid var(--border)',
                 borderRadius: 10, padding: '12px 14px',
               }}>
                 <div style={{ fontSize: 18, marginBottom: 4 }}>{item.emoji}</div>
-                <div style={{ fontSize: 11, color: '#6b7280', marginBottom: 4 }}>{item.name}</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: '#f0fdf4' }}>{item.price}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>{item.name}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>{item.price}</div>
                 <div style={{ fontSize: 11, color: item.trend.startsWith('↑') ? '#f87171' : '#4ade80', marginTop: 2 }}>{item.trend}</div>
               </div>
             ))}
           </div>
-          <div style={{ fontSize: 11, color: '#475569', marginTop: 8 }}>BLS CPI data · Updated monthly · {stateName} prices may vary ±{Math.abs(diff)}%</div>
+          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8 }}>BLS CPI data · Updated monthly · {stateName} prices may vary ±{Math.abs(diff)}%</div>
         </div>
 
         {/* Email CTA */}
@@ -233,18 +235,18 @@ export default async function StatePage({ params }: Props) {
 
         {/* FAQ */}
         <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: '#f1f5f9' }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>
             {stateName} Grocery Prices — FAQ
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {faqs.map((faq, i) => (
               <div key={i} style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#fff',
+                border: '1px solid var(--border)',
                 borderRadius: 12, padding: '14px 18px',
               }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 6 }}>{faq.q}</div>
-                <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.7 }}>{faq.a}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>{faq.q}</div>
+                <div style={{ fontSize: 13, color: 'var(--subtle)', lineHeight: 1.7 }}>{faq.a}</div>
               </div>
             ))}
           </div>
@@ -257,7 +259,7 @@ export default async function StatePage({ params }: Props) {
             borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 700,
           }}>🛒 Find Cheapest Stores</Link>
           <Link href="/news" style={{
-            padding: '10px 20px', background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
+            padding: '10px 20px', background: '#f8fafc', color: 'var(--subtle)',
             borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600,
           }}>📰 Grocery Price News</Link>
         </div>

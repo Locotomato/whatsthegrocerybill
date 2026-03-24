@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { STATE_CITIES } from '../../../lib/cities'
+import NavHeader from '../../components/NavHeader'
 
 // State slug map — reverse lookup from abbr to slug
 const STATE_ABBR_TO_SLUG: Record<string, string> = {
@@ -102,7 +103,8 @@ export default function NearMePage() {
   const spinnerVisible = status === 'requesting' || status === 'locating' || status === 'found'
 
   return (
-    <main style={{ minHeight: '100vh', background: '#0b0d14', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '60px 20px 40px' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--bg)', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '60px 20px 40px' }}>
+      <NavHeader active="prices" />
 
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -110,15 +112,15 @@ export default function NearMePage() {
         <h1 style={{ fontSize: 28, fontWeight: 900, margin: '0 0 8px' }}>
           Grocery Prices Near Me
         </h1>
-        <p style={{ color: '#94a3b8', fontSize: 14, margin: 0 }}>
+        <p style={{ color: 'var(--subtle)', fontSize: 14, margin: 0 }}>
           Real-time Grocery Prices for your location
         </p>
       </div>
 
       {/* Status card */}
       <div style={{
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: '#fff',
+        border: '1px solid var(--border)',
         borderRadius: 16,
         padding: '32px 40px',
         textAlign: 'center',
@@ -142,7 +144,7 @@ export default function NearMePage() {
           <div style={{ fontSize: 32, marginBottom: 12 }}>⚠️</div>
         )}
 
-        <p style={{ color: '#e2e8f0', fontSize: 15, margin: '0 0 20px', lineHeight: 1.5 }}>
+        <p style={{ color: 'var(--text)', fontSize: 15, margin: '0 0 20px', lineHeight: 1.5 }}>
           {message || 'Tap below to find Grocery Prices in your area.'}
         </p>
 
@@ -169,18 +171,18 @@ export default function NearMePage() {
       {/* Browse by state fallback */}
       {(status === 'denied' || status === 'error' || status === 'idle') && (
         <div style={{ textAlign: 'center' }}>
-          <p style={{ color: '#64748b', fontSize: 13, marginBottom: 16 }}>
+          <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16 }}>
             or browse all states:
           </p>
           <a
             href="/grocery-prices"
             style={{
               display: 'inline-block',
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.12)',
+              background: '#f8fafc',
+              border: '1px solid var(--border)',
               borderRadius: 10,
               padding: '10px 24px',
-              color: '#94a3b8',
+              color: 'var(--subtle)',
               textDecoration: 'none',
               fontSize: 14,
               fontWeight: 600,

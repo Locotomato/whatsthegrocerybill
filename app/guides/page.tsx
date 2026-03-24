@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import GroceryEmailBanner from '../components/GroceryEmailBanner'
+import NavHeader from '../components/NavHeader'
 
 const GUIDES = [
   {
@@ -62,18 +63,19 @@ const GUIDES = [
 
 export default function GuidesPage() {
   return (
-    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
+      <NavHeader active="guides" />
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
-        <Link href="/" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Home</Link>
+        <Link href="/" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Home</Link>
 
         <div style={{ textAlign: 'center', margin: '24px 0 36px' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
             Grocery Price Guides
           </div>
-          <h1 style={{ fontSize: 30, fontWeight: 900, color: '#f0fdf4', marginBottom: 10 }}>
+          <h1 style={{ fontSize: 30, fontWeight: 900, color: 'var(--text)', marginBottom: 10 }}>
             📚 Understand Your Grocery Bill
           </h1>
-          <p style={{ color: '#6b7280', fontSize: 14 }}>
+          <p style={{ color: 'var(--muted)', fontSize: 14 }}>
             In-depth guides on grocery prices, food inflation, and how to spend less at the checkout.
           </p>
         </div>
@@ -84,8 +86,8 @@ export default function GuidesPage() {
           {GUIDES.map((guide) => (
             <Link key={guide.slug} href={`/guides/${guide.slug}`} style={{ textDecoration: 'none' }}>
               <div style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#fafafa',
+                border: '1px solid var(--border)',
                 borderRadius: 14,
                 padding: '20px 22px',
                 height: '100%',
@@ -104,13 +106,13 @@ export default function GuidesPage() {
                 }}>
                   {guide.tag}
                 </div>
-                <h2 style={{ fontSize: 15, fontWeight: 800, color: '#f0fdf4', marginBottom: 8, lineHeight: 1.3 }}>
+                <h2 style={{ fontSize: 15, fontWeight: 800, color: 'var(--text)', marginBottom: 8, lineHeight: 1.3 }}>
                   {guide.title}
                 </h2>
-                <p style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.6, marginBottom: 12 }}>
+                <p style={{ fontSize: 13, color: 'var(--subtle)', lineHeight: 1.6, marginBottom: 12 }}>
                   {guide.description}
                 </p>
-                <div style={{ fontSize: 12, color: '#4ade80', fontWeight: 600 }}>
+                <div style={{ fontSize: 12, color: 'var(--red)', fontWeight: 600 }}>
                   {guide.readTime} →
                 </div>
               </div>

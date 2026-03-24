@@ -81,7 +81,7 @@ function TrendChart({ data }: { data: TrendPoint[] }) {
               color: '#fff',
               padding: '6px 10px',
             }}
-            labelStyle={{ color: '#9ca3af', marginBottom: 2 }}
+            labelStyle={{ color: 'var(--subtle)', marginBottom: 2 }}
             formatter={(v: unknown) => [`$${(v as number).toFixed(3)}`, 'Avg price']}
             cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: '4 2' }}
           />

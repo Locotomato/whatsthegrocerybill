@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GroceryEmailBanner from '../../components/GroceryEmailBanner'
+import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
   title: 'Cheapest Grocery Stores in 2025: Aldi vs Walmart vs Kroger vs Costco | What\'s the Grocery Bill?',
@@ -19,17 +20,18 @@ export default function CheapestGroceryStoresCompared() {
   ]
 
   return (
-    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
+      <NavHeader active="guides" />
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 20px' }}>
-        <Link href="/guides" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
+        <Link href="/guides" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
 
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
           Store Comparison Guide
         </div>
-        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: '#f0fdf4' }}>
+        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: 'var(--text)' }}>
           Cheapest Grocery Stores in 2025: Ranked
         </h1>
-        <p style={{ color: '#9ca3af', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--subtle)', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
           Where you shop matters more than what you buy. Switching from a traditional supermarket to Aldi or Walmart can save a family of four <strong style={{ color: '#fbbf24' }}>$150–250/month</strong> with zero change in what they eat.
         </p>
 
@@ -40,8 +42,8 @@ export default function CheapestGroceryStoresCompared() {
             <div key={store.name} style={{
               display: 'flex', gap: 16, marginBottom: 20,
               padding: '18px 20px',
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.07)',
+              background: '#fafafa',
+              border: '1px solid var(--border)',
               borderRadius: 12,
             }}>
               <div style={{ fontSize: 24, fontWeight: 900, color: 'rgba(74,222,128,0.25)', minWidth: 28 }}>
@@ -49,18 +51,18 @@ export default function CheapestGroceryStoresCompared() {
               </div>
               <div>
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 16, fontWeight: 800, color: '#f0fdf4' }}>{store.name}</span>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>{store.name}</span>
                   <span style={{ fontSize: 12, fontWeight: 600 }}>{store.score}</span>
                 </div>
-                <p style={{ color: '#9ca3af', fontSize: 14, lineHeight: 1.6, margin: '0 0 6px' }}>{store.note}</p>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80' }}>{store.savings}</div>
+                <p style={{ color: 'var(--subtle)', fontSize: 14, lineHeight: 1.6, margin: '0 0 6px' }}>{store.note}</p>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>{store.savings}</div>
               </div>
             </div>
           ))}
         </div>
 
-        <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.15)', borderRadius: 12, padding: '20px 24px', margin: '32px 0' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#4ade80', marginBottom: 8 }}>💡 The optimal strategy for most households</div>
+        <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid var(--red-border)', borderRadius: 12, padding: '20px 24px', margin: '32px 0' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--red)', marginBottom: 8 }}>💡 The optimal strategy for most households</div>
           <p style={{ color: '#d1d5db', lineHeight: 1.7, margin: 0 }}>
             Shop Aldi or Lidl for staples (eggs, dairy, canned goods, snacks, produce). Buy meat at Costco when on sale and freeze it. Use Walmart or Kroger for items Aldi doesn't carry. This hybrid approach captures the savings of discount stores while maintaining selection.
           </p>
@@ -68,9 +70,9 @@ export default function CheapestGroceryStoresCompared() {
 
         <GroceryEmailBanner />
 
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/guides/how-to-save-money-on-groceries" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ 8 Ways to Save on Groceries</Link>
-          <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Food Inflation Explained</Link>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ 8 Ways to Save on Groceries</Link>
+          <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Food Inflation Explained</Link>
         </div>
       </div>
     </main>

@@ -41,8 +41,8 @@ export default function ArticleEmailCapture({ placement }: Props) {
       }}>
         <span style={{ fontSize: 22 }}>🛒</span>
         <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9' }}>You're in.</div>
-          <div style={{ fontSize: 13, color: '#64748b' }}>We'll hit you when prices make a move.</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>You're in.</div>
+          <div style={{ fontSize: 13, color: 'var(--muted)' }}>We'll hit you when prices make a move.</div>
         </div>
       </div>
     )
@@ -72,10 +72,10 @@ export default function ArticleEmailCapture({ placement }: Props) {
       >×</button>
 
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#16a34a', marginBottom: 3, letterSpacing: '0.03em' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--red)', marginBottom: 3, letterSpacing: '0.03em' }}>
           🛒 {placement === 'mid' ? 'Get price alerts — free' : 'Don\'t miss the next move'}
         </div>
-        <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.4 }}>
+        <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.4 }}>
           {placement === 'mid'
             ? 'We track gas & oil daily. Get alerts when prices spike or drop.'
             : 'Join readers tracking Grocery Prices with us. No spam, ever.'}
@@ -92,11 +92,11 @@ export default function ArticleEmailCapture({ placement }: Props) {
           disabled={status === 'loading'}
           style={{
             flex: 1,
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#fff',
+            border: '1px solid var(--border)',
             borderRadius: 6,
             padding: '8px 12px',
-            color: '#f1f5f9',
+            color: 'var(--text)',
             fontSize: 13,
             outline: 'none',
             minWidth: 0,

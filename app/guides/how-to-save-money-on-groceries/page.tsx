@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GroceryEmailBanner from '../../components/GroceryEmailBanner'
+import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
   title: 'How to Save Money on Groceries in 2025 | What\'s the Grocery Bill?',
@@ -20,17 +21,18 @@ export default function HowToSaveMoneyOnGroceries() {
   ]
 
   return (
-    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+    <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
+      <NavHeader active="guides" />
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 20px' }}>
-        <Link href="/guides" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
+        <Link href="/guides" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Back to Guides</Link>
 
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '16px 0 10px' }}>
           Grocery Savings Guide
         </div>
-        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: '#f0fdf4' }}>
+        <h1 style={{ fontSize: 32, fontWeight: 900, lineHeight: 1.2, marginBottom: 12, color: 'var(--text)' }}>
           How to Save Money on Groceries in 2025
         </h1>
-        <p style={{ color: '#9ca3af', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--subtle)', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
           The average American family spends <strong style={{ color: '#fbbf24' }}>$1,000–1,500/month</strong> on groceries. With food inflation still elevated, these 8 strategies can cut your bill by 20–30% without spending hours couponing.
         </p>
 
@@ -40,21 +42,21 @@ export default function HowToSaveMoneyOnGroceries() {
           {tips.map((tip) => (
             <div key={tip.num} style={{
               display: 'flex', gap: 20, marginBottom: 28,
-              paddingBottom: 28, borderBottom: '1px solid rgba(255,255,255,0.06)',
+              paddingBottom: 28, borderBottom: '1px solid var(--border)',
             }}>
               <div style={{ fontSize: 28, fontWeight: 900, color: 'rgba(74,222,128,0.2)', minWidth: 40, lineHeight: 1 }}>
                 {tip.num}
               </div>
               <div>
-                <h2 style={{ fontSize: 17, fontWeight: 800, color: '#f0fdf4', marginBottom: 8 }}>{tip.title}</h2>
-                <p style={{ color: '#9ca3af', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
+                <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{tip.title}</h2>
+                <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.15)', borderRadius: 12, padding: '20px 24px', marginBottom: 32 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#4ade80', marginBottom: 8 }}>💡 The bottom line</div>
+        <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid var(--red-border)', borderRadius: 12, padding: '20px 24px', marginBottom: 32 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--red)', marginBottom: 8 }}>💡 The bottom line</div>
           <p style={{ color: '#d1d5db', lineHeight: 1.7, margin: 0 }}>
             Switching your primary grocery store, buying store brand, and freezing sale items are the three highest-ROI changes most households can make. Combined, they typically save $150–300/month for a family of four — without changing what you eat.
           </p>
@@ -62,10 +64,10 @@ export default function HowToSaveMoneyOnGroceries() {
 
         <GroceryEmailBanner />
 
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-          <Link href="/guides/why-are-egg-prices-so-high" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>
-          <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>
-          <Link href="/grocery-prices" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Grocery Prices by State</Link>
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/guides/why-are-egg-prices-so-high" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>
+          <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>
+          <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Grocery Prices by State</Link>
         </div>
       </div>
     </main>
