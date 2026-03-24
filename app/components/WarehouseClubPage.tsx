@@ -1,322 +1,186 @@
-import Link from 'next/link'
+'use client'
 import type { ClubData } from '../../lib/warehouseClubs'
+import Link from 'next/link'
+import NavHeader from './NavHeader'
 
-const C = {
-  bg: '#0b0d14', card: '#111827', border: 'rgba(255,255,255,0.07)',
-  red: '#16a34a', text: '#f1f5f9', muted: '#64748b', stone: '#94a3b8',
-  green: '#22c55e', orange: '#4ade80',
-}
+const C = { bg: '#f8f9fa', card: '#ffffff', border: '#e5e7eb', red: '#dc2626', navy: '#1e3a5f', text: '#1f2937', muted: '#6b7280', green: '#16a34a', light: '#fef2f2' }
 const F = "'Inter', system-ui, sans-serif"
-
-const US_STATES = [
-  ['Alabama','alabama'],['Alaska','alaska'],['Arizona','arizona'],['Arkansas','arkansas'],
-  ['California','california'],['Colorado','colorado'],['Connecticut','connecticut'],
-  ['Delaware','delaware'],['Florida','florida'],['Georgia','georgia'],['Hawaii','hawaii'],
-  ['Idaho','idaho'],['Illinois','illinois'],['Indiana','indiana'],['Iowa','iowa'],
-  ['Kansas','kansas'],['Kentucky','kentucky'],['Louisiana','louisiana'],['Maine','maine'],
-  ['Maryland','maryland'],['Massachusetts','massachusetts'],['Michigan','michigan'],
-  ['Minnesota','minnesota'],['Mississippi','mississippi'],['Missouri','missouri'],
-  ['Montana','montana'],['Nebraska','nebraska'],['Nevada','nevada'],
-  ['New Hampshire','new-hampshire'],['New Jersey','new-jersey'],['New Mexico','new-mexico'],
-  ['New York','new-york'],['North Carolina','north-carolina'],['North Dakota','north-dakota'],
-  ['Ohio','ohio'],['Oklahoma','oklahoma'],['Oregon','oregon'],['Pennsylvania','pennsylvania'],
-  ['Rhode Island','rhode-island'],['South Carolina','south-carolina'],
-  ['South Dakota','south-dakota'],['Tennessee','tennessee'],['Texas','texas'],
-  ['Utah','utah'],['Vermont','vermont'],['Virginia','virginia'],['Washington','washington'],
-  ['West Virginia','west-virginia'],['Wisconsin','wisconsin'],['Wyoming','wyoming'],
-]
 
 interface Props {
   club: ClubData
-  nationalAvg: number | null
+  nationalEggPrice?: number | null
 }
 
-export default function WarehouseClubPage({ club, nationalAvg }: Props) {
-  const savingsMid = (club.savingsLow + club.savingsHigh) / 2
-  const annualSavings = nationalAvg
-    ? ((savingsMid / 100) * club.tankSize * club.fillsPerYear).toFixed(0)
-    : null
-  const estPrice = nationalAvg ? (nationalAvg - savingsMid / 100) : null
+function SavingsCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: '16px 20px', flex: 1, minWidth: 140 }}>
+      <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 700, color: C.navy }}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{sub}</div>}
+    </div>
+  )
+}
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: `${club.name} Grocery Prices Today`,
-    description: club.metaDescription,
-    url: `https://whatsthegrocerybill.com/grocery-prices/${club.slug}`,
-    publisher: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
-  }
-
-  const faqLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: club.faqs.map(f => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  }
+export default function WarehouseClubPage({ club }: Props) {
+  const savingsMid = Math.round((club.savingsLow + club.savingsHigh) / 2)
+  const annualSavings = (club.weeklyCartSavings * 52).toFixed(0)
+  const membershipMonths = club.requiresMembership
+    ? Math.ceil(parseInt(club.membershipCost.replace(/[^0-9]/g, '').slice(0, 3)) / (club.weeklyCartSavings * 4.3))
+    : 0
 
   return (
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: F }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <NavHeader active="grocery-prices" />
 
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
-
+      <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 16px 80px' }}>
         {/* Breadcrumb */}
-        <div style={{ marginBottom: 24, display: 'flex', gap: 8, fontSize: 13, color: C.muted, flexWrap: 'wrap' }}>
+        <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>
           <Link href="/" style={{ color: C.muted, textDecoration: 'none' }}>Home</Link>
-          <span>›</span>
-          <Link href="/grocery-prices" style={{ color: C.muted, textDecoration: 'none' }}>Grocery Prices by State</Link>
-          <span>›</span>
-          <span style={{ color: C.stone }}>{club.name} Grocery Prices</span>
+          {' / '}
+          <Link href="/grocery-prices" style={{ color: C.muted, textDecoration: 'none' }}>Grocery Prices</Link>
+          {' / '}
+          <span style={{ color: C.text }}>{club.name}</span>
         </div>
 
-        {/* Header */}
-        <h1 style={{ margin: '0 0 6px', fontSize: 'clamp(26px,5vw,40px)', fontWeight: 900, letterSpacing: '-0.02em' }}>
-          🛒 {club.name} Grocery Prices Today
-        </h1>
-        <p style={{ margin: '0 0 32px', fontSize: 15, color: C.muted, lineHeight: 1.6 }}>
-          {club.requiresMembership ? 'Member-only pricing' : 'No membership required'} ·{' '}
-          {club.stationCount} · {club.statesAvailable}
-        </p>
+        {/* Hero */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '28px 24px', marginBottom: 24 }}>
+          <h1 style={{ margin: '0 0 8px', fontSize: 26, fontWeight: 800, color: C.navy }}>
+            {club.name} Grocery Prices
+          </h1>
+          <p style={{ margin: '0 0 20px', color: C.muted, fontSize: 15 }}>
+            {club.name} typically prices groceries <strong style={{ color: C.red }}>{club.savingsLow}–{club.savingsHigh}% below</strong> traditional supermarkets.
+            {club.requiresMembership ? ` ${club.membership} required.` : ' No membership required.'}
+          </p>
 
-        {/* Price hero */}
-        <div style={{
-          background: '#fff',
-          border: '1px solid var(--border)',
-          borderRadius: 16,
-          padding: '28px 28px',
-          marginBottom: 16,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: 24,
-        }}>
-          <div>
-            <div style={{ fontSize: 11, color: C.muted, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-              National Average Today
-            </div>
-            <div style={{ fontSize: 'clamp(40px,8vw,60px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1 }}>
-              {nationalAvg ? `$${nationalAvg.toFixed(2)}` : '—'}
-            </div>
-            <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>per gallon · regular unleaded</div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 11, color: C.muted, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-              Estimated {club.shortName} Price
-            </div>
-            <div style={{ fontSize: 'clamp(40px,8vw,60px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1, color: C.green }}>
-              {estPrice ? `$${estPrice.toFixed(2)}` : '—'}
-            </div>
-            <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>
-              avg {club.savingsLow}–{club.savingsHigh}¢ below national avg
-            </div>
-          </div>
-        </div>
-
-        {/* Disclaimer */}
-        <p style={{ margin: '0 0 28px', fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
-          ⚠️ {club.name} does not publish real-time Grocery Prices online. The estimated price above is based on historical savings data and today&apos;s national average from AAA. Actual prices vary by location.
-        </p>
-
-        {/* Savings calculator card */}
-        {annualSavings && (
-          <div style={{
-            background: 'rgba(34,197,94,0.06)',
-            border: '1px solid rgba(34,197,94,0.2)',
-            borderRadius: 14,
-            padding: '22px 24px',
-            marginBottom: 28,
-          }}>
-            <h2 style={{ margin: '0 0 14px', fontSize: 17, fontWeight: 800, color: C.text }}>
-              💰 How Much Would You Save?
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14 }}>
-              {[
-                { label: 'Per fill-up', value: `$${((savingsMid / 100) * club.tankSize).toFixed(2)}` },
-                { label: 'Per month (4 fills)', value: `$${((savingsMid / 100) * club.tankSize * 4).toFixed(2)}` },
-                { label: 'Per year (52 fills)', value: `$${annualSavings}` },
-              ].map(({ label, value }) => (
-                <div key={label} style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, color: '#6ee7b7', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{label}</div>
-                  <div style={{ fontSize: 26, fontWeight: 900, color: C.green }}>{value}</div>
-                </div>
-              ))}
-            </div>
-            <p style={{ margin: '14px 0 0', fontSize: 12, color: '#86efac' }}>
-              Based on {club.savingsLow}–{club.savingsHigh}¢/gal avg savings, {club.tankSize}-gal fill-ups, weekly fill-ups.
-              {club.requiresMembership && ` Membership costs ${club.membershipCost}.`}
-            </p>
+          {/* Savings cards */}
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <SavingsCard
+              label="Avg savings vs supermarket"
+              value={`${club.savingsLow}–${club.savingsHigh}%`}
+              sub="per unit on staples"
+            />
+            <SavingsCard
+              label="Est. weekly cart savings"
+              value={`$${club.weeklyCartSavings}`}
+              sub="on a $150 grocery cart"
+            />
+            <SavingsCard
+              label="Est. annual savings"
+              value={`$${annualSavings}`}
+              sub="based on weekly shopping"
+            />
             {club.requiresMembership && (
-              <p style={{ margin: '8px 0 0', fontSize: 13, color: C.stone }}>
-                <strong style={{ color: C.text }}>Break-even:</strong>{' '}
-                {club.membershipCost.includes('–')
-                  ? `At the base membership price and avg ${savingsMid}¢/gal savings, you recoup the cost after roughly ${Math.ceil(parseFloat(club.membershipCost.replace('$','').split('–')[0]) / ((savingsMid / 100) * club.tankSize))} fill-ups.`
-                  : `You recoup the membership cost after roughly ${Math.ceil(parseFloat(club.membershipCost.replace(/[^0-9]/g,'')) / ((savingsMid / 100) * club.tankSize))} fill-ups.`
-                }
-              </p>
+              <SavingsCard
+                label="Membership"
+                value={club.membershipCost}
+                sub={`breaks even in ~${membershipMonths} month${membershipMonths !== 1 ? 's' : ''}`}
+              />
             )}
           </div>
-        )}
+        </div>
+
+        {/* Key items */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+            Best Grocery Deals at {club.name}
+          </h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {club.keyItems.map((item, i) => (
+              <span key={i} style={{
+                background: C.light, color: C.red, border: `1px solid #fecaca`,
+                borderRadius: 20, padding: '6px 14px', fontSize: 13, fontWeight: 500
+              }}>
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
 
         {/* Why cheaper */}
-        <div style={{
-          background: '#fafafa',
-          border: '1px solid var(--border)',
-          borderRadius: 12,
-          padding: '20px 22px',
-          marginBottom: 28,
-        }}>
-          <h2 style={{ margin: '0 0 10px', fontSize: 16, fontWeight: 800 }}>
-            Why Is {club.name} Gas Cheaper?
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 12px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+            Why Are {club.name} Grocery Prices Lower?
           </h2>
-          <p style={{ margin: 0, fontSize: 14, color: C.stone, lineHeight: 1.75 }}>
+          <p style={{ margin: 0, color: C.text, lineHeight: 1.65, fontSize: 15 }}>
             {club.whyCheaper}
           </p>
         </div>
 
         {/* Membership tiers */}
         {club.membershipTiers && (
-          <div style={{
-            background: '#fafafa',
-            border: '1px solid var(--border)',
-            borderRadius: 12,
-            padding: '20px 22px',
-            marginBottom: 28,
-          }}>
-            <h2 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800 }}>
-              Membership Options
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>
+            <h2 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+              {club.requiresMembership ? 'Membership Options' : 'Loyalty Program'}
             </h2>
-            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {club.membershipTiers.map((tier, i) => (
-                <li key={i} style={{ fontSize: 14, color: C.stone, padding: '6px 0', borderBottom: i < club.membershipTiers!.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                  <span style={{ color: C.green, marginTop: 1 }}>✓</span>
-                  <span>{tier}</span>
-                </li>
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <span style={{ color: C.green, fontSize: 16, marginTop: 1 }}>✓</span>
+                  <span style={{ fontSize: 14, color: C.text }}>{tier}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
 
         {/* Notes */}
-        <div style={{
-          background: '#fafafa',
-          border: '1px solid var(--border)',
-          borderRadius: 12,
-          padding: '20px 22px',
-          marginBottom: 36,
-        }}>
-          <h2 style={{ margin: '0 0 12px', fontSize: 16, fontWeight: 800 }}>
-            What to Know Before You Go
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+            Shopping Tips
           </h2>
-          <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {club.notes.map((note, i) => (
-              <li key={i} style={{ fontSize: 14, color: C.stone, padding: '6px 0', borderBottom: i < club.notes.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none', display: 'flex', gap: 8 }}>
-                <span style={{ color: C.orange }}>→</span>
-                <span>{note}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* FAQ */}
-        <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>
-            {club.name} Gas — Frequently Asked Questions
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {club.faqs.map((faq, i) => (
-              <div key={i} style={{
-                background: '#fff',
-                border: '1px solid var(--border)',
-                borderRadius: 12,
-                padding: '16px 18px',
-              }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 8 }}>
-                  {faq.q}
-                </div>
-                <div style={{ fontSize: 13, color: C.stone, lineHeight: 1.7 }}>
-                  {faq.a}
-                </div>
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <span style={{ color: C.red, fontSize: 16, marginTop: 1 }}>•</span>
+                <span style={{ fontSize: 14, color: C.text }}>{note}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* State grid */}
-        <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 6 }}>
-            Grocery Prices Near You
+        {/* State links */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>
+          <h2 style={{ margin: '0 0 8px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+            {club.name} Grocery Prices by State
           </h2>
-          <p style={{ margin: '0 0 16px', fontSize: 14, color: C.muted }}>
-            Select your state to see today&apos;s average Grocery Price, city-level breakdowns, and how you compare to the national average.
+          <p style={{ margin: '0 0 16px', color: C.muted, fontSize: 14 }}>
+            Grocery prices vary by region. Select your state to see local context.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 6 }}>
-            {US_STATES.map(([name, slug]) => (
-              <Link key={slug} href={`/grocery-prices/${slug}`} style={{ textDecoration: 'none' }}>
-                <div style={{
-                  background: '#fff',
-                  border: '1px solid var(--border)',
-                  borderRadius: 8,
-                  padding: '8px 12px',
-                  fontSize: 13,
-                  color: C.stone,
-                  transition: 'all 0.15s',
-                }}>
-                  {name}
-                </div>
-              </Link>
-            ))}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia',
+              'Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts',
+              'Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico',
+              'New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+              'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'].map(state => {
+              const slug = state.toLowerCase().replace(/\s+/g, '-')
+              return (
+                <Link
+                  key={state}
+                  href={`/grocery-prices/${club.slug}/${slug}`}
+                  style={{ fontSize: 13, color: C.navy, textDecoration: 'none', padding: '4px 10px',
+                    background: '#f1f5f9', borderRadius: 6, border: `1px solid ${C.border}` }}
+                >
+                  {state}
+                </Link>
+              )
+            })}
           </div>
         </div>
 
-        {/* Compare clubs CTA */}
-        <div style={{
-          background: '#fafafa',
-          border: '1px solid var(--border)',
-          borderRadius: 12,
-          padding: '18px 22px',
-          marginBottom: 24,
-        }}>
-          <h2 style={{ margin: '0 0 12px', fontSize: 15, fontWeight: 700, color: C.stone }}>
-            Compare Warehouse Club Grocery Prices
+        {/* FAQs */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px' }}>
+          <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700, color: C.navy }}>
+            {club.name} Grocery Prices — FAQs
           </h2>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {[
-              { name: "Sam's Club", slug: 'sams-club' },
-              { name: 'Costco', slug: 'costco' },
-              { name: "BJ's", slug: 'bjs' },
-              { name: 'Murphy USA', slug: 'murphys' },
-              { name: 'Wawa', slug: 'wawa' },
-            ].filter(c => c.slug !== club.slug).map(c => (
-              <Link key={c.slug} href={`/grocery-prices/${c.slug}`} style={{
-                padding: '7px 14px',
-                background: '#fff',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
-                textDecoration: 'none',
-                fontSize: 13,
-                color: C.stone,
-                fontWeight: 500,
-              }}>
-                {c.name}
-              </Link>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {club.faqs.map((faq, i) => (
+              <div key={i} style={{ borderTop: i > 0 ? `1px solid ${C.border}` : 'none', paddingTop: i > 0 ? 20 : 0 }}>
+                <div style={{ fontWeight: 600, color: C.navy, marginBottom: 8, fontSize: 15 }}>{faq.q}</div>
+                <div style={{ color: C.text, lineHeight: 1.65, fontSize: 14 }}>{faq.a}</div>
+              </div>
             ))}
           </div>
         </div>
-
-        {/* Main CTA */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <Link href="/" style={{ padding: '10px 20px', background: C.red, color: '#fff', borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 700 }}>
-            🛒 National Grocery Price Map
-          </Link>
-          <Link href="/news" style={{ padding: '10px 20px', background: '#f8fafc', color: C.stone, borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600 }}>
-            📰 Grocery Price News
-          </Link>
-        </div>
-
       </div>
     </main>
   )

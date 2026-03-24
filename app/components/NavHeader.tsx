@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function NavHeader({ active }: { active?: 'prices' | 'news' | 'guides' }) {
+export default function NavHeader({ active }: { active?: 'prices' | 'grocery-prices' | 'news' | 'guides' }) {
   const linkStyle = (page: string) => ({
     fontSize: 12, fontWeight: 600 as const,
     color: active === page ? '#fff' : '#cbd5e1',

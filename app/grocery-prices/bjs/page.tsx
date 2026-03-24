@@ -5,7 +5,6 @@ import WarehouseClubPage from '../../components/WarehouseClubPage'
 export const revalidate = 3600
 
 const club = getClub('bjs')!
-const GAS_API = process.env.GAS_API_URL ?? 'https://rolando-pluckiest-ideographically.ngrok-free.dev'
 
 export const metadata: Metadata = {
   title: "What's the Grocery Bill at BJ's? — BJ's Wholesale Grocery Prices Today",
@@ -21,16 +20,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://whatsthegrocerybill.com/grocery-prices/bjs' },
 }
 
-async function getNationalAvg(): Promise<number | null> {
-  try {
-    const res = await fetch(`${GAS_API}/gas/states`, { next: { revalidate: 3600 } })
-    if (!res.ok) return null
-    const data = await res.json()
-    return data.nationalAvg ?? null
-  } catch { return null }
-}
 
-export default async function BJsPage() {
-  const nationalAvg = await getNationalAvg()
-  return <WarehouseClubPage club={club} nationalAvg={nationalAvg} />
+export default function BJsPage() {
+  return <WarehouseClubPage club={club} />
 }
