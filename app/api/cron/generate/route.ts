@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
   const newTweets = []
   for (const t of tweets.slice(0, 20)) {
     const tempSlug = `${t.id}` // quick dedup check by tweet ID prefix
-    const exists   = await kvExists(`tweet:seen:${t.id}`)
+    const exists   = await kvExists(`wtgb:tweet:seen:${t.id}`)
     if (!exists) newTweets.push(t)
     if (newTweets.length >= 9) break // max 9 per run (3 batches × 3)
   }
@@ -113,10 +113,10 @@ export async function GET(req: NextRequest) {
       const r = results[j]
       if (r.status === 'fulfilled' && r.value) {
         const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id) }
-        const key = `article:${article.slug}`
+        const key = `wtgb:article:${article.slug}`
         await kvSet(key, article, 60 * 60 * 24 * 60)        // 60d TTL
-        await kvLpush('articles:index', article.slug)         // append to archive index
-        await kvSet(`tweet:seen:${batch[j].id}`, 1, 60 * 60 * 24 * 7) // 7d dedup
+        await kvLpush('wtgb:articles:index', article.slug)         // append to archive index
+        await kvSet(`wtgb:tweet:seen:${batch[j].id}`, 1, 60 * 60 * 24 * 7) // 7d dedup
         stored.push(article)
       }
     }

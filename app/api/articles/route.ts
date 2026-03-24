@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 // articles:index   → string[]   (all slugs ever, newest first)
 // article:{slug}   → Article    (individual article data)
 const KV_LATEST  = 'articles:latest'
-const KV_INDEX   = 'articles:index'
+const KV_INDEX   = 'wtgb:articles:index'
 const KV_TTL     = 60 * 60 * 24 * 60  // 60 days per article
 
 // ─── In-process fallback cache (when KV not configured) ──────────────────────
@@ -126,7 +126,7 @@ export async function GET() {
 
   // 5. Archive each article individually (60d TTL) + update index
   for (const article of articles) {
-    const key = `article:${article.slug}`
+    const key = `wtgb:article:${article.slug}`
     const existing = await kvGet(key)
     if (!existing) {
       await kvSet(key, article, KV_TTL)

@@ -8,14 +8,14 @@ export async function GET() {
     const { kv } = await import('@vercel/kv')
 
     // Get all slugs (newest first, up to 200)
-    const slugs = await kv.lrange<string>('articles:index', 0, 199)
+    const slugs = await kv.lrange<string>('wtgb:articles:index', 0, 199)
     if (!slugs || slugs.length === 0) {
       return NextResponse.json({ articles: [] })
     }
 
     // Fetch all articles in parallel
     const articles = await Promise.all(
-      slugs.map(slug => kv.get<Article>(`article:${slug}`))
+      slugs.map(slug => kv.get<Article>(`wtgb:article:${slug}`))
     )
 
     const valid = articles.filter((a): a is Article => a !== null)

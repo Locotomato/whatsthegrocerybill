@@ -32,7 +32,7 @@ async function getArticle(slug: string): Promise<Article | null> {
   // 1. KV first — instant
   try {
     const { kv } = await import('@vercel/kv')
-    const cached = await kv.get<Article>(`article:${slug}`)
+    const cached = await kv.get<Article>(`wtgb:article:${slug}`)
     if (cached) return cached
   } catch { /* fall through */ }
 
@@ -50,8 +50,8 @@ async function getArticle(slug: string): Promise<Article | null> {
 
   try {
     const { kv } = await import('@vercel/kv')
-    await kv.set(`article:${slug}`, full, { ex: 60 * 60 * 24 * 60 })
-    await kv.lpush('articles:index', slug)
+    await kv.set(`wtgb:article:${slug}`, full, { ex: 60 * 60 * 24 * 60 })
+    await kv.lpush('wtgb:articles:index', slug)
   } catch { /* non-fatal */ }
 
   return full
