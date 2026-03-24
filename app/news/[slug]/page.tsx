@@ -165,13 +165,13 @@ export default async function ArticlePage({ params }: Props) {
   const articleSchema = {
     '@context': 'https://schema.org', '@type': 'NewsArticle',
     headline: article.headline, description: article.subhead,
-    datePublished: new Date(article.source_tweet?.created_at ?? article.generated_at).toISOString(),
-    dateModified: new Date(article.generated_at).toISOString(),
+    datePublished: new Date(article.source_tweet?.created_at ?? article.generated_at ?? Date.now()).toISOString(),
+    dateModified: new Date(article.generated_at ?? Date.now()).toISOString(),
     author: [{ '@type': 'Organization', name: 'wtgbofficial', url: 'https://twitter.com/wtgbofficial' }],
     publisher: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
     url: articleUrl, mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
     keywords: [...(article.tags ?? []), ...(article.geo_tags ?? []).map(s => `${s} Grocery Prices`)].join(', '),
-    about: [{ '@type': 'Thing', name: 'Gasoline prices' }, { '@type': 'Thing', name: 'Oil markets' }],
+    about: [{ '@type': 'Thing', name: 'Grocery prices' }, { '@type': 'Thing', name: 'Food inflation' }],
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', 'h2', '.article-subhead'] },
   }
 
@@ -252,7 +252,7 @@ export default async function ArticlePage({ params }: Props) {
               style={{ color: '#1d9bf0', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
               @wtgbofficial
             </a>
-            <div style={{ fontSize: 12, color: '#475569' }}>{formatDate(article.source_tweet?.created_at ?? new Date(article.generated_at).toISOString())}</div>
+            <div style={{ fontSize: 12, color: '#475569' }}>{formatDate(article.source_tweet?.created_at ?? new Date(article.generated_at ?? Date.now()).toISOString())}</div>
           </div>
           {/* Share on X — byline inline, pushed right */}
           <a
