@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" width="1000" height="200">
+  <!-- Background -->
+  <rect width="1000" height="200" fill="#0b0d14" rx="12"/>
+  
+  <!-- Gas pump icon group -->
+  <g transform="translate(32, 30)">
+    <!-- Pump body -->
+    <rect x="10" y="40" width="50" height="100" rx="6" fill="#1e2235"/>
+    <rect x="10" y="40" width="50" height="100" rx="6" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <!-- Screen -->
+    <rect x="16" y="50" width="38" height="22" rx="3" fill="#22c55e" opacity="0.15"/>
+    <rect x="16" y="50" width="38" height="22" rx="3" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <!-- Price digits on screen -->
+    <text x="35" y="66" font-family="monospace" font-size="11" font-weight="bold" fill="#22c55e" text-anchor="middle">$3.49</text>
+    <!-- Pump body lower detail -->
+    <rect x="22" y="82" width="26" height="40" rx="3" fill="#161928"/>
+    <!-- Nozzle arm -->
+    <path d="M60 70 Q80 70 80 90 L80 115" stroke="#94a3b8" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- Nozzle -->
+    <rect x="72" y="112" width="16" height="8" rx="3" fill="#94a3b8"/>
+    <!-- Hose curl -->
+    <path d="M80 115 Q85 130 75 130" stroke="#94a3b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- Top of pump -->
+    <rect x="10" y="28" width="50" height="14" rx="4" fill="#22c55e" opacity="0.8"/>
+    <!-- Fuel drop accent -->
+    <circle cx="35" cy="35" r="3" fill="#0b0d14"/>
+    <text x="35" y="38" font-family="sans-serif" font-size="8" fill="#0b0d14" text-anchor="middle" font-weight="bold">⛽</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="155" y="95" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="46" font-weight="900" fill="#ffffff" letter-spacing="-1">What's the Price</text>
+  <text x="155" y="148" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="46" font-weight="900" fill="#ffffff" letter-spacing="-1">of <tspan fill="#22c55e">Gas</tspan><tspan fill="#ffffff">?</tspan></text>
+
+  <!-- Domain pill -->
+  <rect x="155" y="162" width="280" height="24" rx="12" fill="#22c55e" opacity="0.12"/>
+  <text x="295" y="179" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#22c55e" text-anchor="middle" letter-spacing="0.5">whatsthepriceofgas.com</text>
+
+  <!-- Decorative price tags on right -->
+  <g transform="translate(740, 40)" opacity="0.6">
+    <rect x="0" y="0" width="90" height="32" rx="6" fill="#1a2a1a"/>
+    <text x="45" y="21" font-family="monospace" font-size="16" font-weight="bold" fill="#22c55e" text-anchor="middle">▲ $3.89</text>
+  </g>
+  <g transform="translate(850, 40)" opacity="0.6">
+    <rect x="0" y="0" width="90" height="32" rx="6" fill="#2a1a1a"/>
+    <text x="45" y="21" font-family="monospace" font-size="16" font-weight="bold" fill="#ef4444" text-anchor="middle">▼ $3.12</text>
+  </g>
+  <g transform="translate(795, 86)" opacity="0.5">
+    <rect x="0" y="0" width="90" height="32" rx="6" fill="#1a1e2a"/>
+    <text x="45" y="21" font-family="monospace" font-size="16" font-weight="bold" fill="#1d9bf0" text-anchor="middle">⊘ $3.49</text>
+  </g>
+  <!-- US national avg label -->
+  <text x="840" y="145" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="#4a5568" text-anchor="middle">NATIONAL AVG TODAY</text>
+</svg>
