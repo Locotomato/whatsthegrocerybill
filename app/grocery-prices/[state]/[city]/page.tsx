@@ -10,6 +10,7 @@ const STATE_NAMES: Record<string, string> = Object.fromEntries(
 )
 const STATE_ABBRS = STATE_ABBR
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // refresh prices every hour
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 }
 
 // Static params for all ~400 city pages
-export async function generateStaticParams() {
+export async function generateStaticParamsDisabled() {
   const params: { state: string; city: string }[] = []
   for (const [stateSlug, cities] of Object.entries(STATE_CITIES)) {
     for (const city of cities) {

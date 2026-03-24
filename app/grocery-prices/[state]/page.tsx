@@ -86,7 +86,7 @@ async function getStateData(abbr: string) {
   } catch { return null }
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParamsDisabled() {
   return ALL_STATE_SLUGS.map(s => ({ state: s }))
 }
 
