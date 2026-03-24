@@ -41,8 +41,8 @@ export async function getArticleVideo(
   const apiKey = process.env.YOUTUBE_API_KEY
   if (!apiKey) return null
 
-  // Check cache first
-  const cached = await kvGet<YouTubeVideo>(`youtube:${slug}`)
+  // Check cache first (wtgb: prefix to avoid KV collision with WTPOG)
+  const cached = await kvGet<YouTubeVideo>(`wtgb:youtube:${slug}`)
   if (cached) return cached
 
   // Build search query — headline + Grocery Prices context
@@ -83,7 +83,7 @@ export async function getArticleVideo(
     }
 
     // Cache it
-    await kvSet(`youtube:${slug}`, video, KV_TTL)
+    await kvSet(`wtgb:youtube:${slug}`, video, KV_TTL)
     return video
 
   } catch (e) {
