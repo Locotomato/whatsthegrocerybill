@@ -22,7 +22,8 @@ export interface Article {
     url: string
     created_at: string
   } | null
-  generated_at: number
+  generated_at?: number
+  created_at?: string
 }
 
 export function toSlug(headline: string, tweetId: string): string {

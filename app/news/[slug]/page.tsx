@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.headline, description: article.subhead, url,
       siteName: "What's the Grocery Bill?", type: 'article',
-      publishedTime: new Date(article.source_tweet?.created_at ?? article.generated_at).toISOString(),
+      publishedTime: new Date(article.source_tweet?.created_at ?? article.created_at ?? article.generated_at ?? Date.now()).toISOString(),
       authors: ['https://twitter.com/wtgbofficial'], tags: article.tags,
     },
     twitter: {
