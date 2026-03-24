@@ -146,32 +146,16 @@ export async function GET(req: NextRequest) {
     } catch (e) { console.error('[generate] IndexNow failed:', e) }
   }
 
-  // 6. Tweet each article — stagger 8s to stay under 50/day Twitter limit
-  const tweeted: { headline: string; tweet_id: string; direction: string }[] = []
+  // 6. Queue articles for daily tweet — generate is SEO-only, tweet cron handles distribution
   for (const article of stored) {
-    try {
-      const tweetText = buildArticleTweet(article.headline, article.slug, article.tags ?? [])
-      const result    = await postTweetV2(tweetText)
-      if (result.id) {
-        const match = newTweets.find((t: typeof newTweets[number]) => t.id === article.id)
-        const direction = (match?.score ?? 0) > 0 ? 'rising' : 'falling'
-        tweeted.push({ headline: article.headline, tweet_id: result.id, direction })
-      } else {
-        console.error('[generate] tweet failed:', result.error)
-      }
-      if (stored.indexOf(article) < stored.length - 1) {
-        await new Promise(r => setTimeout(r, 8000))
-      }
-    } catch (e) { console.error('[generate] tweet error:', e) }
+    // Already stored in wtgb:articles:index — tweet cron picks best one daily
   }
 
   return NextResponse.json({
     ok: true,
     stored: stored.length,
-    tweeted: tweeted.length,
     skipped: newTweets.length - stored.length,
     directions: newTweets.slice(0, stored.length).map((t: typeof newTweets[number]) => t.score > 0 ? 'rising' : 'falling'),
     headlines: stored.map(a => a.headline),
-    tweets: tweeted,
   })
 }
