@@ -28,7 +28,7 @@ export default function ArticleSection() {
   useEffect(() => {
     fetch('/api/articles')
       .then(r => r.json())
-      .then(d => { setArticles(d.articles ?? []); setLoading(false) })
+      .then(d => { setArticles((d.articles ?? []).filter((a: Article) => a?.source_tweet?.created_at)); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
@@ -87,7 +87,7 @@ export default function ArticleSection() {
                   }}>{tag}</span>
                 ))}
                 <span style={{ fontSize: 11, color: '#475569', marginLeft: 'auto' }}>
-                  {timeAgo(a.source_tweet.created_at)}
+                  {a.source_tweet?.created_at ? timeAgo(a.source_tweet.created_at) : ''}
                 </span>
               </div>
 
