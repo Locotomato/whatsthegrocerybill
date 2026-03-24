@@ -274,7 +274,7 @@ export function buildArticleTweet(
     .filter(h => h.length > 1 && h.length <= 20)
     .join(' ')
 
-  const fixed   = '#GasPrices #OilMarket'
+  const fixed   = '#GroceryPrices #GroceryInflation'
   const allTags = [hashtags, fixed].filter(Boolean).join(' ')
 
   const budget = 280 - 1 - url.length - 1 - allTags.length - 2
@@ -337,11 +337,11 @@ export async function getFollowingV2(
 type ContentType = 'guide' | 'state' | 'city' | 'club' | 'page'
 
 const CONTENT_HASHTAGS: Record<ContentType, string[]> = {
-  guide:  ['#GasPrices', '#GasMoney', '#EnergyPolicy'],
-  state:  ['#GasPrices', '#FuelPrices', '#USGas'],
-  city:   ['#GasPrices', '#LocalGas', '#FuelPrices'],
-  club:   ['#GasPrices', '#Costco', '#SamsClub'],
-  page:   ['#GasPrices', '#OilMarket'],
+  guide:  ['#GroceryPrices', '#GroceryBudget', '#FoodInflation'],
+  state:  ['#GroceryPrices', '#FoodPrices', '#CostOfLiving'],
+  city:   ['#GroceryPrices', '#LocalPrices', '#FoodCosts'],
+  club:   ['#GroceryPrices', '#Costco', '#SamsClub'],
+  page:   ['#GroceryPrices', '#GroceryInflation'],
 }
 
 const CONTENT_PREFIXES: Record<ContentType, string[]> = {

@@ -78,7 +78,7 @@ export function buildArticleTweet(
     .join(' ')
 
   // Always include these power hashtags
-  const fixed = '#GasPrices #OilMarket'
+  const fixed = '#GroceryPrices #GroceryInflation'
   const allTags = [hashtags, fixed].filter(Boolean).join(' ')
 
   // Headline truncated to fit: 280 - url(23) - tags - separators
