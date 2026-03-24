@@ -29,7 +29,7 @@ const GUIDES = [
     description: 'How much did gas actually cost under each administration? The full data, year by year, with context on what drove the changes.',
     readTime: '10 min read',
     tag: 'Politics',
-    tagColor: '#ef4444',
+    tagColor: '#16a34a',
   },
   {
     slug: 'why-is-california-gas-so-expensive',
@@ -38,7 +38,7 @@ const GUIDES = [
     description: 'Six overlapping costs push California $1–2 above the national average. Cap-and-trade, LCFS, CARB blends, refinery isolation — here\'s every layer with dollar amounts.',
     readTime: '9 min read',
     tag: 'State Deep Dive',
-    tagColor: '#f97316',
+    tagColor: '#4ade80',
   },
   {
     slug: 'how-to-save-money-on-gas',

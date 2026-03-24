@@ -35,11 +35,11 @@ function NewsEmailBanner() {
           style={{ padding: '12px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', color: '#f1f5f9', fontSize: 15, width: '100%', boxSizing: 'border-box', outline: 'none' }}
         />
         <button type="submit" disabled={status === 'loading'}
-          style={{ padding: '13px 20px', borderRadius: 10, border: 'none', background: status === 'loading' ? '#475569' : '#ef4444', color: '#fff', fontSize: 15, fontWeight: 700, cursor: status === 'loading' ? 'default' : 'pointer', width: '100%' }}>
+          style={{ padding: '13px 20px', borderRadius: 10, border: 'none', background: status === 'loading' ? '#475569' : '#16a34a', color: '#fff', fontSize: 15, fontWeight: 700, cursor: status === 'loading' ? 'default' : 'pointer', width: '100%' }}>
           {status === 'loading' ? 'Signing up…' : 'Get Alerts →'}
         </button>
       </form>
-      {status === 'error' && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>Something went wrong — try again.</div>}
+      {status === 'error' && <div style={{ fontSize: 12, color: '#16a34a', marginTop: 8 }}>Something went wrong — try again.</div>}
     </div>
   )
 }
@@ -77,7 +77,7 @@ export default function NewsArchive() {
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
             <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: '#f8fafc' }}>
               Price Pressure Analysis
             </h1>
@@ -125,7 +125,7 @@ export default function NewsArchive() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
                     <span style={{
                       fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-                      color: '#ef4444', background: 'rgba(239,68,68,0.1)',
+                      color: '#16a34a', background: 'rgba(239,68,68,0.1)',
                       padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase',
                     }}>⬆ Price Pressure</span>
                     {article.tags.slice(0, 2).map(tag => (
@@ -153,7 +153,7 @@ export default function NewsArchive() {
                     margin: 0, fontSize: 14, color: '#64748b', lineHeight: 1.5,
                   }}>{article.subhead}</p>
 
-                  <div style={{ marginTop: 10, fontSize: 13, color: '#ef4444', fontWeight: 600 }}>
+                  <div style={{ marginTop: 10, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>
                     Read full analysis →
                   </div>
                 </div>

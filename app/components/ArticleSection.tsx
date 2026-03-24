@@ -55,27 +55,27 @@ export default function ArticleSection() {
             style={{ textDecoration: 'none' }}
           >
             <article style={{
-              background: i === 0 ? 'rgba(239,68,68,0.06)' : 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(239,68,68,0.15)',
-              borderLeft: '3px solid #ef4444',
+              background: i === 0 ? 'rgba(22,163,74,0.06)' : 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(22,163,74,0.15)',
+              borderLeft: '3px solid #16a34a',
               borderRadius: 12,
               padding: '18px 20px',
               cursor: 'pointer',
               transition: 'background 0.15s, border-color 0.15s',
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.1)'
+              (e.currentTarget as HTMLElement).style.background = 'rgba(22,163,74,0.1)'
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = i === 0
-                ? 'rgba(239,68,68,0.06)' : 'rgba(255,255,255,0.03)'
+                ? 'rgba(22,163,74,0.06)' : 'rgba(255,255,255,0.03)'
             }}
             >
               {/* Tags + time */}
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10, alignItems: 'center' }}>
                 <span style={{
                   fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-                  color: '#ef4444', background: 'rgba(239,68,68,0.12)',
+                  color: '#16a34a', background: 'rgba(22,163,74,0.12)',
                   padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase',
                 }}>⬆ Price Pressure</span>
                 {a.tags.slice(0, 2).map(tag => (
@@ -111,7 +111,7 @@ export default function ArticleSection() {
 
               {/* CTA */}
               <div style={{
-                fontSize: 12, fontWeight: 600, color: '#ef4444',
+                fontSize: 12, fontWeight: 600, color: '#16a34a',
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
                 Read full analysis →
@@ -143,7 +143,7 @@ function SectionHeader() {
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
       <div style={{
         width: 10, height: 10, borderRadius: '50%',
-        background: '#ef4444', boxShadow: '0 0 8px #ef4444',
+        background: '#16a34a', boxShadow: '0 0 8px #16a34a',
         animation: 'pulse 2s infinite', flexShrink: 0,
       }} />
       <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f1f5f9' }}>

@@ -3,8 +3,8 @@ import type { ClubData } from '../../lib/warehouseClubs'
 
 const C = {
   bg: '#0b0d14', card: '#111827', border: 'rgba(255,255,255,0.07)',
-  red: '#ef4444', text: '#f1f5f9', muted: '#64748b', stone: '#94a3b8',
-  green: '#22c55e', orange: '#f97316',
+  red: '#16a34a', text: '#f1f5f9', muted: '#64748b', stone: '#94a3b8',
+  green: '#22c55e', orange: '#4ade80',
 }
 const F = "'Inter', system-ui, sans-serif"
 

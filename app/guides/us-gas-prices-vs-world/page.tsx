@@ -55,8 +55,8 @@ const REGION_COLORS: Record<string, string> = {
   low: '#3b82f6',
   us: '#22c55e',
   mid: '#f59e0b',
-  high: '#f97316',
-  'very-high': '#ef4444',
+  high: '#4ade80',
+  'very-high': '#16a34a',
 }
 
 const REGION_LABELS: Record<string, string> = {
@@ -109,8 +109,8 @@ export default function USGasPricesVsWorld() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 14, marginBottom: 40 }}>
           {[
             { label: '🇺🇸 USA', value: '$3.35', sub: 'National avg, Mar 2025', color: '#22c55e' },
-            { label: '🇩🇪 Germany', value: '$7.05', sub: '2.1× more than US', color: '#f97316' },
-            { label: '🇬🇧 UK', value: '$7.30', sub: '2.2× more than US', color: '#f97316' },
+            { label: '🇩🇪 Germany', value: '$7.05', sub: '2.1× more than US', color: '#4ade80' },
+            { label: '🇬🇧 UK', value: '$7.30', sub: '2.2× more than US', color: '#4ade80' },
             { label: '🇻🇪 Venezuela', value: '$0.02', sub: '99% cheaper than US', color: '#64748b' },
           ].map(c => (
             <div key={c.label} style={{

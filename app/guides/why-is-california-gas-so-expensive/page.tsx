@@ -29,7 +29,7 @@ export default function WhyCaliforniaGasSoExpensive() {
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{
-              fontSize: 11, fontWeight: 700, color: '#f97316',
+              fontSize: 11, fontWeight: 700, color: '#4ade80',
               background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)',
               borderRadius: 20, padding: '2px 10px', textTransform: 'uppercase', letterSpacing: '0.05em',
             }}>State Deep Dive</span>
@@ -58,8 +58,8 @@ export default function WhyCaliforniaGasSoExpensive() {
             Why California Pays ~$1.40 More Than The US Average
           </div>
           {[
-            { label: 'State Excise Tax', extra: '+49.7¢', note: 'vs 18.4¢ nat\'l avg state — net +31¢', color: '#ef4444' },
-            { label: 'Cap-and-Trade Carbon Program', extra: '+15–25¢', note: 'AB 32 / ARB — varies with carbon price', color: '#f97316' },
+            { label: 'State Excise Tax', extra: '+49.7¢', note: 'vs 18.4¢ nat\'l avg state — net +31¢', color: '#16a34a' },
+            { label: 'Cap-and-Trade Carbon Program', extra: '+15–25¢', note: 'AB 32 / ARB — varies with carbon price', color: '#4ade80' },
             { label: 'Low Carbon Fuel Standard (LCFS)', extra: '+40–65¢', note: 'Most significant single adder in 2024–25', color: '#f59e0b' },
             { label: '"California Blend" (CARB Gasoline)', extra: '+10–20¢', note: 'Special summer formula — tighter supply', color: '#22c55e' },
             { label: 'Refinery Isolation Premium', extra: '+5–15¢', note: 'Can\'t import from other US pipelines', color: '#3b82f6' },
@@ -77,7 +77,7 @@ export default function WhyCaliforniaGasSoExpensive() {
           ))}
           <div style={{ marginTop: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: '#94a3b8' }}>Estimated total premium</span>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#ef4444' }}>~$1.00–1.60/gal</span>
+            <span style={{ fontSize: 22, fontWeight: 800, color: '#16a34a' }}>~$1.00–1.60/gal</span>
           </div>
         </div>
 
@@ -269,7 +269,7 @@ export default function WhyCaliforniaGasSoExpensive() {
         <div style={{ marginTop: 32 }}>
           <Link href="/grocery-prices/california" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            fontSize: 14, fontWeight: 600, color: '#f97316', textDecoration: 'none',
+            fontSize: 14, fontWeight: 600, color: '#4ade80', textDecoration: 'none',
             background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)',
             borderRadius: 8, padding: '10px 18px',
           }}>

@@ -71,8 +71,8 @@ const FEDERAL_TAX = 18.4
 const SORTED = [...GAS_TAXES].sort((a, b) => b.tax - a.tax)
 
 function getColor(tax: number) {
-  if (tax >= 60) return '#ef4444'
-  if (tax >= 45) return '#f97316'
+  if (tax >= 60) return '#16a34a'
+  if (tax >= 45) return '#4ade80'
   if (tax >= 35) return '#f59e0b'
   if (tax >= 25) return '#22c55e'
   return '#3b82f6'
@@ -115,7 +115,7 @@ export default function GasTaxByState() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 40 }}>
           {[
             { label: 'Federal Gas Tax', value: '18.4¢', sub: 'Per gallon, unchanged since 1993', color: '#f59e0b' },
-            { label: 'Highest State Tax', value: '77.9¢', sub: 'Pennsylvania', color: '#ef4444' },
+            { label: 'Highest State Tax', value: '77.9¢', sub: 'Pennsylvania', color: '#16a34a' },
             { label: 'Lowest State Tax', value: '8.95¢', sub: 'Alaska', color: '#22c55e' },
             { label: 'National Avg State Tax', value: '~33¢', sub: 'Plus 18.4¢ federal = ~51¢/gal', color: '#3b82f6' },
           ].map(c => (
@@ -209,8 +209,8 @@ export default function GasTaxByState() {
         {/* Legend */}
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 40, fontSize: 12 }}>
           {[
-            { color: '#ef4444', label: '60¢+' },
-            { color: '#f97316', label: '45–59¢' },
+            { color: '#16a34a', label: '60¢+' },
+            { color: '#4ade80', label: '45–59¢' },
             { color: '#f59e0b', label: '35–44¢' },
             { color: '#22c55e', label: '25–34¢' },
             { color: '#3b82f6', label: 'Under 25¢' },

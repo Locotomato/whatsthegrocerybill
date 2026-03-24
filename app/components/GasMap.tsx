@@ -191,7 +191,7 @@ const STATE_TO_NAME: Record<string, string> = {
   VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',
 }
 
-// Green (#16a34a) → Red (#dc2626), dark-theme-friendly saturated shades
+// Green (#16a34a) → Red (#15803d), dark-theme-friendly saturated shades
 function priceToColor(price: number, min: number, max: number): string {
   const t = Math.max(0, Math.min(1, (price - min) / (max - min)))
   // Interpolate RGB: green [22,163,74] → red [220,38,38]

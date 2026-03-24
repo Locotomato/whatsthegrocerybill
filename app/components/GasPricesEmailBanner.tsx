@@ -12,7 +12,7 @@ export default function GasPricesEmailBanner() {
   )
 
   return (
-    <div style={{ marginBottom: 32, padding: '20px', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12 }}>
+    <div style={{ marginBottom: 32, padding: '20px', background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.2)', borderRadius: 12 }}>
       <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9', marginBottom: 4 }}>
         🛒 Get notified when Grocery Prices spike
       </div>
@@ -39,13 +39,13 @@ export default function GasPricesEmailBanner() {
         />
         <button
           type="submit" disabled={status === 'loading'}
-          style={{ padding: '13px 20px', borderRadius: 10, border: 'none', background: status === 'loading' ? '#475569' : '#ef4444', color: '#fff', fontSize: 15, fontWeight: 700, cursor: status === 'loading' ? 'default' : 'pointer', width: '100%' }}
+          style={{ padding: '13px 20px', borderRadius: 10, border: 'none', background: status === 'loading' ? '#475569' : '#16a34a', color: '#fff', fontSize: 15, fontWeight: 700, cursor: status === 'loading' ? 'default' : 'pointer', width: '100%' }}
         >
           {status === 'loading' ? 'Signing up…' : 'Get Alerts →'}
         </button>
       </form>
       {status === 'error' && (
-        <div style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>Something went wrong — try again.</div>
+        <div style={{ fontSize: 12, color: '#16a34a', marginTop: 8 }}>Something went wrong — try again.</div>
       )}
     </div>
   )

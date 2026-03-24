@@ -24,8 +24,8 @@ export default function EmailCapture() {
   return (
     <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 16px 32px' }}>
       <div style={{
-        background: 'linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(239,68,68,0.03) 100%)',
-        border: '1px solid rgba(239,68,68,0.2)',
+        background: 'linear-gradient(135deg, rgba(22,163,74,0.08) 0%, rgba(22,163,74,0.03) 100%)',
+        border: '1px solid rgba(22,163,74,0.2)',
         borderRadius: 16,
         padding: '24px 20px',
       }}>
@@ -74,7 +74,7 @@ export default function EmailCapture() {
                 padding: '12px 20px',
                 borderRadius: 10,
                 border: 'none',
-                background: status === 'loading' ? '#475569' : '#ef4444',
+                background: status === 'loading' ? '#475569' : '#16a34a',
                 color: '#fff',
                 fontSize: 15,
                 fontWeight: 700,
@@ -88,7 +88,7 @@ export default function EmailCapture() {
         )}
 
         {status === 'error' && (
-          <div style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>
+          <div style={{ fontSize: 12, color: '#16a34a', marginTop: 8 }}>
             Something went wrong — try again or follow @wtgbofficial for updates.
           </div>
         )}

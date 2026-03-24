@@ -34,8 +34,8 @@ export default function ArticleEmailCapture({ placement }: Props) {
       <div style={{
         margin: '28px 0',
         padding: '18px 22px',
-        background: 'rgba(239,68,68,0.08)',
-        border: '1px solid rgba(239,68,68,0.2)',
+        background: 'rgba(22,163,74,0.08)',
+        border: '1px solid rgba(22,163,74,0.2)',
         borderRadius: 10,
         display: 'flex', alignItems: 'center', gap: 12,
       }}>
@@ -55,7 +55,7 @@ export default function ArticleEmailCapture({ placement }: Props) {
       background: placement === 'mid' ? 'transparent' : 'rgba(255,255,255,0.02)',
       border: placement === 'mid' ? 'none' : '1px solid rgba(255,255,255,0.07)',
       borderRadius: placement === 'mid' ? 0 : 12,
-      borderLeft: placement === 'mid' ? '3px solid #ef4444' : 'none',
+      borderLeft: placement === 'mid' ? '3px solid #16a34a' : 'none',
       paddingLeft: placement === 'mid' ? '18px' : '22px',
       position: 'relative',
     }}>
@@ -72,7 +72,7 @@ export default function ArticleEmailCapture({ placement }: Props) {
       >×</button>
 
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#ef4444', marginBottom: 3, letterSpacing: '0.03em' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: '#16a34a', marginBottom: 3, letterSpacing: '0.03em' }}>
           🛒 {placement === 'mid' ? 'Get price alerts — free' : 'Don\'t miss the next move'}
         </div>
         <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.4 }}>
@@ -106,7 +106,7 @@ export default function ArticleEmailCapture({ placement }: Props) {
           type="submit"
           disabled={status === 'loading'}
           style={{
-            background: '#ef4444',
+            background: '#16a34a',
             color: '#fff',
             border: 'none',
             borderRadius: 6,

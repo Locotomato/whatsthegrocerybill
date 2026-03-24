@@ -38,9 +38,9 @@ const PRICE_DATA = [
 
 const ADMIN_COLORS = {
   obama: '#3b82f6',
-  trump1: '#ef4444',
+  trump1: '#16a34a',
   biden: '#8b5cf6',
-  trump2: '#f97316',
+  trump2: '#4ade80',
 }
 
 const ADMIN_LABELS = {
@@ -77,8 +77,8 @@ export default function TrumpBidenObamaGasPrices() {
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{
-              fontSize: 11, fontWeight: 700, color: '#ef4444',
-              background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
+              fontSize: 11, fontWeight: 700, color: '#16a34a',
+              background: 'rgba(22,163,74,0.1)', border: '1px solid rgba(22,163,74,0.2)',
               borderRadius: 20, padding: '2px 10px', textTransform: 'uppercase', letterSpacing: '0.05em',
             }}>Politics</span>
             <span style={{ fontSize: 12, color: '#475569' }}>10 min read · EIA data</span>
@@ -248,7 +248,7 @@ export default function TrumpBidenObamaGasPrices() {
             were demanding capital discipline over production growth.
           </p>
           <p>
-            Then in February 2022, Russia invaded Ukraine. In March 2022, gas hit <strong style={{ color: '#ef4444' }}>$4.33/gallon</strong> — 
+            Then in February 2022, Russia invaded Ukraine. In March 2022, gas hit <strong style={{ color: '#16a34a' }}>$4.33/gallon</strong> — 
             the highest nominal price ever recorded at that point. Russia supplies ~10% of global crude and
             20% of European natural gas. Sanctions removed Russian supply from markets; European buyers scrambled
             for alternatives, driving up global prices.

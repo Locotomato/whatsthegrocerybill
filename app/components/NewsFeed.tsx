@@ -13,7 +13,7 @@ interface NewsItem {
 }
 
 const SENTIMENT_CONFIG = {
-  up:      { label: '⬆ Price Pressure', color: '#ef4444', bg: 'rgba(239,68,68,0.12)' },
+  up:      { label: '⬆ Price Pressure', color: '#16a34a', bg: 'rgba(22,163,74,0.12)' },
   down:    { label: '⬇ Price Relief',   color: '#22c55e', bg: 'rgba(34,197,94,0.12)'  },
   neutral: { label: '➡ Watching',       color: '#94a3b8', bg: 'rgba(148,163,184,0.10)'},
 }
@@ -60,8 +60,8 @@ export default function NewsFeed() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
         <div style={{
           width: 10, height: 10, borderRadius: '50%',
-          background: '#ef4444',
-          boxShadow: '0 0 8px #ef4444',
+          background: '#16a34a',
+          boxShadow: '0 0 8px #16a34a',
           animation: 'pulse 2s infinite',
           flexShrink: 0,
         }} />
@@ -130,7 +130,7 @@ export default function NewsFeed() {
         </div>
       )}
       {error && (
-        <div style={{ textAlign: 'center', color: '#ef4444', padding: 40 }}>{error}</div>
+        <div style={{ textAlign: 'center', color: '#16a34a', padding: 40 }}>{error}</div>
       )}
       {!loading && !error && filtered.length === 0 && (
         <div style={{ textAlign: 'center', color: '#64748b', padding: 40 }}>No signals right now.</div>

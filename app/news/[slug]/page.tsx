@@ -213,7 +213,7 @@ export default async function ArticlePage({ params }: Props) {
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
           <span style={{
             fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
-            color: '#ef4444', background: 'rgba(239,68,68,0.12)',
+            color: '#16a34a', background: 'rgba(239,68,68,0.12)',
             padding: '3px 10px', borderRadius: 4, textTransform: 'uppercase',
           }}>⬆ Price Pressure</span>
           {(article.tags ?? []).slice(0, 3).map((tag: string) => (
@@ -294,7 +294,7 @@ export default async function ArticlePage({ params }: Props) {
               {linkedStates.map((state: string) => (
                 <Link key={state} href={`/grocery-prices/${STATE_SLUGS[state.toLowerCase()]}`}
                   style={{
-                    fontSize: 13, color: '#ef4444', textDecoration: 'none', fontWeight: 600,
+                    fontSize: 13, color: '#16a34a', textDecoration: 'none', fontWeight: 600,
                     padding: '4px 12px', background: 'rgba(239,68,68,0.08)',
                     border: '1px solid rgba(239,68,68,0.15)', borderRadius: 20,
                   }}>
