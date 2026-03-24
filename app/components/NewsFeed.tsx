@@ -13,8 +13,8 @@ interface NewsItem {
 }
 
 const SENTIMENT_CONFIG = {
-  up:      { label: '⬆ Price Pressure', color: '#16a34a', bg: 'rgba(22,163,74,0.12)' },
-  down:    { label: '⬇ Price Relief',   color: '#22c55e', bg: 'rgba(34,197,94,0.12)'  },
+  up:      { label: '⬆ Prices Rising',  color: '#16a34a', bg: 'rgba(22,163,74,0.12)' },
+  down:    { label: '⬇ Prices Falling', color: '#22c55e', bg: 'rgba(34,197,94,0.12)'  },
   neutral: { label: '➡ Watching',       color: '#94a3b8', bg: 'rgba(148,163,184,0.10)'},
 }
 
@@ -66,7 +66,7 @@ export default function NewsFeed() {
           flexShrink: 0,
         }} />
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f1f5f9' }}>
-          Market Intelligence Feed
+          Grocery Market Signals
         </h2>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 12, color: '#64748b' }}>updates every 30 min</span>

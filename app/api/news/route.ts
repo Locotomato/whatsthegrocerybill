@@ -7,12 +7,12 @@ const BEARER = process.env.TWITTER_BEARER_TOKEN
 
 // High-precision query — actual price reporting phrases only, no political noise
 // Under 512 chars. No $ signs (break Twitter parser).
-const FULL_QUERY = '"national average" gallon OR "cents per unit" OR "WTI crude" price OR "Brent crude" price OR "oil inventory" weekly OR "OPEC" (production cut OR quota) OR "groceries inventory" OR "refinery outage" OR "retail groceries" -is:retweet lang:en'
+const FULL_QUERY = '"grocery prices" OR "food prices" OR "egg prices" OR "milk prices" OR "meat prices" OR "produce prices" OR "grocery inflation" OR "food inflation" OR "supermarket prices" OR "cost of groceries" -is:retweet lang:en'
 
 const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase',
-  'cut','shortage','disruption','outage','fire','hurricane','storm','crisis']
+  'shortage','disruption','outage','hurricane','storm','crisis','recall','drought']
 const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','lowest','plunge',
-  'surplus','oversupply','deal','agreement','relief','ease','production increase']
+  'surplus','deal','agreement','relief','ease','discount','sale']
 
 function sentiment(text: string): 'up' | 'down' | 'neutral' {
   const t = text.toLowerCase()

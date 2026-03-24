@@ -18,9 +18,9 @@ let _cache: { articles: Article[]; ts: number } | null = null
 const BEARER       = process.env.TWITTER_BEARER_TOKEN
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY
 
-const QUERY = '"national average" gallon OR "cents per unit" OR "WTI crude" price OR "Brent crude" price OR "oil inventory" weekly OR "OPEC" (production cut OR quota) OR "groceries inventory" OR "refinery outage" OR "retail groceries" -is:retweet lang:en'
-const UP_WORDS = ['spike','surge','rise','rising','jump','soar','higher','increase','cut','shortage','disruption','outage','fire','hurricane','storm','crisis']
-const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','lowest','plunge','surplus','relief','ease']
+const QUERY = '"grocery prices" OR "food prices" OR "egg prices" OR "milk prices" OR "meat prices" OR "produce prices" OR "grocery inflation" OR "food inflation" OR "supermarket prices" OR "cost of groceries" -is:retweet lang:en'
+const UP_WORDS = ['spike','surge','rise','rising','jump','soar','higher','increase','shortage','disruption','outage','hurricane','storm','crisis','recall','drought']
+const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','lowest','plunge','surplus','relief','ease','discount','sale']
 
 function isUpSentiment(text: string) {
   const t = text.toLowerCase()

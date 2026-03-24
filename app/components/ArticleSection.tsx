@@ -77,7 +77,7 @@ export default function ArticleSection() {
                   fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
                   color: '#16a34a', background: 'rgba(22,163,74,0.12)',
                   padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase',
-                }}>⬆ Price Pressure</span>
+                }}>🛒 Grocery Prices</span>
                 {a.tags.slice(0, 2).map(tag => (
                   <span key={tag} style={{
                     fontSize: 10, color: '#64748b',
@@ -147,7 +147,7 @@ function SectionHeader() {
         animation: 'pulse 2s infinite', flexShrink: 0,
       }} />
       <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f1f5f9' }}>
-        Price Pressure Analysis
+        Grocery Price Trends
       </h2>
       <a
         href="https://twitter.com/wtgbofficial"
