@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 // articles:latest  → Article[]  (latest 3, for homepage)
 // articles:index   → string[]   (all slugs ever, newest first)
 // article:{slug}   → Article    (individual article data)
-const KV_LATEST  = 'articles:latest'
+const KV_LATEST  = 'wtgb:articles:latest'
 const KV_INDEX   = 'wtgb:articles:index'
 const KV_TTL     = 60 * 60 * 24 * 60  // 60 days per article
 

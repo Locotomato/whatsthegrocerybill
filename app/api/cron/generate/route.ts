@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
 
   // 4. Update articles:latest with the 3 freshest stored articles
   if (stored.length > 0) {
-    await kvSet('articles:latest', stored.slice(0, 3), 60 * 60 * 2) // 2h homepage TTL
+    await kvSet('wtgb:articles:latest', stored.slice(0, 3), 60 * 60 * 2) // 2h homepage TTL
   }
 
   // 5. IndexNow — ping Bing/DDG/Yandex for instant indexing of new articles

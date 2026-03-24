@@ -146,11 +146,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-            gap: 12,
-          }}>
+          <div className="price-grid">
             {groceryItems.map((item) => {
               const hasYoy = item.yoyPct != null && item.yoyUp != null
               const yoyLabel = hasYoy
