@@ -35,9 +35,16 @@ async function kvSet(key: string, value: unknown, ttl: number) {
   } catch { /* no-op if KV unavailable */ }
 }
 
-async function fetchBLSPrices(): Promise<Record<string, number>> {
-  const currentYear = new Date().getFullYear().toString()
-  const lastYear    = (new Date().getFullYear() - 1).toString()
+interface BLSResult {
+  prices: Record<string, number>
+  yoy: Record<string, { pct: number; up: boolean }>
+  dataMonth: string // e.g. "February 2026"
+}
+
+async function fetchBLSPrices(): Promise<BLSResult> {
+  const now         = new Date()
+  const currentYear = now.getFullYear().toString()
+  const lastYear    = (now.getFullYear() - 1).toString()
 
   const res = await fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
     method: 'POST',
@@ -54,20 +61,42 @@ async function fetchBLSPrices(): Promise<Record<string, number>> {
   const data = await res.json()
 
   const prices: Record<string, number> = {}
+  const yoy: Record<string, { pct: number; up: boolean }> = {}
+  let dataMonth = ''
 
   for (const series of data.Results?.series ?? []) {
     const seriesId = series.seriesID
-    // Get the most recent data point
     const sorted = (series.data ?? []).sort((a: { year: string; period: string }, b: { year: string; period: string }) => {
       if (a.year !== b.year) return parseInt(b.year) - parseInt(a.year)
       return parseInt(b.period.replace('M', '')) - parseInt(a.period.replace('M', ''))
     })
-    if (sorted.length > 0) {
-      prices[seriesId] = parseFloat(sorted[0].value)
+    if (sorted.length === 0) continue
+
+    const latest = sorted[0]
+    const latestPrice = parseFloat(latest.value)
+    prices[seriesId] = latestPrice
+
+    // Build human-readable month label from most recent data point
+    if (!dataMonth) {
+      const monthNum = parseInt(latest.period.replace('M', ''))
+      const monthName = new Date(parseInt(latest.year), monthNum - 1, 1)
+        .toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      dataMonth = monthName
+    }
+
+    // Find same month one year prior for real YoY
+    const priorYearStr = (parseInt(latest.year) - 1).toString()
+    const priorMonthData = sorted.find(
+      (d: { year: string; period: string }) => d.year === priorYearStr && d.period === latest.period
+    )
+    if (priorMonthData) {
+      const priorPrice = parseFloat(priorMonthData.value)
+      const pct = priorPrice > 0 ? ((latestPrice - priorPrice) / priorPrice) * 100 : 0
+      yoy[seriesId] = { pct: Math.round(pct * 10) / 10, up: pct > 0 }
     }
   }
 
-  return prices
+  return { prices, yoy, dataMonth }
 }
 
 export async function GET() {
@@ -78,25 +107,29 @@ export async function GET() {
   }
 
   try {
-    const prices = await fetchBLSPrices()
+    const { prices, yoy, dataMonth } = await fetchBLSPrices()
 
-    // Build response items
+    // Build response items with real YoY baked in
     const items = SERIES_IDS.map(id => {
-      const meta  = BLS_SERIES[id]
-      const price = prices[id]
+      const meta     = BLS_SERIES[id]
+      const price    = prices[id]
+      const yoyData  = yoy[id]
       return {
         id,
-        emoji: meta.emoji,
-        name:  meta.name,
-        unit:  meta.unit,
-        price: price ? `$${price.toFixed(2)}` : null,
+        emoji:    meta.emoji,
+        name:     meta.name,
+        unit:     meta.unit,
+        price:    price ? `$${price.toFixed(2)}` : null,
         priceRaw: price ?? null,
+        yoyPct:   yoyData ? yoyData.pct : null,
+        yoyUp:    yoyData ? yoyData.up  : null,
       }
     }).filter(item => item.priceRaw !== null)
 
     const payload = {
       items,
-      source:    'BLS CPI',
+      source:    'BLS Avg Retail Price',
+      dataMonth,
       updatedAt: new Date().toISOString(),
       cached:    false,
     }
@@ -105,17 +138,18 @@ export async function GET() {
     return NextResponse.json(payload)
   } catch (err) {
     console.error('[grocery-prices] BLS fetch failed:', err)
-    // Return hardcoded fallback
+    // Return hardcoded fallback with realistic current prices
     return NextResponse.json({
       items: [
-        { id: 'APU0000708111', emoji: '🥚', name: 'Eggs (doz)',       unit: '/doz', price: '$4.82', priceRaw: 4.82 },
-        { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94 },
-        { id: 'APU0000702111', emoji: '🍞', name: 'Bread (loaf)',     unit: '/lb',  price: '$3.98', priceRaw: 3.98 },
-        { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43 },
-        { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11 },
-        { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11 },
+        { id: 'APU0000708111', emoji: '🥚', name: 'Eggs (doz)',       unit: '/doz', price: '$4.82', priceRaw: 4.82, yoyPct: 61,  yoyUp: true  },
+        { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94, yoyPct: 3,   yoyUp: true  },
+        { id: 'APU0000702111', emoji: '🍞', name: 'Bread (lb)',       unit: '/lb',  price: '$1.98', priceRaw: 1.98, yoyPct: 5,   yoyUp: true  },
+        { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43, yoyPct: 8,   yoyUp: true  },
+        { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11, yoyPct: -1,  yoyUp: false },
+        { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11, yoyPct: 15,  yoyUp: true  },
       ],
       source:    'fallback',
+      dataMonth: '',
       updatedAt: new Date().toISOString(),
       cached:    false,
     })

@@ -10,39 +10,41 @@ interface GroceryItem {
   unit: string
   price: string | null
   priceRaw: number | null
+  yoyPct: number | null
+  yoyUp: boolean | null
 }
 
-// Year-over-year change estimates (BLS doesn't provide % change directly)
-const YOY_CHANGE: Record<string, { change: string; up: boolean }> = {
-  APU0000708111: { change: '+12%', up: true  }, // eggs
-  APU0000709112: { change: '+3%',  up: true  }, // milk
-  APU0000702111: { change: '+5%',  up: true  }, // bread
-  APU0000703112: { change: '+8%',  up: true  }, // ground beef
-  APU0000706111: { change: '-1%',  up: false }, // chicken
-  APU0000714111: { change: '+15%', up: true  }, // butter
+interface GroceryPricesPayload {
+  items: GroceryItem[]
+  dataMonth: string
+  source: string
 }
 
-async function getGroceryPrices(): Promise<GroceryItem[]> {
+async function getGroceryPrices(): Promise<GroceryPricesPayload> {
   try {
     const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whatsthegrocerybill.com'
     const res  = await fetch(`${base}/api/grocery-prices`, { next: { revalidate: 3600 } })
     if (!res.ok) throw new Error('API error')
     const data = await res.json()
-    return data.items ?? []
+    return { items: data.items ?? [], dataMonth: data.dataMonth ?? '', source: data.source ?? 'BLS' }
   } catch {
-    return [
-      { id: 'APU0000708111', emoji: '🥚', name: 'Eggs (doz)',       unit: '/doz', price: '$4.82', priceRaw: 4.82 },
-      { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94 },
-      { id: 'APU0000702111', emoji: '🍞', name: 'Bread (loaf)',     unit: '/lb',  price: '$3.98', priceRaw: 3.98 },
-      { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43 },
-      { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11 },
-      { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11 },
-    ]
+    return {
+      items: [
+        { id: 'APU0000708111', emoji: '🥚', name: 'Eggs (doz)',       unit: '/doz', price: '$4.82', priceRaw: 4.82, yoyPct: 61,  yoyUp: true  },
+        { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94, yoyPct: 3,   yoyUp: true  },
+        { id: 'APU0000702111', emoji: '🍞', name: 'Bread (lb)',       unit: '/lb',  price: '$1.98', priceRaw: 1.98, yoyPct: 5,   yoyUp: true  },
+        { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43, yoyPct: 8,   yoyUp: true  },
+        { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11, yoyPct: -1,  yoyUp: false },
+        { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11, yoyPct: 15,  yoyUp: true  },
+      ],
+      dataMonth: '',
+      source: 'fallback',
+    }
   }
 }
 
 export default async function Home() {
-  const groceryItems = await getGroceryPrices()
+  const { items: groceryItems, dataMonth, source } = await getGroceryPrices()
   return (
     <main className="min-h-screen text-white" style={{ background: '#0c1409' }}>
       <div className="max-w-6xl mx-auto px-4 pt-6 pb-8">
@@ -133,7 +135,7 @@ export default async function Home() {
                 National Averages
               </div>
               <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
-                BLS CPI data · Updated monthly
+                BLS Avg Retail Price{dataMonth ? ` · ${dataMonth}` : ''} · Varies by store &amp; region
               </div>
             </div>
             <Link href="/grocery-prices" style={{
@@ -150,7 +152,10 @@ export default async function Home() {
             gap: 12,
           }}>
             {groceryItems.map((item) => {
-              const yoy = YOY_CHANGE[item.id] ?? { change: 'N/A', up: true }
+              const hasYoy = item.yoyPct !== null && item.yoyUp !== null
+              const yoyLabel = hasYoy
+                ? `${item.yoyUp ? '+' : ''}${item.yoyPct!.toFixed(1)}% vs last year`
+                : null
               return (
                 <div key={item.id} style={{
                   background: 'rgba(255,255,255,0.03)',
@@ -163,12 +168,14 @@ export default async function Home() {
                   <div style={{ fontSize: 18, fontWeight: 800, color: '#f0fdf4', marginBottom: 3 }}>
                     {item.price ?? '—'}
                   </div>
-                  <div style={{
-                    fontSize: 11, fontWeight: 600,
-                    color: yoy.up ? '#f87171' : '#4ade80',
-                  }}>
-                    {yoy.change} vs last year
-                  </div>
+                  {yoyLabel && (
+                    <div style={{
+                      fontSize: 11, fontWeight: 600,
+                      color: item.yoyUp ? '#f87171' : '#4ade80',
+                    }}>
+                      {yoyLabel}
+                    </div>
+                  )}
                 </div>
               )
             })}
