@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0c1409" rx="40"/>
+
+  <!-- Shopping cart icon -->
+  <g transform="translate(200, 155)">
+    <!-- Cart body -->
+    <path d="M-70 -40 L-55 -40 L-30 45 L55 45 L70 -20 L-40 -20"
+          fill="none" stroke="#4ade80" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Cart handle -->
+    <line x1="-70" y1="-40" x2="-90" y2="-70" stroke="#4ade80" stroke-width="14" stroke-linecap="round"/>
+    <!-- Wheels -->
+    <circle cx="-15" cy="62" r="10" fill="#4ade80"/>
+    <circle cx="45" cy="62" r="10" fill="#4ade80"/>
+    <!-- Dollar sign inside cart -->
+    <text x="12" y="22" font-family="Arial Black, sans-serif" font-size="38" font-weight="900"
+          fill="#4ade80" text-anchor="middle">$</text>
+  </g>
+
+  <!-- WTGB text -->
+  <text x="200" y="295" font-family="Arial Black, Helvetica Neue, sans-serif"
+        font-size="48" font-weight="900" fill="#4ade80" text-anchor="middle" letter-spacing="3">WTGB</text>
+
+  <!-- Tagline -->
+  <text x="200" y="335" font-family="Arial, Helvetica Neue, sans-serif"
+        font-size="16" font-weight="400" fill="#6b7280" text-anchor="middle" letter-spacing="1">WHATS THE GROCERY BILL</text>
+</svg>
