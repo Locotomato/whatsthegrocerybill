@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.headline, description: article.subhead, url,
       siteName: "What's the Grocery Bill?", type: 'article',
-      publishedTime: new Date(article.source_tweet.created_at).toISOString(),
+      publishedTime: new Date(article.source_tweet?.created_at ?? article.generated_at).toISOString(),
       authors: ['https://twitter.com/wtgbofficial'], tags: article.tags,
     },
     twitter: {
@@ -165,7 +165,7 @@ export default async function ArticlePage({ params }: Props) {
   const articleSchema = {
     '@context': 'https://schema.org', '@type': 'NewsArticle',
     headline: article.headline, description: article.subhead,
-    datePublished: new Date(article.source_tweet.created_at).toISOString(),
+    datePublished: new Date(article.source_tweet?.created_at ?? article.generated_at).toISOString(),
     dateModified: new Date(article.generated_at).toISOString(),
     author: [{ '@type': 'Organization', name: 'wtgbofficial', url: 'https://twitter.com/wtgbofficial' }],
     publisher: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
@@ -252,7 +252,7 @@ export default async function ArticlePage({ params }: Props) {
               style={{ color: '#1d9bf0', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
               @wtgbofficial
             </a>
-            <div style={{ fontSize: 12, color: '#475569' }}>{formatDate(article.source_tweet.created_at)}</div>
+            <div style={{ fontSize: 12, color: '#475569' }}>{formatDate(article.source_tweet?.created_at ?? new Date(article.generated_at).toISOString())}</div>
           </div>
           {/* Share on X — byline inline, pushed right */}
           <a
@@ -365,7 +365,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        {/* Source tweet */}
+        {/* Source tweet — only shown when article was generated from a tweet */}
+        {article.source_tweet && article.source_tweet.url && (
         <a href={article.source_tweet.url} target="_blank" rel="noopener noreferrer" style={{
           display: 'block', marginTop: 40, padding: '16px 18px',
           background: 'rgba(255,255,255,0.03)',
@@ -380,6 +381,7 @@ export default async function ArticlePage({ params }: Props) {
           <p style={{ margin: 0, fontSize: 14, color: '#94a3b8', lineHeight: 1.6 }}>{article.source_tweet.text}</p>
           <div style={{ fontSize: 12, color: '#1d9bf0', marginTop: 10, fontWeight: 600 }}>View on X →</div>
         </a>
+        )}
 
         {/* Follow CTA — prominent, above share buttons */}
         <div style={{

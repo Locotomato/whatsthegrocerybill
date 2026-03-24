@@ -14,14 +14,14 @@ export interface Article {
   faqs?: FAQ[]
   tags: string[]
   geo_tags?: string[] // US state names for geo SEO
-  source_tweet: {
+  source_tweet?: {
     id: string
     text: string
     author: string
     username: string
     url: string
     created_at: string
-  }
+  } | null
   generated_at: number
 }
 

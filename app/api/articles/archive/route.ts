@@ -18,7 +18,7 @@ export async function GET() {
       slugs.map(slug => kv.get<Article>(`wtgb:article:${slug}`))
     )
 
-    const valid = articles.filter((a): a is Article => a !== null && typeof a === 'object' && !!a.headline && !!a.created_at)
+    const valid = articles.filter((a): a is Article => a !== null && typeof a === 'object' && !!a.headline)
     return NextResponse.json({ articles: valid })
   } catch (e) {
     console.error('[archive] KV error:', e)
