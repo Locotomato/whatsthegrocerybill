@@ -2,19 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateArticle, toSlug, type Article } from '../../../../lib/articleUtils'
 import { postTweetV2, buildArticleTweet } from '../../../../lib/twitterOAuth2'
 
-export const dynamic = 'force-dynamic'
-export const maxDuration = 300 // Vercel Pro: 300s max
+export const dynamic     = 'force-dynamic'
+export const maxDuration = 300
 
-const BEARER       = process.env.TWITTER_BEARER_TOKEN
-const ANTHROPIC    = process.env.ANTHROPIC_API_KEY
-const CRON_SECRET  = process.env.CRON_SECRET
+const BEARER      = process.env.TWITTER_BEARER_TOKEN
+const ANTHROPIC   = process.env.ANTHROPIC_API_KEY
+const CRON_SECRET = process.env.CRON_SECRET
 
+const QUERY = '(grocery prices OR egg prices OR food prices OR grocery inflation OR "cost of groceries" OR "grocery bill" OR milk prices OR beef prices OR chicken prices OR bread prices) (rising OR up OR down OR high OR record OR surge OR drop OR inflation OR tariff OR cheaper OR falling OR lower OR relief OR expensive) -is:retweet lang:en'
 
+const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase','shortage',
+                    'disruption','crisis','record','expensive','inflation','tariff','tax','worst','all-time']
+const DOWN_WORDS = ['drop','fall','falling','decline','lower','decrease','cheap','cheapest','plunge',
+                    'relief','ease','sale','discount','savings','cheaper','down','affordable']
 
-const QUERY = '(grocery prices OR egg prices OR food prices OR grocery inflation OR "cost of groceries" OR "grocery bill" OR milk prices OR beef prices OR chicken prices OR bread prices) (rising OR up OR down OR high OR record OR surge OR drop OR inflation OR tariff OR cheaper) -is:retweet lang:en'
-const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase','shortage','disruption','crisis','record','expensive','inflation','tariff','tax']
-const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','cheapest','plunge','relief','ease','sale','discount','savings']
-
+/** Positive score = rising pressure. Negative score = falling pressure. */
 function sentimentScore(text: string): number {
   const t = text.toLowerCase()
   const up   = UP_WORDS.filter(w => t.includes(w)).length
@@ -22,7 +24,7 @@ function sentimentScore(text: string): number {
   return up - down
 }
 
-async function fetchAllPressureTweets() {
+async function fetchSignalTweets() {
   if (!BEARER) return []
   const params = new URLSearchParams({
     query: QUERY, max_results: '100',
@@ -40,15 +42,16 @@ async function fetchAllPressureTweets() {
   return (json.data ?? [])
     .map((t: any) => ({
       id: t.id, text: t.text,
-      author: users[t.author_id]?.name ?? 'Unknown',
-      username: users[t.author_id]?.username ?? 'unknown',
+      author:    users[t.author_id]?.name     ?? 'Unknown',
+      username:  users[t.author_id]?.username ?? 'unknown',
       created_at: t.created_at,
       score: sentimentScore(t.text),
     }))
-    .filter((t: any) => t.score > 0)
-    .sort((a: any, b: any) => b.score - a.score)
+    .filter((t: any) => t.score !== 0)           // must have a clear direction
+    .sort((a: any, b: any) => Math.abs(b.score) - Math.abs(a.score)) // strongest signal first
 }
 
+// ─── KV helpers ───────────────────────────────────────────────────────────────
 async function kvSet(key: string, value: unknown, ex?: number) {
   try {
     const { kv } = await import('@vercel/kv')
@@ -56,83 +59,71 @@ async function kvSet(key: string, value: unknown, ex?: number) {
     else    await kv.set(key, value)
   } catch (e) { console.error('[generate] kv.set failed:', e) }
 }
-
 async function kvExists(key: string): Promise<boolean> {
   try {
     const { kv } = await import('@vercel/kv')
     return (await kv.exists(key)) > 0
   } catch { return false }
 }
-
 async function kvLpush(key: string, value: string) {
-  try {
-    const { kv } = await import('@vercel/kv')
-    await kv.lpush(key, value)
-  } catch {}
+  try { const { kv } = await import('@vercel/kv'); await kv.lpush(key, value) } catch {}
 }
 
+// ─── Main handler ─────────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
-  // Auth check for external cron calls
   const auth = req.headers.get('authorization')
   if (CRON_SECRET && auth !== `Bearer ${CRON_SECRET}`) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
-
   if (!BEARER || !ANTHROPIC) {
     return NextResponse.json({ error: 'missing_config' }, { status: 500 })
   }
 
-  // 1. Fetch up to 100 tweets, ranked by sentiment score
-  const tweets = await fetchAllPressureTweets()
-  if (tweets.length === 0) {
-    return NextResponse.json({ ok: false, note: 'no_pressure_signals' })
+  // 1. Fetch all signal tweets (rising + falling), ranked by abs(score)
+  const allTweets = await fetchSignalTweets()
+  if (allTweets.length === 0) {
+    return NextResponse.json({ ok: false, note: 'no_signals' })
   }
 
-  // 2. Skip tweets already in KV (don't regenerate)
-  const newTweets = []
-  for (const t of tweets.slice(0, 20)) {
-    const tempSlug = `${t.id}` // quick dedup check by tweet ID prefix
-    const exists   = await kvExists(`wtgb:tweet:seen:${t.id}`)
-    if (!exists) newTweets.push(t)
-    if (newTweets.length >= 9) break // max 9 per run (3 batches × 3)
+  // 2. Deduplicate against seen tweets — max 3 new per run
+  const newTweets: typeof allTweets = []
+  for (const t of allTweets.slice(0, 30)) {
+    if (await kvExists(`wtgb:tweet:seen:${t.id}`)) continue
+    newTweets.push(t)
+    if (newTweets.length >= 3) break
   }
 
   if (newTweets.length === 0) {
-    return NextResponse.json({ ok: true, note: 'all_tweets_already_archived', stored: 0 })
+    return NextResponse.json({ ok: true, note: 'all_tweets_already_seen', stored: 0 })
   }
 
-  // 3. Generate articles in batches of 3 (parallel within batch, serial between)
+  // 3. Generate all 3 in parallel
+  const results = await Promise.allSettled(
+    newTweets.map((t: typeof newTweets[number]) => generateArticle(t, ANTHROPIC!, t.score > 0 ? 'rising' : 'falling'))
+  )
+
   const stored: Article[] = []
-  const BATCH = 3
-  for (let i = 0; i < newTweets.length; i += BATCH) {
-    const batch = newTweets.slice(i, i + BATCH)
-    const results = await Promise.allSettled(
-      batch.map(t => generateArticle(t, ANTHROPIC!))
-    )
-    for (let j = 0; j < results.length; j++) {
-      const r = results[j]
-      if (r.status === 'fulfilled' && r.value) {
-        const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id) }
-        const key = `wtgb:article:${article.slug}`
-        await kvSet(key, article, 60 * 60 * 24 * 60)        // 60d TTL
-        await kvLpush('wtgb:articles:index', article.slug)         // append to archive index
-        await kvSet(`wtgb:tweet:seen:${batch[j].id}`, 1, 60 * 60 * 24 * 7) // 7d dedup
-        stored.push(article)
-      }
-    }
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i]
+    if (r.status !== 'fulfilled' || !r.value) continue
+    const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id) }
+    const key = `wtgb:article:${article.slug}`
+    await kvSet(key, article, 60 * 60 * 24 * 60)              // 60d TTL
+    await kvLpush('wtgb:articles:index', article.slug)
+    await kvSet(`wtgb:tweet:seen:${newTweets[i].id}`, 1, 60 * 60 * 24 * 7)
+    stored.push(article)
   }
 
-  // 4. Update articles:latest with the 3 freshest stored articles
+  // 4. Update homepage latest cache (3 freshest)
   if (stored.length > 0) {
-    await kvSet('wtgb:articles:latest', stored.slice(0, 3), 60 * 60 * 2) // 2h homepage TTL
+    await kvSet('wtgb:articles:latest', stored.slice(0, 3), 60 * 60 * 2)
   }
 
-  // 5. IndexNow — ping Bing/DDG/Yandex for instant indexing of new articles
+  // 5. IndexNow — instant indexing on Bing/DDG/Yandex
   if (stored.length > 0) {
     try {
       const INDEXNOW_KEY = '1aad7dfecb3488df56e98b3335b912a3'
       const SITE = 'https://whatsthegrocerybill.com'
-      const urlList = stored.map(a => `${SITE}/news/${a.slug}`)
       await fetch('https://api.indexnow.org/indexnow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -140,43 +131,37 @@ export async function GET(req: NextRequest) {
           host: 'whatsthegrocerybill.com',
           key: INDEXNOW_KEY,
           keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`,
-          urlList,
+          urlList: stored.map(a => `${SITE}/news/${a.slug}`),
         }),
       })
-      console.log(`[generate] IndexNow pinged ${urlList.length} URLs`)
-    } catch (e) {
-      console.error('[generate] IndexNow failed:', e)
-    }
+    } catch (e) { console.error('[generate] IndexNow failed:', e) }
   }
 
-  // 6. Tweet each new article — stagger 8s apart to avoid rate limits
-  const tweeted: { headline: string; tweet_id: string }[] = []
-
+  // 6. Tweet each article — stagger 8s to stay under 50/day Twitter limit
+  const tweeted: { headline: string; tweet_id: string; direction: string }[] = []
   for (const article of stored) {
     try {
       const tweetText = buildArticleTweet(article.headline, article.slug, article.tags ?? [])
       const result    = await postTweetV2(tweetText)
       if (result.id) {
-        tweeted.push({ headline: article.headline, tweet_id: result.id })
-        console.log(`[generate] tweeted ${result.id}: ${article.headline}`)
+        const match = newTweets.find((t: typeof newTweets[number]) => t.id === article.id)
+        const direction = (match?.score ?? 0) > 0 ? 'rising' : 'falling'
+        tweeted.push({ headline: article.headline, tweet_id: result.id, direction })
       } else {
         console.error('[generate] tweet failed:', result.error)
       }
-      // Stagger — Twitter rate limit: 50 posts per 24h on Basic tier
       if (stored.indexOf(article) < stored.length - 1) {
         await new Promise(r => setTimeout(r, 8000))
       }
-    } catch (e) {
-      console.error('[generate] tweet error:', e)
-    }
+    } catch (e) { console.error('[generate] tweet error:', e) }
   }
 
-  console.log(`[generate] stored ${stored.length} articles, tweeted ${tweeted.length}`)
   return NextResponse.json({
     ok: true,
     stored: stored.length,
     tweeted: tweeted.length,
     skipped: newTweets.length - stored.length,
+    directions: newTweets.slice(0, stored.length).map((t: typeof newTweets[number]) => t.score > 0 ? 'rising' : 'falling'),
     headlines: stored.map(a => a.headline),
     tweets: tweeted,
   })

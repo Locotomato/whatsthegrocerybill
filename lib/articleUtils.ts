@@ -73,40 +73,74 @@ export async function fetchTweetById(tweetId: string, bearer: string): Promise<{
 
 export async function generateArticle(
   tweet: { id: string; text: string; author: string; username: string; created_at: string },
-  anthropicKey: string
+  anthropicKey: string,
+  direction: 'rising' | 'falling' = 'rising'
 ): Promise<Omit<Article, 'slug'> | null> {
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
+  const isRising = direction === 'rising'
+
+  // Direction-specific section content
+  const headlineExample = isRising
+    ? 'Egg Prices Hit Record High as Avian Flu Cuts US Supply by 20%'
+    : 'Grocery Prices Drop for Third Week as Supply Chain Pressures Ease'
+
+  const whyItMatters = isRising
+    ? '## Why It Matters for Your Grocery Bill\n[2–3 sentences: connect the signal to what shoppers will see at checkout — which items will cost more, by how much, how fast this hits store shelves. Reference affected US regions if applicable.]'
+    : '## Why It Matters for Your Grocery Bill\n[2–3 sentences: explain what shoppers stand to gain — where savings will show up first, which stores move fastest, and which categories drop most. Reference affected US regions if applicable.]'
+
+  const meansForFamilies = isRising
+    ? '## What This Means for Families\n[2–3 sentences: concrete budget impact — weekly grocery bill change, which staples to swap (store brand, frozen vs fresh, bulk buying), how to offset the increase.]'
+    : '## What This Means for Families\n[2–3 sentences: concrete budget opportunity — where families can save the most, which swaps are now worth reversing (name brand vs store brand), ideal time to restock pantry staples.]'
+
+  const meansForOther = isRising
+    ? '## What This Means for Restaurants and Food Businesses\n[2–3 sentences: how rising ingredient costs flow through to menu prices and margins. Which restaurant categories (fast food, casual dining, school lunch) feel it first.]'
+    : '## What This Means for Restaurants and Food Businesses\n[2–3 sentences: how falling input costs create margin relief. Whether restaurants are likely to pass savings to consumers or absorb them. Which segments benefit most.]'
+
+  const shopperExpect = isRising
+    ? '## What Shoppers Should Expect\n[2–3 sentences: price outlook and timeline for how long this lasts, plus one concrete action — stock up now, delay big purchases, check Aldi/Walmart/Costco for deals.]'
+    : '## What Shoppers Should Expect\n[2–3 sentences: how long the relief may last, what could reverse it, plus one concrete action — best time to buy in bulk, which stores post the lowest prices first.]'
+
+  const faqRising = [
+    { q: 'Why are grocery prices so high right now?', a: '2–3 sentence answer specific to this event.' },
+    { q: 'Which grocery items are most affected by rising prices?', a: '2–3 sentence answer with specific items and price ranges.' },
+    { q: 'How long will grocery prices stay elevated?', a: '2–3 sentence realistic outlook.' },
+  ]
+  const faqFalling = [
+    { q: 'Why are grocery prices dropping right now?', a: '2–3 sentence answer specific to this event.' },
+    { q: 'Which grocery items are getting cheaper first?', a: '2–3 sentence answer with specific items and expected savings.' },
+    { q: 'How long will lower grocery prices last?', a: '2–3 sentence realistic outlook.' },
+  ]
+  const faqTemplate = JSON.stringify(isRising ? faqRising : faqFalling, null, 2)
+
   const prompt = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers.
 
-A market signal just came in. Write a fully SEO-optimized, in-depth article based on this tweet.
+A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article based on this tweet.
 
 TWEET: "${tweet.text}"
 SOURCE: @${tweet.username}
 DATE: ${today}
+DIRECTION: prices ${direction}
 
 Return ONLY valid JSON — no markdown fences, no commentary:
 {
-  "headline": "8–12 word headline with primary keyword near the front. Example: 'Egg Prices Hit Record High as Avian Flu Cuts US Supply by 20%'",
+  "headline": "8–12 word headline with primary keyword near the front. Example: '${headlineExample}'",
   "subhead": "One crisp sentence adding context. Include a price figure or % change if available.",
-  "body": "Full article body using this exact structure — separate sections with \\n\\n:\\n\\n## What's Happening\\n[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]\\n\\n## Why It Matters for Your Grocery Bill\\n[2–3 sentences connecting the supply/demand signal to what shoppers will see at checkout. Mention national average context where relevant. Reference affected US regions if applicable.]\\n\\n## What's Driving This\\n[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, inflation, labor costs. Be specific.]\\n\\n## What Shoppers Should Expect\\n[2–3 sentences with price outlook, how long the trend may last, and a concrete shopper tip — stock up now, buy store brand, check Aldi/Walmart/Costco prices, etc.]",
-  "faqs": [
-    {"q": "Why are grocery prices so high right now?", "a": "2–3 sentence answer specific to this event."},
-    {"q": "Which grocery items are most affected?", "a": "2–3 sentence answer with specific items and price ranges."},
-    {"q": "How long will grocery prices stay elevated?", "a": "2–3 sentence realistic outlook."}
-  ],
+  "body": "Full article body using this exact structure — separate each section with \\n\\n:\\n\\n## What's Happening\\n[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]\\n\\n${whyItMatters}\\n\\n## What's Driving This\\n[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, tariffs, inflation relief, harvest surplus, labor costs. Be specific.]\\n\\n${meansForFamilies}\\n\\n${meansForOther}\\n\\n${shopperExpect}",
+  "faqs": ${faqTemplate},
   "tags": ["5–7 tags: mix of topic tags (Egg Prices, Grocery Inflation, Food Costs) and question-style tags (Why are groceries so expensive, grocery price forecast 2025)"],
   "geo_tags": ["list of US state names most relevant to this story — e.g. California, Texas, Florida"]
 }
 
 Rules:
-- Total body ~500–600 words across all sections
+- Total body ~600–700 words across all sections
 - Track these key grocery categories: eggs, milk, bread, chicken, beef, pork, produce, cereal, cooking oil
 - Use specific numbers when available; if not available, use ranges or context
 - Tone: Consumer Reports meets Main Street — authoritative but friendly and practical
 - Never fabricate prices; hedge with "could", "may", "analysts expect" when uncertain
 - Each section header (##) must stay — they become H2 tags on the page
-- SEO: naturally include phrases like "grocery prices today", "cost of groceries", "average grocery bill" at least once each`
+- SEO: naturally include phrases like "grocery prices today", "cost of groceries", "average grocery bill" at least once each
+- The "What This Means for" sections MUST have concrete, actionable content — not vague filler`
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
