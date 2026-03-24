@@ -11,9 +11,9 @@ const CRON_SECRET  = process.env.CRON_SECRET
 
 
 
-const QUERY = '"national average" gallon OR "cents per unit" OR "WTI crude" price OR "Brent crude" price OR "oil inventory" weekly OR "OPEC" (production cut OR quota) OR "groceries inventory" OR "refinery outage" OR "retail groceries" -is:retweet lang:en'
-const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase','cut','shortage','disruption','outage','fire','hurricane','storm','crisis','rally','tight','squeeze']
-const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','lowest','plunge','surplus','relief','ease','glut','oversupply']
+const QUERY = '(grocery prices OR egg prices OR food prices OR grocery inflation OR "cost of groceries" OR "grocery bill" OR milk prices OR beef prices OR chicken prices OR bread prices) (rising OR up OR down OR high OR record OR surge OR drop OR inflation OR tariff OR cheaper) -is:retweet lang:en'
+const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase','shortage','disruption','crisis','record','expensive','inflation','tariff','tax']
+const DOWN_WORDS = ['drop','fall','decline','lower','decrease','cheap','cheapest','plunge','relief','ease','sale','discount','savings']
 
 function sentimentScore(text: string): number {
   const t = text.toLowerCase()
