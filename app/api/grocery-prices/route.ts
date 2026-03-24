@@ -9,16 +9,17 @@ export const dynamic = 'force-dynamic'
 
 // BLS series IDs for key grocery items
 const BLS_SERIES: Record<string, { name: string; unit: string; emoji: string }> = {
-  APU0000708111: { name: 'Eggs (doz)',      unit: '/doz', emoji: '🥚' },
-  APU0000709112: { name: 'Milk (gal)',      unit: '/gal', emoji: '🥛' },
-  APU0000702111: { name: 'Bread (loaf)',    unit: '/lb',  emoji: '🍞' },
-  APU0000703112: { name: 'Ground Beef (lb)',unit: '/lb',  emoji: '🥩' },
-  APU0000706111: { name: 'Chicken (lb)',    unit: '/lb',  emoji: '🐔' },
-  APU0000714111: { name: 'Butter (lb)',     unit: '/lb',  emoji: '🧈' },
+  APU0000708111: { name: 'Eggs (doz)',       unit: '/doz',  emoji: '🥚' },
+  APU0000709112: { name: 'Milk (gal)',       unit: '/gal',  emoji: '🥛' },
+  APU0000702111: { name: 'Bread (loaf)',     unit: '/lb',   emoji: '🍞' },
+  APU0000703112: { name: 'Ground Beef (lb)', unit: '/lb',   emoji: '🥩' },
+  APU0000706111: { name: 'Chicken (lb)',     unit: '/lb',   emoji: '🐔' },
+  APU0000712111: { name: 'Orange Juice (qt)',unit: '/qt',   emoji: '🍊' },
+  APU0000714111: { name: 'Butter (lb)',      unit: '/lb',   emoji: '🧈' },
 }
 
 const SERIES_IDS = Object.keys(BLS_SERIES)
-const CACHE_KEY  = 'grocery:prices:national'
+const CACHE_KEY  = 'grocery:prices:national:v3'
 const CACHE_TTL  = 60 * 60 * 24 // 24 hours
 
 async function kvGet(key: string): Promise<unknown> {
@@ -44,14 +45,15 @@ interface BLSResult {
 async function fetchBLSPrices(): Promise<BLSResult> {
   const now         = new Date()
   const currentYear = now.getFullYear().toString()
-  const lastYear    = (now.getFullYear() - 1).toString()
+  // Go back 2 years to guarantee prior-year data is available for YoY calc
+  const twoYearsAgo = (now.getFullYear() - 2).toString()
 
   const res = await fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       seriesid: SERIES_IDS,
-      startyear: lastYear,
+      startyear: twoYearsAgo,
       endyear: currentYear,
       registrationkey: process.env.BLS_API_KEY ?? '',
     }),
@@ -145,8 +147,9 @@ export async function GET() {
         { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94, yoyPct: 3,   yoyUp: true  },
         { id: 'APU0000702111', emoji: '🍞', name: 'Bread (lb)',       unit: '/lb',  price: '$1.98', priceRaw: 1.98, yoyPct: 5,   yoyUp: true  },
         { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43, yoyPct: 8,   yoyUp: true  },
-        { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11, yoyPct: -1,  yoyUp: false },
-        { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11, yoyPct: 15,  yoyUp: true  },
+        { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',      unit: '/lb',  price: '$2.11', priceRaw: 2.11, yoyPct: -1,  yoyUp: false },
+        { id: 'APU0000712111', emoji: '🍊', name: 'Orange Juice (qt)', unit: '/qt',  price: '$5.23', priceRaw: 5.23, yoyPct: 22,  yoyUp: true  },
+        { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',       unit: '/lb',  price: '$5.11', priceRaw: 5.11, yoyPct: 15,  yoyUp: true  },
       ],
       source:    'fallback',
       dataMonth: '',

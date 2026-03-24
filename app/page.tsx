@@ -116,9 +116,10 @@ export default async function Home() {
               const pct = hasYoy ? Math.abs(Number(item.yoyPct)).toFixed(0) : null
               return (
                 <div key={item.id} style={{
-                  background: item.yoyUp ? 'var(--red-light)' : '#f0fdf4',
-                  border: `1px solid ${item.yoyUp ? 'var(--red-border)' : '#bbf7d0'}`,
+                  background: !hasYoy ? '#fff' : item.yoyUp ? 'var(--red-light)' : '#f0fdf4',
+                  border: `1px solid ${!hasYoy ? 'var(--border)' : item.yoyUp ? 'var(--red-border)' : '#bbf7d0'}`,
                   borderRadius: 12, padding: '12px 14px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
                     <span style={{ fontSize: 22, lineHeight: 1 }}>{item.emoji}</span>
@@ -132,7 +133,10 @@ export default async function Home() {
                     )}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4, lineHeight: 1.3 }}>{item.name}</div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: item.yoyUp ? 'var(--red)' : 'var(--green)', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                  <div style={{
+                    fontSize: 22, fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1,
+                    color: !hasYoy ? 'var(--text)' : item.yoyUp ? 'var(--red)' : 'var(--green)',
+                  }}>
                     {item.price ?? '—'}
                   </div>
                 </div>
