@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GasPricesEmailBanner from '../../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 
 export const metadata: Metadata = {
   title: 'What Determines Grocery Prices? | What\'s the Grocery Bill?',
@@ -32,7 +32,7 @@ export default function WhatAffectsGroceryPrices() {
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f) => (
@@ -45,7 +45,7 @@ export default function WhatAffectsGroceryPrices() {
           ))}
         </div>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>

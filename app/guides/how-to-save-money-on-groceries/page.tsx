@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GasPricesEmailBanner from '../../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 
 export const metadata: Metadata = {
   title: 'How to Save Money on Groceries in 2025 | What\'s the Grocery Bill?',
@@ -34,7 +34,7 @@ export default function HowToSaveMoneyOnGroceries() {
           The average American family spends <strong style={{ color: '#fbbf24' }}>$1,000–1,500/month</strong> on groceries. With food inflation still elevated, these 8 strategies can cut your bill by 20–30% without spending hours couponing.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32 }}>
           {tips.map((tip) => (
@@ -60,7 +60,7 @@ export default function HowToSaveMoneyOnGroceries() {
           </p>
         </div>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>

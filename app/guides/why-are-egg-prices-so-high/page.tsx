@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GasPricesEmailBanner from '../../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 
 export const metadata: Metadata = {
   title: 'Why Are Egg Prices So High in 2025? | What\'s the Grocery Bill?',
@@ -34,7 +34,7 @@ export default function WhyAreEggPricesSoHigh() {
           The average dozen eggs now costs <strong style={{ color: '#fbbf24' }}>over $4.80</strong> — nearly triple what they cost in 2021. Here's the full breakdown of what's driving record egg prices, which states are hit hardest, and whether relief is coming.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#f0fdf4', marginTop: 36, marginBottom: 12 }}>
           🦠 The Avian Flu Epidemic
@@ -134,7 +134,7 @@ export default function WhyAreEggPricesSoHigh() {
           ))}
         </div>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>

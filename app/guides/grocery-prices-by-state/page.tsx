@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GasPricesEmailBanner from '../../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 
 export const metadata: Metadata = {
   title: 'Grocery Prices by State 2025: Which States Pay Most & Least | What\'s the Grocery Bill?',
@@ -36,7 +36,7 @@ export default function GroceryPricesByState() {
           A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here's how all 50 states compare — and why the gaps are so large.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#f0fdf4', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>
@@ -68,7 +68,7 @@ export default function GroceryPricesByState() {
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>

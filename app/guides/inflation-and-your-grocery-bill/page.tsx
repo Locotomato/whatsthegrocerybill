@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GasPricesEmailBanner from '../../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 
 export const metadata: Metadata = {
   title: 'How Inflation Is Hitting Your Grocery Bill in 2025 | What\'s the Grocery Bill?',
@@ -34,7 +34,7 @@ export default function InflationAndYourGroceryBill() {
           Food prices have risen faster than overall inflation for three consecutive years. The average American family is spending <strong style={{ color: '#fbbf24' }}>$3,000–4,000 more per year</strong> on groceries than they were in 2021. Here's the full breakdown.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#f0fdf4', marginTop: 36, marginBottom: 16 }}>
           Price Changes Since 2021 (BLS Data)
@@ -62,7 +62,7 @@ export default function InflationAndYourGroceryBill() {
           The USDA projects overall food-at-home prices to increase <strong style={{ color: '#fbbf24' }}>2–3% in 2025</strong> — a slowdown from recent years but still above the historical 1.5% average. Eggs remain the wild card; avian flu outbreaks can spike prices 50–100% in weeks.
         </p>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>

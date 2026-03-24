@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import GasPricesEmailBanner from '../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../components/GroceryEmailBanner'
 
 const GUIDES = [
   {
@@ -78,7 +78,7 @@ export default function GuidesPage() {
           </p>
         </div>
 
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, marginTop: 28 }}>
           {GUIDES.map((guide) => (

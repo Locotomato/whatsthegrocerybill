@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ALL_STATE_SLUGS, STATE_ABBR, toTitleCase } from '../../lib/stateData'
-import GasPricesEmailBanner from '../components/GasPricesEmailBanner'
+import GroceryEmailBanner from '../components/GroceryEmailBanner'
 
 export const revalidate = 3600
 
@@ -106,7 +106,7 @@ export default async function GasPricesIndex() {
         )}
 
         {/* Email CTA — after price cards, high intent */}
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
 
         {/* States by region */}
         {Object.entries(REGION_ORDER).map(([region, slugs]) => (
@@ -184,7 +184,7 @@ export default async function GasPricesIndex() {
         </div>
 
         {/* Email CTA — after brands */}
-        <GasPricesEmailBanner />
+        <GroceryEmailBanner />
       </div>
     </main>
   )

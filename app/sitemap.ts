@@ -23,22 +23,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE, lastModified: now, changeFrequency: 'hourly', priority: 1 },
     { url: `${BASE}/news`, lastModified: now, changeFrequency: 'hourly', priority: 0.9 },
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
-    { url: `${BASE}/guides/what-determines-gas-prices`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/guides/gas-tax-by-state`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/guides/trump-biden-obama-gas-prices`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/guides/why-is-california-gas-so-expensive`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/guides/how-to-save-money-on-gas`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/guides/us-gas-prices-vs-world`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/why-are-egg-prices-so-high`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/how-to-save-money-on-groceries`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/cheapest-grocery-stores-compared`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/inflation-and-your-grocery-bill`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/grocery-prices-by-state`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/guides/what-affects-grocery-prices`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/grocery-prices/sams-club`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
     { url: `${BASE}/grocery-prices/costco`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
     { url: `${BASE}/grocery-prices/bjs`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
-    { url: `${BASE}/grocery-prices/murphys`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
-    { url: `${BASE}/grocery-prices/wawa`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
-    { url: `${BASE}/grocery-prices/sheetz`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
+    
+    
+    
     { url: `${BASE}/grocery-prices/walmart`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
-    { url: `${BASE}/grocery-prices/bucees`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
+    
     { url: `${BASE}/grocery-prices/kroger`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
-    { url: `${BASE}/grocery-prices/circle-k`, lastModified: now, changeFrequency: 'daily', priority: 0.85 },
+    
   ]
 
   // State pages
@@ -79,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Warehouse club state pages (~215 pages)
   const clubStatePages: MetadataRoute.Sitemap = []
-  const brands = ['sams-club', 'costco', 'bjs', 'murphys', 'wawa', 'sheetz', 'walmart', 'bucees', 'kroger', 'circle-k']
+  const brands = ['sams-club', 'costco', 'bjs', 'walmart', 'kroger']
   for (const brand of brands) {
     for (const stateSlug of (BRAND_STATES[brand] ?? [])) {
       clubStatePages.push({
