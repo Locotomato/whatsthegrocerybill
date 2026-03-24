@@ -152,9 +152,9 @@ export default async function Home() {
             gap: 12,
           }}>
             {groceryItems.map((item) => {
-              const hasYoy = item.yoyPct !== null && item.yoyUp !== null
+              const hasYoy = item.yoyPct != null && item.yoyUp != null
               const yoyLabel = hasYoy
-                ? `${item.yoyUp ? '+' : ''}${item.yoyPct!.toFixed(1)}% vs last year`
+                ? `${item.yoyUp ? '+' : ''}${Number(item.yoyPct).toFixed(1)}% vs last year`
                 : null
               return (
                 <div key={item.id} style={{
