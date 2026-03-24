@@ -3,17 +3,46 @@ import ArticleSection from './components/ArticleSection'
 import EmailCapture from './components/EmailCapture'
 import NewsFeed from './components/NewsFeed'
 
-// Key grocery items with BLS-tracked averages (updated weekly)
-const GROCERY_ITEMS = [
-  { emoji: '🥚', name: 'Eggs (doz)', avg: '$4.82', change: '+12%', up: true },
-  { emoji: '🥛', name: 'Milk (gal)', avg: '$3.94', change: '+3%', up: true },
-  { emoji: '🍞', name: 'Bread (loaf)', avg: '$3.98', change: '+5%', up: true },
-  { emoji: '🐔', name: 'Chicken (lb)', avg: '$2.11', change: '-1%', up: false },
-  { emoji: '🥩', name: 'Ground Beef (lb)', avg: '$5.43', change: '+8%', up: true },
-  { emoji: '🧈', name: 'Butter (lb)', avg: '$5.11', change: '+15%', up: true },
-]
+interface GroceryItem {
+  id: string
+  emoji: string
+  name: string
+  unit: string
+  price: string | null
+  priceRaw: number | null
+}
 
-export default function Home() {
+// Year-over-year change estimates (BLS doesn't provide % change directly)
+const YOY_CHANGE: Record<string, { change: string; up: boolean }> = {
+  APU0000708111: { change: '+12%', up: true  }, // eggs
+  APU0000709112: { change: '+3%',  up: true  }, // milk
+  APU0000702111: { change: '+5%',  up: true  }, // bread
+  APU0000703112: { change: '+8%',  up: true  }, // ground beef
+  APU0000706111: { change: '-1%',  up: false }, // chicken
+  APU0000714111: { change: '+15%', up: true  }, // butter
+}
+
+async function getGroceryPrices(): Promise<GroceryItem[]> {
+  try {
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whatsthegrocerybill.com'
+    const res  = await fetch(`${base}/api/grocery-prices`, { next: { revalidate: 3600 } })
+    if (!res.ok) throw new Error('API error')
+    const data = await res.json()
+    return data.items ?? []
+  } catch {
+    return [
+      { id: 'APU0000708111', emoji: '🥚', name: 'Eggs (doz)',       unit: '/doz', price: '$4.82', priceRaw: 4.82 },
+      { id: 'APU0000709112', emoji: '🥛', name: 'Milk (gal)',       unit: '/gal', price: '$3.94', priceRaw: 3.94 },
+      { id: 'APU0000702111', emoji: '🍞', name: 'Bread (loaf)',     unit: '/lb',  price: '$3.98', priceRaw: 3.98 },
+      { id: 'APU0000703112', emoji: '🥩', name: 'Ground Beef (lb)', unit: '/lb',  price: '$5.43', priceRaw: 5.43 },
+      { id: 'APU0000706111', emoji: '🐔', name: 'Chicken (lb)',     unit: '/lb',  price: '$2.11', priceRaw: 2.11 },
+      { id: 'APU0000714111', emoji: '🧈', name: 'Butter (lb)',      unit: '/lb',  price: '$5.11', priceRaw: 5.11 },
+    ]
+  }
+}
+
+export default async function Home() {
+  const groceryItems = await getGroceryPrices()
   return (
     <main className="min-h-screen text-white" style={{ background: '#0c1409' }}>
       <div className="max-w-6xl mx-auto px-4 pt-6 pb-8">
@@ -104,7 +133,7 @@ export default function Home() {
                 National Averages
               </div>
               <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
-                BLS data · Updated weekly
+                BLS CPI data · Updated monthly
               </div>
             </div>
             <Link href="/grocery-prices" style={{
@@ -120,26 +149,29 @@ export default function Home() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
             gap: 12,
           }}>
-            {GROCERY_ITEMS.map((item) => (
-              <div key={item.name} style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
-                borderRadius: 10,
-                padding: '12px 14px',
-              }}>
-                <div style={{ fontSize: 20, marginBottom: 4 }}>{item.emoji}</div>
-                <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 4 }}>{item.name}</div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: '#f0fdf4', marginBottom: 3 }}>
-                  {item.avg}
-                </div>
-                <div style={{
-                  fontSize: 11, fontWeight: 600,
-                  color: item.up ? '#f87171' : '#4ade80',
+            {groceryItems.map((item) => {
+              const yoy = YOY_CHANGE[item.id] ?? { change: 'N/A', up: true }
+              return (
+                <div key={item.id} style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: 10,
+                  padding: '12px 14px',
                 }}>
-                  {item.change} vs last year
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>{item.emoji}</div>
+                  <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 4 }}>{item.name}</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: '#f0fdf4', marginBottom: 3 }}>
+                    {item.price ?? '—'}
+                  </div>
+                  <div style={{
+                    fontSize: 11, fontWeight: 600,
+                    color: yoy.up ? '#f87171' : '#4ade80',
+                  }}>
+                    {yoy.change} vs last year
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
