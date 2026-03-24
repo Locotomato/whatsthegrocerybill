@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/engage",
       "schedule": "0 */12 * * *"
+    },
+    {
+      "path": "/api/cron/signal-alert",
+      "schedule": "*/30 * * * *"
     }
   ]
 }
