@@ -129,7 +129,7 @@ export default async function Home() {
                         color: item.yoyUp ? 'var(--red)' : 'var(--green)',
                         background: item.yoyUp ? '#fee2e2' : '#dcfce7',
                         padding: '2px 7px', borderRadius: 20, lineHeight: 1.6,
-                      }}>{item.yoyUp ? '↑' : '↓'}{pct}%</span>
+                      }}>{item.yoyUp ? '↑' : '↓'}{pct}% 2yr</span>
                     )}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4, lineHeight: 1.3 }}>{item.name}</div>

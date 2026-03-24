@@ -18,7 +18,7 @@ const BLS_SERIES: Record<string, { name: string; unit: string; emoji: string; fa
 }
 
 const SERIES_IDS = Object.keys(BLS_SERIES)
-const CACHE_KEY  = 'grocery:prices:national:v4'
+const CACHE_KEY  = 'grocery:prices:national:v5'
 const CACHE_TTL  = 60 * 60 * 24 // 24 hours
 
 async function kvGet(key: string): Promise<unknown> {
@@ -85,8 +85,8 @@ async function fetchBLSPrices(): Promise<BLSResult> {
       dataMonth = monthName
     }
 
-    // Find same month one year prior for real YoY
-    const priorYearStr = (parseInt(latest.year) - 1).toString()
+    // Use 2-year comparison — avoids distortion from anomalous spikes (e.g. 2025 egg/avian flu peak)
+    const priorYearStr = (parseInt(latest.year) - 2).toString()
     const priorMonthData = sorted.find(
       (d: { year: string; period: string }) => d.year === priorYearStr && d.period === latest.period
     )
