@@ -137,7 +137,7 @@ export default function NewsArchive() {
                       }}>{tag}</span>
                     ))}
                     <span style={{ fontSize: 12, color: '#334155', marginLeft: 'auto' }}>
-                      {timeAgo(article.source_tweet.created_at)}
+                      {timeAgo(article.source_tweet?.created_at ?? article.created_at)}
                     </span>
                   </div>
 
