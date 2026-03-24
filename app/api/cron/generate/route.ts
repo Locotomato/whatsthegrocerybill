@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateArticle, toSlug, type Article } from '../../../../lib/articleUtils'
 import { postTweetV2, buildArticleTweet } from '../../../../lib/twitterOAuth2'
+import { getArticleVideo } from '../../../../lib/youtubeUtils'
 
 export const dynamic     = 'force-dynamic'
 export const maxDuration = 300
@@ -117,6 +118,14 @@ export async function GET(req: NextRequest) {
   // 4. Update homepage latest cache (3 freshest)
   if (stored.length > 0) {
     await kvSet('wtgb:articles:latest', stored.slice(0, 3), 60 * 60 * 2)
+  }
+
+  // 4b. Pre-warm YouTube video cache at generation time (not on first page load)
+  //     This burns quota once per article at generation, not on every ISR revalidation.
+  for (const article of stored) {
+    try {
+      await getArticleVideo(article.slug, article.headline, article.tags ?? [])
+    } catch { /* non-fatal */ }
   }
 
   // 5. IndexNow — instant indexing on Bing/DDG/Yandex
