@@ -95,6 +95,26 @@ export async function GET() {
     return NextResponse.json({ articles: cached, cached: true })
   }
 
+  // 1b. Reconstruct latest from archive index (handles case where latest cache is empty
+  //     but articles were previously generated and stored under wtgb:article:{slug})
+  try {
+    const slugs = await kvLrange(KV_INDEX, 0, 4) // grab top 5
+    if (slugs && slugs.length > 0) {
+      const archiveArticles: Article[] = (
+        await Promise.all(slugs.map(s => kvGet<Article>(`wtgb:article:${s}`)))
+      ).filter((a): a is Article => a !== null)
+
+      if (archiveArticles.length > 0) {
+        const latest = archiveArticles.slice(0, 3)
+        await kvSet(KV_LATEST, latest, 60 * 60 * 2) // rebuild the latest cache
+        _cache = { articles: latest, ts: Date.now() }
+        return NextResponse.json({ articles: latest, cached: true, source: 'archive_rebuild' })
+      }
+    }
+  } catch (e) {
+    console.error('[articles] archive rebuild failed:', e)
+  }
+
   // 2. In-process fallback cache
   if (_cache && Date.now() - _cache.ts < CACHE_TTL_MS) {
     return NextResponse.json({ articles: _cache.articles, cached: true })
