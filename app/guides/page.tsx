@@ -5,147 +5,118 @@ import GasPricesEmailBanner from '../components/GasPricesEmailBanner'
 
 const GUIDES = [
   {
-    slug: 'what-determines-gas-prices',
-    icon: '📊',
-    title: 'What Determines Grocery Prices?',
-    description: 'Why do Grocery Prices change every day? From crude oil futures to refinery margins, here\'s every factor that moves the number on the pump.',
-    readTime: '8 min read',
-    tag: 'Economics',
-    tagColor: '#3b82f6',
+    slug: 'why-are-egg-prices-so-high',
+    icon: '🥚',
+    title: 'Why Are Egg Prices So High Right Now?',
+    description: 'Avian flu wiped out 100M+ hens. Feed costs are up. Cage-free mandates added a permanent floor. Here\'s the full breakdown — and when prices may ease.',
+    readTime: '7 min read',
+    tag: 'Trending',
+    tagColor: '#f87171',
   },
   {
-    slug: 'gas-tax-by-state',
-    icon: '🏛',
-    title: 'Gas Tax by State (2025)',
-    description: 'Complete table of state + federal gas taxes for all 50 states. See exactly how much of your fill-up goes to the government.',
-    readTime: '5 min read',
-    tag: 'Data',
-    tagColor: '#22c55e',
-  },
-  {
-    slug: 'trump-biden-obama-gas-prices',
-    icon: '🇺🇸',
-    title: 'Grocery Prices Under Trump, Biden & Obama',
-    description: 'How much did gas actually cost under each administration? The full data, year by year, with context on what drove the changes.',
-    readTime: '10 min read',
-    tag: 'Politics',
-    tagColor: '#16a34a',
-  },
-  {
-    slug: 'why-is-california-gas-so-expensive',
-    icon: '🌴',
-    title: 'Why Is California Gas So Expensive?',
-    description: 'Six overlapping costs push California $1–2 above the national average. Cap-and-trade, LCFS, CARB blends, refinery isolation — here\'s every layer with dollar amounts.',
-    readTime: '9 min read',
-    tag: 'State Deep Dive',
+    slug: 'how-to-save-money-on-groceries',
+    icon: '💰',
+    title: 'How to Save Money on Groceries in 2025',
+    description: '8 proven strategies that can cut your grocery bill 20–30% without spending hours couponing. Real savings on eggs, meat, produce and more.',
+    readTime: '6 min read',
+    tag: 'Savings',
     tagColor: '#4ade80',
   },
   {
-    slug: 'how-to-save-money-on-gas',
-    icon: '💰',
-    title: 'How to Save Money on Gas: 12 Proven Ways',
-    description: 'From warehouse club memberships to driving habits — 12 strategies ranked by annual savings, with real dollar estimates.',
-    readTime: '7 min read',
-    tag: 'Consumer Guide',
-    tagColor: '#22c55e',
+    slug: 'cheapest-grocery-stores-compared',
+    icon: '🏪',
+    title: 'Cheapest Grocery Stores in 2025: Ranked',
+    description: 'Aldi vs Walmart vs Kroger vs Costco vs Whole Foods — we compared 20 common items. Where you shop matters more than what you buy.',
+    readTime: '5 min read',
+    tag: 'Data',
+    tagColor: '#3b82f6',
   },
   {
-    slug: 'us-gas-prices-vs-world',
-    icon: '🌍',
-    title: 'US Grocery Prices vs. The World',
-    description: 'Americans pay $3.35. Germany pays $7. Norway pays $8.85. Venezuela pays $0.02. Here\'s the full global comparison and why prices vary so dramatically.',
+    slug: 'inflation-and-your-grocery-bill',
+    icon: '📈',
+    title: 'How Inflation Is Hitting Your Grocery Bill',
+    description: 'Eggs +146%. Butter +45%. Beef +38%. Food prices have outpaced overall inflation for three straight years. Here\'s the full breakdown by category.',
     readTime: '8 min read',
-    tag: 'Global',
-    tagColor: '#8b5cf6',
+    tag: 'Economics',
+    tagColor: '#fbbf24',
+  },
+  {
+    slug: 'grocery-prices-by-state',
+    icon: '🗺',
+    title: 'Grocery Prices by State: Complete Guide',
+    description: 'Groceries cost 30–50% more in Hawaii and Alaska than in Midwest states. See how your state compares for eggs, milk, meat, and produce.',
+    readTime: '6 min read',
+    tag: 'Data',
+    tagColor: '#a78bfa',
+  },
+  {
+    slug: 'what-affects-grocery-prices',
+    icon: '🌾',
+    title: 'What Determines Grocery Prices?',
+    description: 'From commodity markets to supply chain costs to labor — here\'s every factor that moves the number on your grocery receipt.',
+    readTime: '7 min read',
+    tag: 'Economics',
+    tagColor: '#22c55e',
   },
 ]
 
-export default function GuidesIndex() {
+export default function GuidesPage() {
   return (
-    <main style={{ minHeight: '100vh', background: '#0b0d14', color: '#f1f5f9' }}>
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
+    <main style={{ background: '#0c1409', minHeight: '100vh', color: 'white' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
+        <Link href="/" style={{ color: '#4ade80', fontSize: 13, textDecoration: 'none' }}>← Home</Link>
 
-        {/* Nav */}
-        <div style={{ marginBottom: 32 }}>
-          <Link href="/" style={{ color: '#64748b', textDecoration: 'none', fontSize: 14 }}>
-            ← whatsthegrocerybill.com
-          </Link>
-        </div>
-
-        {/* Header */}
-        <div style={{ marginBottom: 48 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-            <span style={{ fontSize: 28 }}>📚</span>
-            <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: '#f8fafc' }}>
-              Grocery Price Guides
-            </h1>
+        <div style={{ textAlign: 'center', margin: '24px 0 36px' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+            Grocery Price Guides
           </div>
-          <p style={{ margin: 0, color: '#64748b', fontSize: 15, lineHeight: 1.6 }}>
-            Everything you need to understand Grocery Prices in America — from the economics of crude oil
-            to how your state's tax rate compares.
+          <h1 style={{ fontSize: 30, fontWeight: 900, color: '#f0fdf4', marginBottom: 10 }}>
+            📚 Understand Your Grocery Bill
+          </h1>
+          <p style={{ color: '#6b7280', fontSize: 14 }}>
+            In-depth guides on grocery prices, food inflation, and how to spend less at the checkout.
           </p>
         </div>
 
-        {/* Guide cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {GUIDES.map(guide => (
-            <Link
-              key={guide.slug}
-              href={`/guides/${guide.slug}`}
-              style={{ textDecoration: 'none' }}
-            >
+        <GasPricesEmailBanner />
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, marginTop: 28 }}>
+          {GUIDES.map((guide) => (
+            <Link key={guide.slug} href={`/guides/${guide.slug}`} style={{ textDecoration: 'none' }}>
               <div style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 12,
-                padding: '24px 28px',
-                transition: 'border-color 0.15s',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: 14,
+                padding: '20px 22px',
+                height: '100%',
+                transition: 'border-color 0.2s',
                 cursor: 'pointer',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-                  <span style={{ fontSize: 32, lineHeight: 1 }}>{guide.icon}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-                      <span style={{
-                        fontSize: 11, fontWeight: 700, color: guide.tagColor,
-                        background: `${guide.tagColor}18`,
-                        border: `1px solid ${guide.tagColor}30`,
-                        borderRadius: 20, padding: '2px 10px',
-                        textTransform: 'uppercase', letterSpacing: '0.05em',
-                      }}>
-                        {guide.tag}
-                      </span>
-                      <span style={{ fontSize: 12, color: '#475569' }}>{guide.readTime}</span>
-                    </div>
-                    <h2 style={{ margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#f1f5f9' }}>
-                      {guide.title}
-                    </h2>
-                    <p style={{ margin: 0, color: '#64748b', fontSize: 14, lineHeight: 1.6 }}>
-                      {guide.description}
-                    </p>
-                  </div>
+              }}>
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{guide.icon}</div>
+                <div style={{
+                  display: 'inline-block',
+                  fontSize: 11, fontWeight: 700,
+                  color: guide.tagColor,
+                  background: `${guide.tagColor}18`,
+                  border: `1px solid ${guide.tagColor}30`,
+                  borderRadius: 20, padding: '2px 10px',
+                  marginBottom: 10,
+                }}>
+                  {guide.tag}
+                </div>
+                <h2 style={{ fontSize: 15, fontWeight: 800, color: '#f0fdf4', marginBottom: 8, lineHeight: 1.3 }}>
+                  {guide.title}
+                </h2>
+                <p style={{ fontSize: 13, color: '#9ca3af', lineHeight: 1.6, marginBottom: 12 }}>
+                  {guide.description}
+                </p>
+                <div style={{ fontSize: 12, color: '#4ade80', fontWeight: 600 }}>
+                  {guide.readTime} →
                 </div>
               </div>
             </Link>
           ))}
         </div>
-
-        {/* Email CTA */}
-        <div style={{ marginTop: 48 }}>
-          <GasPricesEmailBanner />
-        </div>
-
-        {/* Footer note */}
-        <div style={{ paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)', color: '#475569', fontSize: 13 }}>
-          More guides coming soon. Follow{' '}
-          <a href="https://twitter.com/wtgbofficial" target="_blank" rel="noopener noreferrer"
-            style={{ color: '#1d9bf0', textDecoration: 'none' }}>@wtgbofficial</a>{' '}
-          for updates.
-        </div>
-
       </div>
     </main>
   )
