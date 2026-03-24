@@ -1,22 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0c1409;
+  --foreground: #f0fdf4;
 }
 
 body {
@@ -25,14 +11,93 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Grocery price grid — 2-col on mobile, auto-fill on wider screens */
+/* ── Price grid ─────────────────────────────── */
 .price-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 @media (min-width: 480px) {
   .price-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 }
+@media (min-width: 768px) {
+  .price-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* ── Email form — stacked mobile, inline desktop ── */
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.email-form-input {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #f1f5f9;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+.email-form-input::placeholder { color: #475569; }
+.email-form-input:focus {
+  border-color: rgba(74,222,128,0.4);
+  background: rgba(255,255,255,0.08);
+}
+.email-form-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  background: #16a34a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.email-form-btn:hover  { background: #15803d; }
+.email-form-btn:disabled { background: #475569; cursor: default; }
+
+@media (min-width: 600px) {
+  .email-form {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .email-form-input {
+    flex: 1;
+    width: auto;
+  }
+  .email-form-btn {
+    width: auto;
+  }
+}
+
+/* ── Nav pills ──────────────────────────────── */
+.nav-pills {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.nav-pill {
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid;
+  transition: opacity 0.15s;
+}
+.nav-pill:hover { opacity: 0.8; }
