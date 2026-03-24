@@ -37,10 +37,10 @@ export async function GET(req: NextRequest) {
   // Store verifier + state in a short-lived cookie
   const response = NextResponse.redirect(authUrl.toString())
   response.cookies.set('tw_pkce_verifier', codeVerifier, {
-    httpOnly: true, secure: true, sameSite: 'lax', maxAge: 600, path: '/',
+    httpOnly: true, secure: true, sameSite: 'none', maxAge: 600, path: '/',
   })
   response.cookies.set('tw_pkce_state', state, {
-    httpOnly: true, secure: true, sameSite: 'lax', maxAge: 600, path: '/',
+    httpOnly: true, secure: true, sameSite: 'none', maxAge: 600, path: '/',
   })
 
   return response
