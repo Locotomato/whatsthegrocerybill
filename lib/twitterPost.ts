@@ -81,9 +81,12 @@ export function buildArticleTweet(
   const fixed = '#GroceryPrices #GroceryInflation'
   const allTags = [hashtags, fixed].filter(Boolean).join(' ')
 
-  // Headline truncated to fit: 280 - url(23) - tags - separators
-  const budget = 280 - 1 - url.length - 1 - allTags.length - 2 // 2 newlines
+  // Newsletter CTA line (Twitter counts URLs as 23 chars)
+  const cta = '📩 Free weekly grocery report → whatsthegrocerybill.com'
+
+  // Headline truncated to fit: 280 - url(23) - cta - tags - separators
+  const budget = 280 - 1 - 23 - 1 - cta.length - 1 - allTags.length - 3 // 3 newlines
   const hl = headline.length <= budget ? headline : headline.slice(0, budget - 1) + '…'
 
-  return `${hl}\n\n${url}\n\n${allTags}`
+  return `${hl}\n\n${url}\n\n${cta}\n\n${allTags}`
 }
