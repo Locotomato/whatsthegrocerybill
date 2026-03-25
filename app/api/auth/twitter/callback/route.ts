@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Store refresh token in KV
-  await kvSet('twitter:refresh_token', data.refresh_token)
+  await kvSet('wtgb:twitter:refresh_token', data.refresh_token)
 
   // Clear PKCE cookies
   const response = new NextResponse(`

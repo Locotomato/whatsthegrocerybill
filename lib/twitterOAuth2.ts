@@ -87,7 +87,7 @@ async function postTweetOAuth1(
   return { id: json.data?.id }
 }
 
-const KV_REFRESH_KEY = 'twitter:refresh_token'
+const KV_REFRESH_KEY = 'wtgb:twitter:refresh_token'
 
 // ─── In-memory token cache (per serverless invocation) ───────────────────────
 // Prevents token rotation race when multiple calls happen in the same function run
