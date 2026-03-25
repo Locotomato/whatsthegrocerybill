@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { postTweetV2 } from '../../../../lib/twitterOAuth2'
+import { postTweet, buildArticleTweet } from '../../../../lib/twitterPost'
 import type { Article } from '../../../../lib/articleUtils'
 
 export const dynamic = 'force-dynamic'
@@ -62,14 +62,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, note: 'all_articles_tweeted' })
   }
 
-  // 3. Build tweet text
-  const url    = `${siteUrl}/news/${chosenSlug}`
-  const tags   = (articleToTweet.tags ?? []).slice(0, 2).map(t => `#${t.replace(/\s+/g, '')}`).join(' ')
-  const tweet  = `${articleToTweet.headline}\n\n${url}\n\n${tags} #GroceryPrices`
-  const final  = tweet.length <= 280 ? tweet : `${articleToTweet.headline}\n\n${url}\n\n#GroceryPrices`
+  // 3. Build tweet text using OAuth 1.0a builder (includes newsletter CTA)
+  const final = buildArticleTweet(articleToTweet.headline, chosenSlug, articleToTweet.tags ?? [])
 
-  // 4. Post via OAuth 2.0
-  const result = await postTweetV2(final)
+  // 4. Post via OAuth 1.0a (@wtgbofficial)
+  const secrets = {
+    apiKey:      process.env.TWITTER_API_KEY!,
+    apiSecret:   process.env.TWITTER_API_SECRET!,
+    token:       process.env.TWITTER_ACCESS_TOKEN!,
+    tokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET!,
+  }
+  const result = await postTweet(final, secrets)
 
   if (result.error) {
     console.error('[cron/tweet] post failed:', result.error)
