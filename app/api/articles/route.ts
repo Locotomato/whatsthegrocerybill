@@ -98,14 +98,14 @@ export async function GET() {
   // 1b. Reconstruct latest from archive index (handles case where latest cache is empty
   //     but articles were previously generated and stored under wtgb:article:{slug})
   try {
-    const slugs = await kvLrange(KV_INDEX, 0, 4) // grab top 5
+    const slugs = await kvLrange(KV_INDEX, 0, 49) // grab top 50
     if (slugs && slugs.length > 0) {
       const archiveArticles: Article[] = (
         await Promise.all(slugs.map(s => kvGet<Article>(`wtgb:article:${s}`)))
       ).filter((a): a is Article => a !== null)
 
       if (archiveArticles.length > 0) {
-        const latest = archiveArticles.slice(0, 3)
+        const latest = archiveArticles.slice(0, 50)
         await kvSet(KV_LATEST, latest, 60 * 60 * 2) // rebuild the latest cache
         _cache = { articles: latest, ts: Date.now() }
         return NextResponse.json({ articles: latest, cached: true, source: 'archive_rebuild' })

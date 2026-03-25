@@ -7,9 +7,17 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-async function kvSet(key: string, value: string) {
+async function kvSet(key: string, value: string, ex?: number) {
   const { kv } = await import('@vercel/kv')
-  await kv.set(key, value)
+  if (ex) await kv.set(key, value, { ex })
+  else await kv.set(key, value)
+}
+
+async function kvGet(key: string): Promise<string | null> {
+  try {
+    const { kv } = await import('@vercel/kv')
+    return await kv.get<string>(key)
+  } catch { return null }
 }
 
 export async function GET(req: NextRequest) {
@@ -26,15 +34,22 @@ export async function GET(req: NextRequest) {
     return new NextResponse('Missing code parameter', { status: 400 })
   }
 
-  // Validate state + retrieve verifier from cookies
-  const cookieState    = req.cookies.get('tw_pkce_state')?.value
-  const codeVerifier   = req.cookies.get('tw_pkce_verifier')?.value
+  // Validate state + retrieve verifier — check cookies first, fall back to KV
+  const cookieState  = req.cookies.get('tw_pkce_state')?.value
+  let codeVerifier   = req.cookies.get('tw_pkce_verifier')?.value
 
-  if (!cookieState || cookieState !== state) {
+  // If no cookie (e.g. direct Twitter URL flow), look up verifier from KV by state
+  if (!codeVerifier && state) {
+    codeVerifier = await kvGet(`tw_pkce_verifier:${state}`) ?? undefined
+  }
+
+  // Accept if state matches cookie OR if we found the verifier in KV (server-generated flow)
+  const stateOk = (cookieState && cookieState === state) || (!cookieState && !!codeVerifier)
+  if (!stateOk) {
     return new NextResponse('State mismatch — CSRF check failed', { status: 400 })
   }
   if (!codeVerifier) {
-    return new NextResponse('Missing PKCE verifier cookie', { status: 400 })
+    return new NextResponse('Missing PKCE verifier', { status: 400 })
   }
 
   const clientId     = process.env.TWITTER_CLIENT_ID!
