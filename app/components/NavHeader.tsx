@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function NavHeader({ active }: { active?: 'prices' | 'grocery-prices' | 'news' | 'guides' }) {
+export default function NavHeader({ active }: { active?: 'prices' | 'grocery-prices' | 'news' | 'guides' | 'near-me' }) {
   const linkStyle = (page: string) => ({
     fontSize: 12, fontWeight: 600 as const,
     color: active === page ? '#fff' : '#cbd5e1',
@@ -20,6 +20,7 @@ export default function NavHeader({ active }: { active?: 'prices' | 'grocery-pri
         </Link>
         <nav style={{ display: 'flex', gap: 2 }}>
           <Link href="/grocery-prices" style={linkStyle('prices')}>By State</Link>
+          <Link href="/near-me"        style={linkStyle('near-me')}>Near Me</Link>
           <Link href="/news"           style={linkStyle('news')}>News</Link>
           <Link href="/guides"         style={linkStyle('guides')}>Guides</Link>
         </nav>

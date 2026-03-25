@@ -302,6 +302,23 @@ export default async function ArticlePage({ params }: Props) {
                 </Link>
               ))}
             </div>
+            {/* Near me CTA */}
+            <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--blue-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+              <span style={{ fontSize: 13, color: 'var(--muted)' }}>Want prices for your area?</span>
+              <Link href="/near-me" style={{ fontSize: 13, fontWeight: 700, color: 'var(--red)', textDecoration: 'none' }}>
+                📍 Grocery prices near me →
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Near me fallback (no geo tags) */}
+        {linkedStates.length === 0 && (
+          <div style={{ marginTop: 28, padding: '14px 18px', background: 'var(--blue-light)', border: '1px solid var(--blue-border)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600 }}>See grocery prices in your area</span>
+            <Link href="/near-me" style={{ fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: 'var(--red)', padding: '7px 16px', borderRadius: 20 }}>
+              📍 Near Me →
+            </Link>
           </div>
         )}
 

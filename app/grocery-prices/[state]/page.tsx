@@ -253,7 +253,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* CTAs */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 40 }}>
           <Link href="/guides/cheapest-grocery-stores-compared" style={{
             padding: '10px 20px', background: '#16a34a', color: '#fff',
             borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 700,
@@ -262,6 +262,35 @@ export default async function StatePage({ params }: Props) {
             padding: '10px 20px', background: '#f8fafc', color: 'var(--subtle)',
             borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600,
           }}>📰 Grocery Price News</Link>
+          <Link href="/near-me" style={{
+            padding: '10px 20px', background: '#f8fafc', color: 'var(--subtle)',
+            borderRadius: 20, textDecoration: 'none', fontSize: 13, fontWeight: 600,
+          }}>📍 Prices Near Me</Link>
+        </div>
+
+        {/* Latest news internal links */}
+        <div style={{ background: '#f8fafc', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 22px', marginBottom: 40 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.01em' }}>
+            📰 Latest Grocery Price News
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              { slug: 'grocery-prices-rising-again-what-shoppers-need-to-know-now', title: 'Grocery Prices Rising Again: What Shoppers Need to Know' },
+              { slug: 'grocery-prices-fall-again-what-shoppers-are-seeing-at-checkout', title: 'Grocery Prices Fall: What Shoppers Are Seeing at Checkout' },
+              { slug: 'grocery-prices-rising-food-inflation-hits-9-12-as-shoppers-face-empty-shelves', title: 'Food Inflation Hits 9–12% as Shoppers Face Empty Shelves' },
+            ].map(article => (
+              <Link key={article.slug} href={`/news/${article.slug}`} style={{
+                fontSize: 13, color: 'var(--blue)', textDecoration: 'none', fontWeight: 600,
+                display: 'flex', alignItems: 'center', gap: 6,
+              }}>
+                <span style={{ color: 'var(--muted)', fontSize: 11 }}>→</span>
+                {article.title}
+              </Link>
+            ))}
+            <Link href="/news" style={{ fontSize: 12, color: 'var(--muted)', textDecoration: 'none', marginTop: 4 }}>
+              View all grocery price news →
+            </Link>
+          </div>
         </div>
       </div>
     </main>
