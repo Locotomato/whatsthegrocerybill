@@ -5,6 +5,11 @@
 
 export interface FAQ { q: string; a: string }
 
+export interface ArticleSource {
+  name: string  // e.g. "USDA Economic Research Service"
+  url: string   // canonical URL to authoritative source
+}
+
 export interface Article {
   id: string
   slug: string
@@ -12,6 +17,7 @@ export interface Article {
   subhead: string
   body: string        // markdown-ish: ## H2, ### H3, paragraphs separated by \n\n
   faqs?: FAQ[]
+  sources?: ArticleSource[]  // 2-3 authoritative outbound citations
   tags: string[]
   geo_tags?: string[] // US state names for geo SEO
   source_tweet?: {
@@ -114,6 +120,11 @@ export async function generateArticle(
   ]
   const faqTemplate = JSON.stringify(isRising ? faqRising : faqFalling, null, 2)
 
+  const sourcesTemplate = JSON.stringify([
+    { name: "USDA Economic Research Service", url: "https://www.ers.usda.gov/topics/food-markets-prices/" },
+    { name: "Bureau of Labor Statistics — CPI Food", url: "https://www.bls.gov/cpi/" },
+  ])
+
   const prompt = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers.
 
 A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article based on this tweet.
@@ -129,6 +140,17 @@ Return ONLY valid JSON — no markdown fences, no commentary:
   "subhead": "One crisp sentence adding context. Include a price figure or % change if available.",
   "body": "Full article body using this exact structure — separate each section with \\n\\n:\\n\\n## What's Happening\\n[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]\\n\\n${whyItMatters}\\n\\n## What's Driving This\\n[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, tariffs, inflation relief, harvest surplus, labor costs. Be specific.]\\n\\n${meansForFamilies}\\n\\n${meansForOther}\\n\\n${shopperExpect}",
   "faqs": ${faqTemplate},
+  "sources": [
+    2 or 3 authoritative outbound sources relevant to THIS specific article. Pick from real, well-known organizations:
+    - For egg/poultry: USDA NASS (https://www.nass.usda.gov), CDC Avian Flu tracker (https://www.cdc.gov/bird-flu)
+    - For general food inflation: BLS CPI Food (https://www.bls.gov/cpi/), USDA ERS (https://www.ers.usda.gov/topics/food-markets-prices/)
+    - For supply chain/trade: USDA Foreign Agricultural Service (https://www.fas.usda.gov), Reuters (https://www.reuters.com/markets/commodities/)
+    - For meat/beef: USDA AMS (https://www.ams.usda.gov/market-news/livestock-poultry-grain)
+    - For produce: USDA AMS Fruit & Veg (https://www.ams.usda.gov/market-news/fruit-vegetable)
+    - For fuel/transport costs: EIA (https://www.eia.gov/petroleum/gasdiesel/)
+    Return as: [{"name": "Full Organization Name", "url": "https://exact-url.gov-or-org"}]
+    ONLY include sources from .gov, reuters.com, apnews.com, usda.gov, bls.gov, eia.gov — no random blogs
+  ],
   "tags": ["5–7 tags: mix of topic tags (Egg Prices, Grocery Inflation, Food Costs) and question-style tags (Why are groceries so expensive, grocery price forecast 2025)"],
   "geo_tags": ["list of US state names most relevant to this story — e.g. California, Texas, Florida"]
 }
@@ -169,6 +191,7 @@ Rules:
       subhead: parsed.subhead,
       body: parsed.body,
       faqs: parsed.faqs ?? [],
+      sources: (parsed.sources ?? []).filter((s: any) => s?.name && s?.url),
       tags: parsed.tags ?? [],
       geo_tags: parsed.geo_tags ?? [],
       source_tweet: {

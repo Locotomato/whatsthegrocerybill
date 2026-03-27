@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article } from '../../../lib/articleUtils'
+import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
 import ArticleEmailCapture from '../../components/ArticleEmailCapture'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
+
+const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
 
 export const revalidate = 86400
 
@@ -367,6 +369,79 @@ export default async function ArticlePage({ params }: Props) {
                   <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>{faq.q}</div>
                   <div style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7 }}>{faq.a}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 🎁 Grocery Card Giveaway CTA */}
+        <a
+          href={`${GIVEAWAY_BASE}${encodeURIComponent(article.slug)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'block', marginTop: 40, padding: '20px 24px',
+            background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+            borderRadius: 14, textDecoration: 'none',
+            boxShadow: '0 4px 14px rgba(22,163,74,0.35)',
+            border: '1px solid #14532d',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>🛒</div>
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <div style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                color: '#bbf7d0', textTransform: 'uppercase', marginBottom: 4,
+              }}>Daily Giveaway — Starting April 1st</div>
+              <div style={{
+                fontSize: 20, fontWeight: 900, color: '#fff',
+                lineHeight: 1.2, marginBottom: 4, letterSpacing: '-0.02em',
+              }}>Win a $100 Grocery Gift Card</div>
+              <div style={{ fontSize: 14, color: '#d1fae5', lineHeight: 1.5 }}>
+                One winner every single day. Enter free — takes 30 seconds.
+              </div>
+            </div>
+            <div style={{
+              background: '#fff', color: '#16a34a', fontSize: 14, fontWeight: 800,
+              padding: '11px 22px', borderRadius: 30, whiteSpace: 'nowrap',
+              flexShrink: 0, letterSpacing: '-0.01em',
+            }}>
+              Enter to Win →
+            </div>
+          </div>
+        </a>
+
+        {/* Sources */}
+        {(article.sources ?? []).length > 0 && (
+          <div style={{ marginTop: 40 }}>
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+              color: 'var(--subtle)', textTransform: 'uppercase', marginBottom: 10,
+            }}>Sources &amp; Further Reading</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {(article.sources as ArticleSource[]).map((src, i) => (
+                <a
+                  key={i}
+                  href={src.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    fontSize: 13, color: 'var(--blue)', textDecoration: 'none',
+                    padding: '8px 12px', borderRadius: 8,
+                    background: 'var(--blue-light)', border: '1px solid var(--blue-border)',
+                  }}
+                >
+                  <span style={{ flexShrink: 0, opacity: 0.6 }}>🔗</span>
+                  <span style={{ fontWeight: 600 }}>{src.name}</span>
+                  <span style={{
+                    marginLeft: 'auto', fontSize: 11, color: 'var(--subtle)',
+                    flexShrink: 0, fontFamily: 'monospace',
+                  }}>
+                    {new URL(src.url).hostname.replace('www.', '')}
+                  </span>
+                </a>
               ))}
             </div>
           </div>

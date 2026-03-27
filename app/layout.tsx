@@ -53,6 +53,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
+        <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
+          <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
+            © {new Date().getFullYear()} Magic Media Group LLC &nbsp;·&nbsp;
+            <a href="/privacy" style={{ color: '#9ca3af', textDecoration: 'none' }}>Privacy Policy</a>
+            &nbsp;·&nbsp;
+            <a href="/terms" style={{ color: '#9ca3af', textDecoration: 'none' }}>Terms of Service</a>
+          </p>
+        </footer>
         <Analytics />
         <SpeedInsights />
       </body>
