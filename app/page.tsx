@@ -151,6 +151,44 @@ export default async function Home() {
         {/* Divider */}
         <div style={{ borderTop: '1px solid var(--border)', margin: '8px 0 28px' }} />
 
+        {/* 🎁 Giveaway CTA */}
+        <a
+          href="https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1=wtgb-homepage"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'block', marginBottom: 28, padding: '20px 24px',
+            background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+            borderRadius: 14, textDecoration: 'none',
+            boxShadow: '0 4px 14px rgba(22,163,74,0.35)',
+            border: '1px solid #14532d',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>🛒</div>
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <div style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                color: '#bbf7d0', textTransform: 'uppercase', marginBottom: 4,
+              }}>Daily Giveaway — Starting April 1st</div>
+              <div style={{
+                fontSize: 20, fontWeight: 900, color: '#fff',
+                lineHeight: 1.2, marginBottom: 4, letterSpacing: '-0.02em',
+              }}>Win a $100 Grocery Gift Card</div>
+              <div style={{ fontSize: 14, color: '#d1fae5', lineHeight: 1.5 }}>
+                One winner every single day. Enter free — takes 30 seconds.
+              </div>
+            </div>
+            <div style={{
+              background: '#fff', color: '#16a34a', fontSize: 14, fontWeight: 800,
+              padding: '11px 22px', borderRadius: 30, whiteSpace: 'nowrap',
+              flexShrink: 0, letterSpacing: '-0.01em',
+            }}>
+              Enter to Win →
+            </div>
+          </div>
+        </a>
+
         {/* Articles */}
         <ArticleSection />
 
