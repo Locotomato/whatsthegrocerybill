@@ -110,6 +110,9 @@ export default async function Home() {
             }}>By state →</Link>
           </div>
 
+          {/* Email Capture — above fold, before price grid */}
+          <EmailCapture />
+
           <div className="price-grid">
             {groceryItems.map((item) => {
               const hasYoy = item.yoyPct != null && item.yoyUp != null
@@ -144,9 +147,6 @@ export default async function Home() {
             })}
           </div>
         </div>
-
-        {/* Email Capture */}
-        <EmailCapture />
 
         {/* Divider */}
         <div style={{ borderTop: '1px solid var(--border)', margin: '8px 0 28px' }} />

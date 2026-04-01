@@ -53,12 +53,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Latest articles (best-effort — don't block sitemap if API is down)
   let articlePages: MetadataRoute.Sitemap = []
   try {
-    const res = await fetch(`${BASE}/api/articles`, { next: { revalidate: 7200 } })
+    const res = await fetch(`${BASE}/api/articles?limit=500`, { cache: 'no-store' })
     if (res.ok) {
       const data = await res.json()
-      articlePages = (data.articles ?? []).map((a: { slug: string; source_tweet: { created_at: string } }) => ({
+      articlePages = (data.articles ?? []).map((a: { slug: string; publishedAt?: string; source_tweet?: { created_at: string } | null }) => ({
         url: `${BASE}/news/${a.slug}`,
-        lastModified: new Date(a.source_tweet.created_at),
+        lastModified: new Date(a.publishedAt ?? a.source_tweet?.created_at ?? Date.now()),
         changeFrequency: 'weekly' as const,
         priority: 0.7,
       }))

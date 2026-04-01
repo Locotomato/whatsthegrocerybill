@@ -30,6 +30,7 @@ export interface Article {
   } | null
   generated_at?: number
   created_at?: string
+  publishedAt?: string
 }
 
 export function toSlug(headline: string, tweetId: string): string {

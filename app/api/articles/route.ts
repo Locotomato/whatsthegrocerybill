@@ -84,9 +84,26 @@ async function fetchPressureTweets(bearer: string) {
     })
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const limit = Math.min(parseInt(searchParams.get('limit') ?? '3', 10), 500)
+  const wantAll = limit > 3
+
   if (!BEARER || !ANTHROPIC_KEY) {
     return NextResponse.json({ articles: [], error: 'missing_config' })
+  }
+
+  // For sitemap / full-index requests: always read from the full archive index
+  if (wantAll) {
+    try {
+      const slugs = await kvLrange(KV_INDEX, 0, limit - 1)
+      const articles: Article[] = (
+        await Promise.all(slugs.map(s => kvGet<Article>(`wtgb:article:${s}`)))
+      ).filter((a): a is Article => a !== null)
+      return NextResponse.json({ articles, cached: true, source: 'full_index' })
+    } catch (e) {
+      console.error('[articles] full index read failed:', e)
+    }
   }
 
   // 1. Try KV first — instant if warm

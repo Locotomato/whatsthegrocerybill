@@ -95,39 +95,43 @@ async function fetchNewsSignals(): Promise<Array<{
   return signals.sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
 }
 
+// Twitter is a supplemental signal only — max 15 results, skip gracefully on any error
 async function fetchSignalTweets(): Promise<Array<{
   id: string; text: string; author: string; username: string; created_at: string; score: number
 }>> {
-  if (!BEARER) {
-    console.warn('[generate] no Twitter bearer token — skipping Twitter signals')
-    return []
-  }
-  const params = new URLSearchParams({
-    query: QUERY, max_results: '100',
-    'tweet.fields': 'created_at,author_id,public_metrics',
-    expansions: 'author_id', 'user.fields': 'username,name',
-  })
-  const res = await fetch(`https://api.twitter.com/2/tweets/search/recent?${params}`, {
-    headers: { Authorization: `Bearer ${BEARER}` },
-  })
-  if (!res.ok) {
-    console.warn('[generate] Twitter fetch failed:', res.status, res.statusText)
-    return []
-  }
-  const json = await res.json() as any
-  const users: Record<string, { name: string; username: string }> = {}
-  for (const u of json.includes?.users ?? []) users[u.id] = u
+  if (!BEARER) return []
+  try {
+    const params = new URLSearchParams({
+      query: QUERY, max_results: '15',
+      'tweet.fields': 'created_at,author_id',
+      expansions: 'author_id', 'user.fields': 'username,name',
+    })
+    const res = await fetch(`https://api.twitter.com/2/tweets/search/recent?${params}`, {
+      headers: { Authorization: `Bearer ${BEARER}` },
+      signal: AbortSignal.timeout(8000),
+    })
+    if (!res.ok) {
+      console.warn('[generate] Twitter fetch skipped:', res.status)
+      return []
+    }
+    const json = await res.json() as any
+    const users: Record<string, { name: string; username: string }> = {}
+    for (const u of json.includes?.users ?? []) users[u.id] = u
 
-  return (json.data ?? [])
-    .map((t: any) => ({
-      id: t.id, text: t.text,
-      author:    users[t.author_id]?.name     ?? 'Unknown',
-      username:  users[t.author_id]?.username ?? 'unknown',
-      created_at: t.created_at,
-      score: sentimentScore(t.text),
-    }))
-    .filter((t: any) => t.score !== 0)
-    .sort((a: any, b: any) => Math.abs(b.score) - Math.abs(a.score))
+    return (json.data ?? [])
+      .map((t: any) => ({
+        id: t.id, text: t.text,
+        author:    users[t.author_id]?.name     ?? 'Unknown',
+        username:  users[t.author_id]?.username ?? 'unknown',
+        created_at: t.created_at,
+        score: sentimentScore(t.text),
+      }))
+      .filter((t: any) => t.score !== 0)
+      .sort((a: any, b: any) => Math.abs(b.score) - Math.abs(a.score))
+  } catch (e) {
+    console.warn('[generate] Twitter fetch error (skipping):', e)
+    return []
+  }
 }
 
 // ─── KV helpers ───────────────────────────────────────────────────────────────
@@ -169,16 +173,16 @@ export async function GET(req: NextRequest) {
   const dailyCountKey = `wtgb:daily:count:${today}`
   const dailyCount    = (await kvGet<number>(dailyCountKey)) ?? 0
 
-  // Fetch signals from both sources in parallel
-  const [tweetSignals, newsSignals] = await Promise.all([
-    fetchSignalTweets(),
+  // Google News RSS is primary. Twitter is supplemental — runs in parallel but skipped on failure.
+  const [newsSignals, tweetSignals] = await Promise.all([
     fetchNewsSignals(),
+    fetchSignalTweets(),
   ])
 
-  // Merge: twitter first (higher authority), then news; deduplicate by id
+  // Merge: news first (primary), Twitter supplements; deduplicate by id
   const seenIds = new Set<string>()
   const allSignals: typeof tweetSignals = []
-  for (const s of [...tweetSignals, ...newsSignals]) {
+  for (const s of [...newsSignals, ...tweetSignals]) {
     if (!seenIds.has(s.id)) { seenIds.add(s.id); allSignals.push(s) }
   }
 
@@ -221,7 +225,7 @@ export async function GET(req: NextRequest) {
   for (let i = 0; i < results.length; i++) {
     const r = results[i]
     if (r.status !== 'fulfilled' || !r.value) continue
-    const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id) }
+    const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id), publishedAt: new Date().toISOString() }
     await kvSet(`wtgb:article:${article.slug}`, article, 60 * 60 * 24 * 60)
     await kvLpush('wtgb:articles:index', article.slug)
     await kvSet(`wtgb:signal:seen:${newSignals[i].id}`, 1, 60 * 60 * 24 * 7)

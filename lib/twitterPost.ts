@@ -70,23 +70,22 @@ export function buildArticleTweet(
 ): string {
   const url = `https://whatsthegrocerybill.com/news/${slug}`
 
-  // Pick up to 3 hashtags from tags — strip spaces, capitalize
+  // Pick up to 2 hashtags from tags
   const hashtags = tags
-    .slice(0, 3)
+    .slice(0, 2)
     .map(t => '#' + t.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, ''))
     .filter(h => h.length > 1 && h.length <= 20)
     .join(' ')
 
-  // Always include these power hashtags
-  const fixed = '#GroceryPrices #GroceryInflation'
+  const fixed = '#GroceryPrices'
   const allTags = [hashtags, fixed].filter(Boolean).join(' ')
 
-  // Newsletter CTA line (Twitter counts URLs as 23 chars)
-  const cta = '📩 Free weekly grocery report → whatsthegrocerybill.com'
+  // Sweepstakes CTA
+  const partnerCta = '🎁 Enter for a chance to win $100 in Groceries! → grocerygrabgiveaway.com'
 
-  // Headline truncated to fit: 280 - url(23) - cta - tags - separators
-  const budget = 280 - 1 - 23 - 1 - cta.length - 1 - allTags.length - 3 // 3 newlines
+  // Headline truncated to fit: 280 - url(23) - partnerCta - tags - 3 newlines
+  const budget = 280 - 1 - 23 - 1 - partnerCta.length - 1 - allTags.length - 3
   const hl = headline.length <= budget ? headline : headline.slice(0, budget - 1) + '…'
 
-  return `${hl}\n\n${url}\n\n${cta}\n\n${allTags}`
+  return `${hl}\n\n${url}\n\n${partnerCta}\n\n${allTags}`
 }

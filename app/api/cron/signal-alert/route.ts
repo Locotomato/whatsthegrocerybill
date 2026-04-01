@@ -1,15 +1,15 @@
 /**
- * /api/cron/signal-alert — runs every 30 min
+ * /api/cron/signal-alert — runs 2x/day (8am + 8pm ET)
  *
- * 1. Fetches latest 40 tweets about grocery prices (same query as /api/news)
- * 2. Classifies sentiment (up / down / neutral)
- * 3. Fires subscriber email alert if:
- *    a) ≥ 50% of tweets are "Prices Rising"  →  SPIKE alert
- *    b) ≥ 50% of tweets are "Prices Falling" →  DROP alert
- *    c) Any tweet contains a BREAKING keyword (shortage, recall, ban, tariff spike, etc.)
- * 4. KV dedup: max 1 alert per alert-type per 12 hours
+ * Signal sources (in priority order):
+ *   1. Google News RSS (primary — free, no rate limits)
+ *   2. Twitter search/recent (supplemental — max 10 results, skipped on failure)
  *
- * Email is sent to the full Resend audience via broadcast.
+ * Fires subscriber email alert if:
+ *    a) ≥ 50% of signals are "Prices Rising"  →  SPIKE alert
+ *    b) ≥ 50% of signals are "Prices Falling" →  DROP alert
+ *    c) Any signal contains a BREAKING keyword
+ * KV dedup: max 1 alert per alert-type per 12 hours
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -61,33 +61,73 @@ function hasBreaking(text: string): string | null {
   return BREAKING_WORDS.find(w => t.includes(w)) ?? null
 }
 
-// ─── Fetch latest tweets ──────────────────────────────────────────────────────
 interface Tweet { id: string; text: string; author: string; username: string; created_at: string }
 
+const NEWS_FEEDS = [
+  { url: 'https://news.google.com/rss/search?q=grocery+prices+OR+food+inflation+OR+egg+prices+OR+supermarket+prices+US&hl=en-US&gl=US&ceid=US:en', source: 'Google News' },
+  { url: 'https://feeds.reuters.com/reuters/businessNews', source: 'Reuters' },
+  { url: 'https://www.supermarketnews.com/rss/all', source: 'Supermarket News' },
+]
+const GROCERY_KEYWORDS = ['grocery','groceries','supermarket','food price','egg price','milk price',
+  'beef','chicken','bread','produce','food inflation','cost of food','grocery bill','walmart','kroger',
+  'aldi','whole foods','usda','agriculture','farm price','tariff','commodity']
+
+// ─── Primary: Google News RSS signals ────────────────────────────────────────
+async function fetchNewsSignals(): Promise<Tweet[]> {
+  const results: Tweet[] = []
+  for (const feed of NEWS_FEEDS) {
+    try {
+      const res = await fetch(feed.url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; WTGBBot/1.0)' },
+        signal: AbortSignal.timeout(8000),
+      })
+      if (!res.ok) continue
+      const xml = await res.text()
+      for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+        const block = m[1]
+        const title = (block.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1]
+                    ?? block.match(/<title>(.*?)<\/title>/)?.[1] ?? '').trim()
+        const desc  = (block.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/)?.[1]
+                    ?? block.match(/<description>(.*?)<\/description>/)?.[1] ?? '').replace(/<[^>]+>/g,'').trim()
+        const pubDate = block.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] ?? new Date().toISOString()
+        if (!title) continue
+        const combined = `${title} ${desc}`.toLowerCase()
+        if (!GROCERY_KEYWORDS.some(kw => combined.includes(kw))) continue
+        const id = `news_${Buffer.from(title).toString('base64').slice(0, 24)}`
+        results.push({ id, text: `${title}. ${desc.slice(0, 200)}`, author: feed.source,
+          username: feed.source.toLowerCase().replace(/\W+/g,''), created_at: pubDate })
+      }
+    } catch (e) { console.warn('[signal-alert] news feed failed:', feed.source, e) }
+  }
+  return results
+}
+
+// ─── Supplemental: Twitter (max 10, skip on any failure) ─────────────────────
 async function fetchTweets(): Promise<Tweet[]> {
   if (!BEARER) return []
-  const params = new URLSearchParams({
-    query:          TWEET_QUERY,
-    max_results:    '40',
-    'tweet.fields': 'created_at,author_id,text',
-    expansions:     'author_id',
-    'user.fields':  'name,username',
-  })
-  const res = await fetch(
-    `https://api.twitter.com/2/tweets/search/recent?${params}`,
-    { headers: { Authorization: `Bearer ${BEARER}` } }
-  )
-  if (!res.ok) { console.error('[signal-alert] Twitter error:', res.status); return [] }
-  const data = await res.json() as any
-  const users: Record<string, { name: string; username: string }> = {}
-  for (const u of data.includes?.users ?? []) users[u.id] = { name: u.name, username: u.username }
-  return (data.data ?? []).map((t: any) => ({
-    id:         t.id,
-    text:       t.text,
-    author:     users[t.author_id]?.name ?? 'Unknown',
-    username:   users[t.author_id]?.username ?? 'unknown',
-    created_at: t.created_at,
-  }))
+  try {
+    const params = new URLSearchParams({
+      query:          TWEET_QUERY,
+      max_results:    '10',
+      'tweet.fields': 'created_at,author_id,text',
+      expansions:     'author_id',
+      'user.fields':  'name,username',
+    })
+    const res = await fetch(
+      `https://api.twitter.com/2/tweets/search/recent?${params}`,
+      { headers: { Authorization: `Bearer ${BEARER}` }, signal: AbortSignal.timeout(8000) }
+    )
+    if (!res.ok) { console.warn('[signal-alert] Twitter skipped:', res.status); return [] }
+    const data = await res.json() as any
+    const users: Record<string, { name: string; username: string }> = {}
+    for (const u of data.includes?.users ?? []) users[u.id] = { name: u.name, username: u.username }
+    return (data.data ?? []).map((t: any) => ({
+      id: t.id, text: t.text,
+      author:     users[t.author_id]?.name ?? 'Unknown',
+      username:   users[t.author_id]?.username ?? 'unknown',
+      created_at: t.created_at,
+    }))
+  } catch (e) { console.warn('[signal-alert] Twitter error (skipping):', e); return [] }
 }
 
 // ─── Resend: get subscriber count ─────────────────────────────────────────────
@@ -198,9 +238,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
 
-  const tweets = await fetchTweets()
+  // Fetch signals: news primary + Twitter supplemental in parallel
+  const [newsSignals, twitterSignals] = await Promise.all([fetchNewsSignals(), fetchTweets()])
+  const seenIds = new Set<string>()
+  const tweets: Tweet[] = []
+  for (const t of [...newsSignals, ...twitterSignals]) {
+    if (!seenIds.has(t.id)) { seenIds.add(t.id); tweets.push(t) }
+  }
+
   if (tweets.length === 0) {
-    return NextResponse.json({ ok: true, action: 'no_tweets' })
+    return NextResponse.json({ ok: true, action: 'no_signals' })
   }
 
   // Classify
