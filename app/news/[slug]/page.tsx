@@ -9,14 +9,27 @@ import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
 
 // ── FinanceBuzz affiliate ────────────────────────────────────
-const FB_BASE_WTGB = 'https://www.yrxtrk.com/aff_c?offer_id=22607&aff_id=2414&aff_sub='
 function fbSubIdWtgb(slug: string): string {
-  return encodeURIComponent(`wtgb-${slug}`.slice(0, 100))
+  return `wtgb-${slug}`.slice(0, 100)
 }
 function FinanceBuzzCalloutWtgb({ slug }: { slug: string }) {
-  const href = `${FB_BASE_WTGB}${fbSubIdWtgb(slug)}`
+  const subid = fbSubIdWtgb(slug)
+  // Route through proxy for click tracking + KV logging
+  const href = `/api/affiliate/click?subid=${encodeURIComponent(subid)}&slug=${encodeURIComponent(slug)}`
+
+  function handleClick() {
+    if (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>).gtag) {
+      ;(window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'affiliate_click', {
+        affiliate: 'financebuzz',
+        site: 'wtgb',
+        article_slug: slug,
+        subid,
+      })
+    }
+  }
+
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer sponsored" style={{
+    <a href={href} target="_blank" rel="noopener noreferrer sponsored" onClick={handleClick} style={{
       display: 'block', margin: '28px 0', borderRadius: 12,
       border: '1px solid #fde68a',
       background: '#fffbeb', padding: '20px 24px',
