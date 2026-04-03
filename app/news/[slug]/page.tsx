@@ -8,6 +8,42 @@ import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
 
+// ── FinanceBuzz affiliate ────────────────────────────────────
+const FB_BASE_WTGB = 'https://www.yrxtrk.com/aff_c?offer_id=22607&aff_id=2414&aff_sub='
+function fbSubIdWtgb(slug: string): string {
+  return encodeURIComponent(`wtgb-${slug}`.slice(0, 100))
+}
+function FinanceBuzzCalloutWtgb({ slug }: { slug: string }) {
+  const href = `${FB_BASE_WTGB}${fbSubIdWtgb(slug)}`
+  return (
+    <div style={{
+      margin: '28px 0', borderRadius: 12,
+      border: '1px solid #fde68a',
+      background: '#fffbeb', padding: '20px 24px',
+    }}>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+        <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#92400e', fontWeight: 700 }}>Sponsored</span>
+        <span style={{ fontSize: 10, background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: 20, fontWeight: 700, textTransform: 'uppercase' }}>Free</span>
+      </div>
+      <p style={{ margin: '0 0 6px', fontSize: 16, fontWeight: 700, color: '#1a1a2e', lineHeight: 1.4 }}>
+        Grocery bills climbing? You may be missing other ways to save.
+      </p>
+      <p style={{ margin: '0 0 14px', fontSize: 14, color: '#374151', lineHeight: 1.6 }}>
+        Lesser-known programs, discounts, and financial moves that help stretch every dollar at checkout and beyond.
+      </p>
+      <a href={href} target="_blank" rel="noopener noreferrer sponsored"
+        style={{
+          display: 'inline-block', background: '#1a1a2e', color: '#fff',
+          fontWeight: 700, fontSize: 13, padding: '10px 20px',
+          borderRadius: 8, textDecoration: 'none',
+        }}>
+        See What&apos;s Available →
+      </a>
+      <p style={{ margin: '10px 0 0', fontSize: 10, color: '#9ca3af' }}>Paid partner resource. Compensation may be received for clicks.</p>
+    </div>
+  )
+}
+
 export const revalidate = 86400
 
 interface Props { params: Promise<{ slug: string }> }
@@ -84,15 +120,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
-function renderBody(body: string) {
+function renderBody(body: string, slug: string) {
   const lines = body.split('\n')
   const elements: React.ReactNode[] = []
   let paraBuffer: string[] = []
   let emailInserted = false
+  let paraCount = 0
+  let fbInserted = false
 
   function flushPara() {
     const text = paraBuffer.join(' ').trim()
     if (text) {
+      paraCount++
       elements.push(
         <p key={`p-${elements.length}`} style={{
           margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
@@ -101,6 +140,11 @@ function renderBody(body: string) {
       if (!emailInserted) {
         elements.push(<ArticleEmailCapture key="mid-capture" placement="mid" />)
         emailInserted = true
+      }
+      // Insert FinanceBuzz callout after 3rd paragraph
+      if (paraCount === 3 && !fbInserted) {
+        elements.push(<FinanceBuzzCalloutWtgb key="fb-callout" slug={slug} />)
+        fbInserted = true
       }
     }
     paraBuffer = []
@@ -338,7 +382,7 @@ export default async function ArticlePage({ params }: Props) {
         </a>
 
         {/* Body */}
-        <article>{renderBody(article.body ?? '')}</article>
+        <article>{renderBody(article.body ?? '', slug)}</article>
 
         {/* State links */}
         {linkedStates.length > 0 && (
