@@ -16,10 +16,11 @@ function fbSubIdWtgb(slug: string): string {
 function FinanceBuzzCalloutWtgb({ slug }: { slug: string }) {
   const href = `${FB_BASE_WTGB}${fbSubIdWtgb(slug)}`
   return (
-    <div style={{
-      margin: '28px 0', borderRadius: 12,
+    <a href={href} target="_blank" rel="noopener noreferrer sponsored" style={{
+      display: 'block', margin: '28px 0', borderRadius: 12,
       border: '1px solid #fde68a',
       background: '#fffbeb', padding: '20px 24px',
+      textDecoration: 'none', cursor: 'pointer',
     }}>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#92400e', fontWeight: 700 }}>Sponsored</span>
@@ -31,16 +32,15 @@ function FinanceBuzzCalloutWtgb({ slug }: { slug: string }) {
       <p style={{ margin: '0 0 14px', fontSize: 14, color: '#374151', lineHeight: 1.6 }}>
         Lesser-known programs, discounts, and financial moves that help stretch every dollar at checkout and beyond.
       </p>
-      <a href={href} target="_blank" rel="noopener noreferrer sponsored"
-        style={{
-          display: 'inline-block', background: '#1a1a2e', color: '#fff',
-          fontWeight: 700, fontSize: 13, padding: '10px 20px',
-          borderRadius: 8, textDecoration: 'none',
-        }}>
+      <span style={{
+        display: 'inline-block', background: '#1a1a2e', color: '#fff',
+        fontWeight: 700, fontSize: 13, padding: '10px 20px',
+        borderRadius: 8,
+      }}>
         See What&apos;s Available →
-      </a>
+      </span>
       <p style={{ margin: '10px 0 0', fontSize: 10, color: '#9ca3af' }}>Paid partner resource. Compensation may be received for clicks.</p>
-    </div>
+    </a>
   )
 }
 
