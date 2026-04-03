@@ -44,7 +44,7 @@ export default function PrivacyPage() {
         Magic Media Group LLC<br />
         330 N Federal Hwy, Ste 200<br />
         Hollywood, FL 33024<br />
-        Email: <a href="mailto:michael@magicmediagroup.co" style={{ color: '#2563eb' }}>michael@magicmediagroup.co</a>
+        Email: <a href="mailto:info@magicmediagroup.co" style={{ color: '#2563eb' }}>info@magicmediagroup.co</a>
       </p>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Changes to This Policy</h2>

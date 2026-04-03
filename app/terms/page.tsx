@@ -49,7 +49,7 @@ export default function TermsPage() {
         Magic Media Group LLC<br />
         330 N Federal Hwy, Ste 200<br />
         Hollywood, FL 33024<br />
-        Email: <a href="mailto:michael@magicmediagroup.co" style={{ color: '#2563eb' }}>michael@magicmediagroup.co</a>
+        Email: <a href="mailto:info@magicmediagroup.co" style={{ color: '#2563eb' }}>info@magicmediagroup.co</a>
       </p>
     </main>
   )

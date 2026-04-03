@@ -20,6 +20,7 @@ export interface Article {
   sources?: ArticleSource[]  // 2-3 authoritative outbound citations
   tags: string[]
   geo_tags?: string[] // US state names for geo SEO
+  author?: string     // display name of the author persona
   source_tweet?: {
     id: string
     text: string
@@ -82,7 +83,8 @@ export async function fetchTweetById(tweetId: string, bearer: string): Promise<{
 export async function generateArticle(
   tweet: { id: string; text: string; author: string; username: string; created_at: string },
   anthropicKey: string,
-  direction: 'rising' | 'falling' = 'rising'
+  direction: 'rising' | 'falling' = 'rising',
+  authorPersona?: string
 ): Promise<Omit<Article, 'slug'> | null> {
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
@@ -121,26 +123,15 @@ export async function generateArticle(
   ]
   const faqTemplate = JSON.stringify(isRising ? faqRising : faqFalling, null, 2)
 
-  const sourcesTemplate = JSON.stringify([
-    { name: "USDA Economic Research Service", url: "https://www.ers.usda.gov/topics/food-markets-prices/" },
-    { name: "Bureau of Labor Statistics — CPI Food", url: "https://www.bls.gov/cpi/" },
-  ])
-
-  const prompt = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers.
-
-A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article based on this tweet.
-
-TWEET: "${tweet.text}"
-SOURCE: @${tweet.username}
-DATE: ${today}
-DIRECTION: prices ${direction}
+  // Static system prompt — cached by Anthropic between calls
+  const systemPrompt = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers.
 
 Return ONLY valid JSON — no markdown fences, no commentary:
 {
-  "headline": "8–12 word headline with primary keyword near the front. Example: '${headlineExample}'",
+  "headline": "8–12 word headline with primary keyword near the front",
   "subhead": "One crisp sentence adding context. Include a price figure or % change if available.",
-  "body": "Full article body using this exact structure — separate each section with \\n\\n:\\n\\n## What's Happening\\n[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]\\n\\n${whyItMatters}\\n\\n## What's Driving This\\n[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, tariffs, inflation relief, harvest surplus, labor costs. Be specific.]\\n\\n${meansForFamilies}\\n\\n${meansForOther}\\n\\n${shopperExpect}",
-  "faqs": ${faqTemplate},
+  "body": "Full article body using the exact section structure provided in the user message — separate each section with \\n\\n",
+  "faqs": [array of 3 FAQ objects with q and a fields, using the templates provided in the user message],
   "sources": [
     2 or 3 authoritative outbound sources relevant to THIS specific article. Pick from real, well-known organizations:
     - For egg/poultry: USDA NASS (https://www.nass.usda.gov), CDC Avian Flu tracker (https://www.cdc.gov/bird-flu)
@@ -166,18 +157,57 @@ Rules:
 - SEO: naturally include phrases like "grocery prices today", "cost of groceries", "average grocery bill" at least once each
 - The "What This Means for" sections MUST have concrete, actionable content — not vague filler`
 
+  const fullSystemPrompt = authorPersona ? `${authorPersona}\n\n${systemPrompt}` : systemPrompt
+
+  // Dynamic user prompt — changes per article call (tweet, direction, date, templates)
+  const userPrompt = `A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article based on this tweet.
+
+TWEET: "${tweet.text}"
+SOURCE: @${tweet.username}
+DATE: ${today}
+DIRECTION: prices ${direction}
+
+Use this headline style: "${headlineExample}"
+
+Use this exact body structure:
+
+## What's Happening
+[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]
+
+${whyItMatters}
+
+## What's Driving This
+[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, tariffs, inflation relief, harvest surplus, labor costs. Be specific.]
+
+${meansForFamilies}
+
+${meansForOther}
+
+${shopperExpect}
+
+Use these FAQ templates (fill in the specifics for this event):
+${faqTemplate}`
+
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': anthropicKey,
         'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31',
         'content-type': 'application/json',
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
         max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }],
+        system: [
+          {
+            type: 'text',
+            text: fullSystemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [{ role: 'user', content: userPrompt }],
       }),
     })
     if (!res.ok) return null

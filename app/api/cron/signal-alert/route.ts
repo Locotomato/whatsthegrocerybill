@@ -200,11 +200,20 @@ async function sendAlert(type: 'spike' | 'drop' | 'breaking', keyword: string, t
       </p>
     </div>`
 
+  // Gate: must have at least 1 subscriber
+  const subCount = await getSubscriberCount()
+  if (subCount < 1) {
+    console.log('[signal-alert] 0 subscribers — skipping broadcast creation')
+    return false
+  }
+
   // Resend broadcast to full audience
+  const broadcastName = `WTGB ${type.toUpperCase()} Alert — ${new Date().toISOString().slice(0,10)}`
   const res = await fetch('https://api.resend.com/broadcasts', {
     method: 'POST',
     headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      name:        broadcastName,
       audience_id: AUDIENCE_ID,
       from:        `What's the Grocery Bill? <${FROM}>`,
       subject,
@@ -213,21 +222,25 @@ async function sendAlert(type: 'spike' | 'drop' | 'breaking', keyword: string, t
   })
 
   if (!res.ok) {
-    console.error('[signal-alert] Resend broadcast failed:', res.status, await res.text())
+    console.error('[signal-alert] Resend broadcast create failed:', res.status, await res.text())
     return false
   }
 
   // Send broadcast immediately
   const { id: broadcastId } = await res.json() as any
-  if (broadcastId) {
-    await fetch(`https://api.resend.com/broadcasts/${broadcastId}/send`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({}),
-    })
+  if (!broadcastId) { console.error('[signal-alert] No broadcastId returned'); return false }
+
+  const sendRes = await fetch(`https://api.resend.com/broadcasts/${broadcastId}/send`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  })
+  if (!sendRes.ok) {
+    console.error('[signal-alert] Resend broadcast send failed:', sendRes.status, await sendRes.text())
+    return false
   }
 
-  console.log('[signal-alert] Alert sent:', type, keyword, '→ broadcast', broadcastId)
+  console.log('[signal-alert] Alert sent:', type, keyword, '→ broadcast', broadcastId, 'to', subCount, 'subscribers')
   return true
 }
 

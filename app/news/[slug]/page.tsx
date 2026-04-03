@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
+import { findAuthor, AUTHORS } from '../../../lib/authors'
 import ArticleEmailCapture from '../../components/ArticleEmailCapture'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 
@@ -71,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.headline, description: article.subhead, url,
       siteName: "What's the Grocery Bill?", type: 'article',
-      publishedTime: new Date(article.source_tweet?.created_at ?? article.created_at ?? article.generated_at ?? Date.now()).toISOString(),
+      publishedTime: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
       authors: ['https://twitter.com/wtgbofficial'], tags: article.tags,
     },
     twitter: {
@@ -159,8 +160,8 @@ export default async function ArticlePage({ params }: Props) {
   const articleSchema = {
     '@context': 'https://schema.org', '@type': 'NewsArticle',
     headline: article.headline, description: article.subhead,
-    datePublished: new Date(article.source_tweet?.created_at ?? article.generated_at ?? Date.now()).toISOString(),
-    dateModified: new Date(article.generated_at ?? Date.now()).toISOString(),
+    datePublished: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
+    dateModified: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
     author: [{ '@type': 'Organization', name: 'wtgbofficial', url: 'https://twitter.com/wtgbofficial' }],
     publisher: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
     url: articleUrl, mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
@@ -248,37 +249,55 @@ export default async function ArticlePage({ params }: Props) {
         }}>{article.subhead}</p>
 
         {/* Byline */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          paddingBottom: 20, borderBottom: '2px solid var(--border)', marginBottom: 32,
-        }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: '50%', background: '#1d9bf0',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0,
-          }}>W</div>
-          <div>
-            <a href="https://twitter.com/wtgbofficial" target="_blank" rel="noopener noreferrer"
-              style={{ color: '#1d9bf0', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
-              @wtgbofficial
-            </a>
-            <div style={{ fontSize: 12, color: 'var(--subtle)' }}>
-              {formatDate(article.source_tweet?.created_at ?? new Date(article.generated_at ?? Date.now()).toISOString())}
-            </div>
-          </div>
-          <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.headline)}&url=${encodeURIComponent(articleUrl)}&via=wtgbofficial`}
-            target="_blank" rel="noopener noreferrer"
-            style={{
-              marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6,
-              background: 'var(--navy)', color: '#fff', fontSize: 12, fontWeight: 700,
-              padding: '7px 14px', borderRadius: 20, textDecoration: 'none', whiteSpace: 'nowrap',
+        {(() => {
+          const articleAuthor = article.author ? findAuthor(article.author) : undefined
+          const fallbackAuthor = articleAuthor ?? AUTHORS[0]
+          return (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              paddingBottom: 20, borderBottom: '2px solid var(--border)', marginBottom: 32,
             }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
-            </svg>
-            Share
-          </a>
-        </div>
+              <a href={`/authors#${fallbackAuthor.slug}`} style={{ flexShrink: 0, textDecoration: 'none' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={fallbackAuthor.avatarUrl}
+                  alt={fallbackAuthor.name}
+                  width={28}
+                  height={28}
+                  style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: fallbackAuthor.avatarColor,
+                    border: `2px solid ${fallbackAuthor.avatarColor}44`,
+                    display: 'block',
+                  }}
+                />
+              </a>
+              <div>
+                <a href={`/authors#${fallbackAuthor.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
+                  {fallbackAuthor.name}
+                </a>
+                <div style={{ fontSize: 12, color: 'var(--subtle)' }}>
+                  {fallbackAuthor.credential} · {fallbackAuthor.tagline}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--subtle)' }}>
+                  {formatDate(article.publishedAt ?? new Date(article.generated_at ?? Date.now()).toISOString())}
+                </div>
+              </div>
+              <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.headline)}&url=${encodeURIComponent(articleUrl)}&via=wtgbofficial`}
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: 'var(--navy)', color: '#fff', fontSize: 12, fontWeight: 700,
+                  padding: '7px 14px', borderRadius: 20, textDecoration: 'none', whiteSpace: 'nowrap',
+                }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+                </svg>
+                Share
+              </a>
+            </div>
+          )
+        })()}
 
         {/* 🎁 Grocery Card Giveaway CTA — TOP */}
         <a

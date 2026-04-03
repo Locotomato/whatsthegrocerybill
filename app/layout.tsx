@@ -38,6 +38,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* AdSense — plain script tag so Google's crawler sees it in raw HTML */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9017750219468820"
+          crossOrigin="anonymous"
+        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-04DFV0Z2NJ"
           strategy="afterInteractive"
@@ -59,6 +66,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href="/privacy" style={{ color: '#9ca3af', textDecoration: 'none' }}>Privacy Policy</a>
             &nbsp;·&nbsp;
             <a href="/terms" style={{ color: '#9ca3af', textDecoration: 'none' }}>Terms of Service</a>
+            &nbsp;·&nbsp;
+            <a href="/authors" style={{ color: '#9ca3af', textDecoration: 'none' }}>Our Writers</a>
           </p>
         </footer>
         <Analytics />

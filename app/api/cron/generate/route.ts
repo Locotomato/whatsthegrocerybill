@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateArticle, toSlug, type Article } from '../../../../lib/articleUtils'
+import { pickAuthor } from '../../../../lib/authors'
 import { postTweetV2, buildArticleTweet } from '../../../../lib/twitterOAuth2'
 import { getArticleVideo } from '../../../../lib/youtubeUtils'
 
@@ -217,15 +218,16 @@ export async function GET(req: NextRequest) {
   }
 
   // ── Generate articles ─────────────────────────────────────────────────────
+  const articleAuthors = newSignals.map(s => pickAuthor(s.score > 0 ? 'rising' : 'falling', s.text))
   const results = await Promise.allSettled(
-    newSignals.map(s => generateArticle(s, ANTHROPIC!, s.score > 0 ? 'rising' : 'falling'))
+    newSignals.map((s, i) => generateArticle(s, ANTHROPIC!, s.score > 0 ? 'rising' : 'falling', articleAuthors[i].promptPersona))
   )
 
   const stored: Article[] = []
   for (let i = 0; i < results.length; i++) {
     const r = results[i]
     if (r.status !== 'fulfilled' || !r.value) continue
-    const article: Article = { ...r.value, slug: toSlug(r.value.headline, r.value.id), publishedAt: new Date().toISOString() }
+    const article: Article = { ...r.value, author: articleAuthors[i].name, slug: toSlug(r.value.headline, r.value.id), publishedAt: new Date().toISOString() }
     await kvSet(`wtgb:article:${article.slug}`, article, 60 * 60 * 24 * 60)
     await kvLpush('wtgb:articles:index', article.slug)
     await kvSet(`wtgb:signal:seen:${newSignals[i].id}`, 1, 60 * 60 * 24 * 7)

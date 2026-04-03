@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Filter to real people with reasonable follower counts
-    const candidates = tweets.filter(t =>
+    const candidates = tweets.filter((t: { followers: number; authorId: string; username: string; name: string }) =>
       t.followers >= 100 &&
       t.followers <= 50000 &&
       t.authorId !== MY_USER_ID &&
