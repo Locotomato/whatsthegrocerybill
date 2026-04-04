@@ -3,7 +3,7 @@
  * Includes articles published in the last 2 days (Google News requires < 2 days)
  */
 import { NextResponse } from 'next/server'
-import type { Article } from '../../../lib/articleUtils'
+import type { Article } from '../../lib/articleUtils'
 
 export const revalidate = 3600 // 1h
 
