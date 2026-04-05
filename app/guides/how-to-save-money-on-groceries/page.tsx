@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function HowToSaveMoneyOnGroceries() {
           The average American family spends <strong style={{ color: '#fbbf24' }}>$1,000–1,500/month</strong> on groceries. With food inflation still elevated, these 8 strategies can cut your bill by 20–30% without spending hours couponing.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32 }}>
           {tips.map((tip) => (
@@ -62,7 +62,7 @@ export default function HowToSaveMoneyOnGroceries() {
           </p>
         </div>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>

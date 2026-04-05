@@ -1,7 +1,7 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import { slugToAbbr, toTitleCase, ALL_STATE_SLUGS } from '../../../lib/stateData'
 import NavHeader from '../../components/NavHeader'
 
@@ -231,7 +231,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Email CTA */}
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         {/* FAQ */}
         <div style={{ marginBottom: 40 }}>

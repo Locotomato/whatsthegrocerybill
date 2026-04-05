@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import NavHeader from '../components/NavHeader'
-import EmailCapture from '../components/EmailCapture'
 import NearMeClient from './NearMeClient'
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function NearMePage() {
         </div>
         <NearMeClient />
       </main>
-      <EmailCapture />
+      <LocoEmbed />
     </div>
   )
 }

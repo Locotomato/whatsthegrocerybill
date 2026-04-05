@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default function WhatAffectsGroceryPrices() {
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f) => (
@@ -47,7 +47,7 @@ export default function WhatAffectsGroceryPrices() {
           ))}
         </div>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>

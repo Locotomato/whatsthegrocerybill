@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function WhyAreEggPricesSoHigh() {
           The average dozen eggs now costs <strong style={{ color: '#fbbf24' }}>over $4.80</strong> — nearly triple what they cost in 2021. Here's the full breakdown of what's driving record egg prices, which states are hit hardest, and whether relief is coming.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🦠 The Avian Flu Epidemic
@@ -136,7 +136,7 @@ export default function WhyAreEggPricesSoHigh() {
           ))}
         </div>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>

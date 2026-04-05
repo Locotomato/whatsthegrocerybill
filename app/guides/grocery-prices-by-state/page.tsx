@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function GroceryPricesByState() {
           A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here's how all 50 states compare — and why the gaps are so large.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>
@@ -70,7 +70,7 @@ export default function GroceryPricesByState() {
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>

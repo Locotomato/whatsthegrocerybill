@@ -1,7 +1,7 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ALL_STATE_SLUGS, STATE_ABBR, toTitleCase } from '../../lib/stateData'
-import GroceryEmailBanner from '../components/GroceryEmailBanner'
 import NavHeader from '../components/NavHeader'
 
 export const revalidate = 3600
@@ -132,7 +132,7 @@ export default async function GroceryPricesIndex() {
         </div>
 
         {/* Email CTA — after price cards, high intent */}
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         {/* States by region */}
         {Object.entries(REGION_ORDER).map(([region, slugs]) => (
@@ -209,7 +209,7 @@ export default async function GroceryPricesIndex() {
         </div>
 
         {/* Email CTA — after brands */}
-        <GroceryEmailBanner />
+        <LocoEmbed />
       </div>
     </main>
   )

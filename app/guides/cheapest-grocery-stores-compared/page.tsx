@@ -1,6 +1,6 @@
+import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import GroceryEmailBanner from '../../components/GroceryEmailBanner'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default function CheapestGroceryStoresCompared() {
           Where you shop matters more than what you buy. Switching from a traditional supermarket to Aldi or Walmart can save a family of four <strong style={{ color: '#fbbf24' }}>$150–250/month</strong> with zero change in what they eat.
         </p>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32 }}>
           {stores.map((store) => (
@@ -68,7 +68,7 @@ export default function CheapestGroceryStoresCompared() {
           </p>
         </div>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ 8 Ways to Save on Groceries</Link>

@@ -1,7 +1,7 @@
 'use client'
 
+import LocoEmbed from '@/app/components/LocoEmbed'
 import Link from 'next/link'
-import GroceryEmailBanner from '../components/GroceryEmailBanner'
 import NavHeader from '../components/NavHeader'
 
 const GUIDES = [
@@ -80,7 +80,7 @@ export default function GuidesPage() {
           </p>
         </div>
 
-        <GroceryEmailBanner />
+        <LocoEmbed />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, marginTop: 28 }}>
           {GUIDES.map((guide) => (

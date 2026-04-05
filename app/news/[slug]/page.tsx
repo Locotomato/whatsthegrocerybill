@@ -1,9 +1,9 @@
+import LocoEmbed from '../../components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
 import { findAuthor, AUTHORS } from '../../../lib/authors'
-import ArticleEmailCapture from '../../components/ArticleEmailCapture'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
@@ -151,7 +151,7 @@ function renderBody(body: string, slug: string) {
         }}>{text}</p>
       )
       if (!emailInserted) {
-        elements.push(<ArticleEmailCapture key="mid-capture" placement="mid" />)
+        elements.push(<LocoEmbed />)
         emailInserted = true
       }
       // Insert FinanceBuzz callout after 3rd paragraph
@@ -439,7 +439,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* End email capture */}
-        <ArticleEmailCapture placement="end" />
+        <LocoEmbed />
 
         {/* YouTube embed */}
         {video && (
