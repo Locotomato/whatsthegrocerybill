@@ -1,21 +1,26 @@
-// Renders a single target div with a stable unique ID.
-// embed.v1.js mounts to this specific ID — no querySelectorAll, no ambiguity.
-// campaignId prop supports future multi-unit placements with different campaigns.
+// Pure static div — embed.v1.js mounts widget here.
+// formTitle is passed as data-form-title so the widget sends it as form_title
+// to /api/leads, enabling per-topic guide generation and delivery.
 
 interface Props {
   campaignId?: string
+  formTitle?: string
 }
 
-const DEFAULT_CAMPAIGN = 'cmp_8c54fcc7'
+const DEFAULT_CAMPAIGN  = 'cmp_8c54fcc7'
+const DEFAULT_FORMTITLE = 'Get Your Free Grocery Savings Guide'
 
-export default function LocoEmbed({ campaignId = DEFAULT_CAMPAIGN }: Props) {
-  // ID is stable per campaign — embed.v1.js targets exactly this element
+export default function LocoEmbed({
+  campaignId = DEFAULT_CAMPAIGN,
+  formTitle  = DEFAULT_FORMTITLE,
+}: Props) {
   const widgetId = `loco-widget-${campaignId}`
   return (
     <div
       id={widgetId}
       data-loco-widget
       data-campaign={campaignId}
+      data-form-title={formTitle}
       style={{ width: '100%' }}
     />
   )
