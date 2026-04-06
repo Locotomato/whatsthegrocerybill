@@ -1,15 +1,19 @@
-// Pure static div — embed.v1.js is loaded once in layout.tsx and handles
-// all widget mounting. It deduplicates by campaign ID, so placing this
-// component multiple times is safe — only the first instance per campaign mounts.
-// No useEffect, no script injection, no race conditions.
+// Renders a single target div with a stable unique ID.
+// embed.v1.js mounts to this specific ID — no querySelectorAll, no ambiguity.
+// campaignId prop supports future multi-unit placements with different campaigns.
 
 interface Props {
   campaignId?: string
 }
 
-export default function LocoEmbed({ campaignId = 'cmp_8c54fcc7' }: Props) {
+const DEFAULT_CAMPAIGN = 'cmp_8c54fcc7'
+
+export default function LocoEmbed({ campaignId = DEFAULT_CAMPAIGN }: Props) {
+  // ID is stable per campaign — embed.v1.js targets exactly this element
+  const widgetId = `loco-widget-${campaignId}`
   return (
     <div
+      id={widgetId}
       data-loco-widget
       data-campaign={campaignId}
       style={{ width: '100%' }}
