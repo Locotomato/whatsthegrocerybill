@@ -38,6 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* Preconnect to locotomato.com — starts TCP/TLS handshake early for faster widget load */}
+        <link rel="preconnect" href="https://locotomato.com" />
+        <link rel="dns-prefetch" href="https://locotomato.com" />
         {/* AdSense — plain script tag so Google's crawler sees it in raw HTML */}
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script
