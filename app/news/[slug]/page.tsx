@@ -438,8 +438,7 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        {/* End email capture */}
-        <LocoEmbed />
+        {/* End email capture — widget inserted mid-article via elements.push above */}
 
         {/* YouTube embed */}
         {video && (

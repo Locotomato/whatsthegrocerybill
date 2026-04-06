@@ -47,8 +47,6 @@ export default function WhatAffectsGroceryPrices() {
           ))}
         </div>
 
-        <LocoEmbed />
-
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ How to Save on Groceries</Link>

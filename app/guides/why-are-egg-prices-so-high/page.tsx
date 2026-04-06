@@ -136,8 +136,6 @@ export default function WhyAreEggPricesSoHigh() {
           ))}
         </div>
 
-        <LocoEmbed />
-
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>
             → How to Save Money on Groceries

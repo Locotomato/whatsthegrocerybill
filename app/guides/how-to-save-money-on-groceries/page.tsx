@@ -62,8 +62,6 @@ export default function HowToSaveMoneyOnGroceries() {
           </p>
         </div>
 
-        <LocoEmbed />
-
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>
           <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>

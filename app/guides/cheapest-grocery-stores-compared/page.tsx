@@ -68,8 +68,6 @@ export default function CheapestGroceryStoresCompared() {
           </p>
         </div>
 
-        <LocoEmbed />
-
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ 8 Ways to Save on Groceries</Link>
           <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Food Inflation Explained</Link>

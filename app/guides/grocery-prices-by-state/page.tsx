@@ -70,8 +70,6 @@ export default function GroceryPricesByState() {
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
 
-        <LocoEmbed />
-
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>
           <Link href="/guides/cheapest-grocery-stores-compared" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Cheapest Grocery Stores Compared</Link>

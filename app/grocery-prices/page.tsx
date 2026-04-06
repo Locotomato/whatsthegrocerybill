@@ -209,7 +209,6 @@ export default async function GroceryPricesIndex() {
         </div>
 
         {/* Email CTA — after brands */}
-        <LocoEmbed />
       </div>
     </main>
   )
