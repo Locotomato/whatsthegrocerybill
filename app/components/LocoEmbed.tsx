@@ -1,37 +1,18 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
-
-const PARTNER_ID  = 'pub_rs2wayi1'
-const CAMPAIGN_ID = 'cmp_8c54fcc7'
-const SCRIPT_SRC  = 'https://locotomato.com/embed.v1.js'
+// Pure static div — embed.v1.js is loaded once in layout.tsx and handles
+// all widget mounting. It deduplicates by campaign ID, so placing this
+// component multiple times is safe — only the first instance per campaign mounts.
+// No useEffect, no script injection, no race conditions.
 
 interface Props {
-  campaignId?: string  // override for future multi-campaign placements
+  campaignId?: string
 }
 
-export default function LocoEmbed({ campaignId = CAMPAIGN_ID }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-
-    // Stamp campaign ID on container — embed.v1.js deduplicates by campaign ID.
-    // Same campaign rendered twice = one widget. Different campaigns = each mounts.
-    container.setAttribute('data-loco-widget', '')
-    container.setAttribute('data-campaign', campaignId)
-
-    // Load embed script once per page (dedup by partner attr)
-    if (!document.querySelector(`script[data-partner="${PARTNER_ID}"]`)) {
-      const script = document.createElement('script')
-      script.src = SCRIPT_SRC
-      script.setAttribute('data-partner', PARTNER_ID)
-      script.setAttribute('data-campaign', campaignId)
-      script.async = true
-      document.body.appendChild(script)
-    }
-  }, [campaignId])
-
-  return <div ref={containerRef} style={{ width: '100%' }} />
+export default function LocoEmbed({ campaignId = 'cmp_8c54fcc7' }: Props) {
+  return (
+    <div
+      data-loco-widget
+      data-campaign={campaignId}
+      style={{ width: '100%' }}
+    />
+  )
 }

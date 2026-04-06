@@ -60,6 +60,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
+        {/* Loco Tomato embed script — loaded once globally, dedup handled by embed.v1.js */}
+        <Script
+          src="https://locotomato.com/embed.v1.js"
+          data-partner="pub_rs2wayi1"
+          data-campaign="cmp_8c54fcc7"
+          strategy="lazyOnload"
+        />
         <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
             © {new Date().getFullYear()} Magic Media Group LLC &nbsp;·&nbsp;
