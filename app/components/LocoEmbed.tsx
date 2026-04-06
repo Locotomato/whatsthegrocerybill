@@ -6,47 +6,32 @@ const PARTNER_ID  = 'pub_rs2wayi1'
 const CAMPAIGN_ID = 'cmp_8c54fcc7'
 const SCRIPT_SRC  = 'https://locotomato.com/embed.v1.js'
 
-// Module-level flag: only ever mount one widget per page, regardless of how
-// many <LocoEmbed /> instances are placed in JSX. The second+ instances
-// render nothing — this prevents the double-widget bug.
-let widgetMounted = false
+interface Props {
+  campaignId?: string  // override for future multi-campaign placements
+}
 
-export default function LocoEmbed() {
+export default function LocoEmbed({ campaignId = CAMPAIGN_ID }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const isOwner = useRef(false)
 
   useEffect(() => {
-    // If a widget is already mounted on this page, this instance renders nothing
-    if (widgetMounted) return
-    widgetMounted = true
-    isOwner.current = true
-
     const container = containerRef.current
     if (!container) return
 
-    // Mark the container so embed.v1.js targets exactly this one div
+    // Stamp campaign ID on container — embed.v1.js deduplicates by campaign ID.
+    // Same campaign rendered twice = one widget. Different campaigns = each mounts.
     container.setAttribute('data-loco-widget', '')
+    container.setAttribute('data-campaign', campaignId)
 
-    // Don't double-load the script
+    // Load embed script once per page (dedup by partner attr)
     if (!document.querySelector(`script[data-partner="${PARTNER_ID}"]`)) {
       const script = document.createElement('script')
       script.src = SCRIPT_SRC
       script.setAttribute('data-partner', PARTNER_ID)
-      script.setAttribute('data-campaign', CAMPAIGN_ID)
+      script.setAttribute('data-campaign', campaignId)
       script.async = true
       document.body.appendChild(script)
     }
-
-    return () => {
-      // Reset flag on unmount so navigating away + back works
-      if (isOwner.current) widgetMounted = false
-    }
-  }, [])
-
-  // Non-owner instances render nothing
-  if (typeof window !== 'undefined' && widgetMounted && !isOwner.current) {
-    return null
-  }
+  }, [campaignId])
 
   return <div ref={containerRef} style={{ width: '100%' }} />
 }
