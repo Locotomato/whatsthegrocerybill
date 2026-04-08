@@ -110,7 +110,7 @@ export default async function Home() {
           </div>
 
           {/* Email Capture — above fold, before price grid */}
-          <div data-loco-widget></div>
+          <div data-loco-widget style={{ marginBottom: 40 }}></div>
 
           <div className="price-grid">
             {groceryItems.map((item) => {
