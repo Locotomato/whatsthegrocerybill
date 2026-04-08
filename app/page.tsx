@@ -110,8 +110,6 @@ export default async function Home() {
           </div>
 
           {/* Email Capture — above fold, before price grid */}
-          <div data-loco-widget style={{ marginBottom: 40 }}></div>
-
           <div className="price-grid">
             {groceryItems.map((item) => {
               const hasYoy = item.yoyPct != null && item.yoyUp != null
@@ -145,6 +143,8 @@ export default async function Home() {
               )
             })}
           </div>
+
+          <div data-loco-widget style={{ marginTop: 32, marginBottom: 8 }}></div>
         </div>
 
         {/* Divider */}
