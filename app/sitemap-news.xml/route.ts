@@ -26,8 +26,9 @@ export async function GET() {
   let articles: Article[] = []
   try {
     const { kv } = await import('@vercel/kv')
-    const slugs = await kv.lrange<string>('wtgb:articles:index', 0, 99)
-    const raws = await Promise.all((slugs ?? []).map(s => kv.get(`wtgb:article:${s}`)))
+    const rawSlugs = await kv.lrange<string>('wtgb:articles:index', 0, 99)
+    const slugs = [...new Set(rawSlugs ?? [])]
+    const raws = await Promise.all(slugs.map(s => kv.get(`wtgb:article:${s}`)))
     articles = raws
       .map(parseArticle)
       .filter((a): a is Article => {
