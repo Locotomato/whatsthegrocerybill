@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -231,7 +230,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Email CTA */}
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         {/* FAQ */}
         <div style={{ marginBottom: 40 }}>

@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import NavHeader from '../components/NavHeader'
 import NearMeClient from './NearMeClient'
@@ -32,7 +31,7 @@ export default function NearMePage() {
         </div>
         <NearMeClient />
       </main>
-      <LocoEmbed />
+      <div data-loco-widget></div>
     </div>
   )
 }

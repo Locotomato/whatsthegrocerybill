@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ALL_STATE_SLUGS, STATE_ABBR, toTitleCase } from '../../lib/stateData'
@@ -132,7 +131,7 @@ export default async function GroceryPricesIndex() {
         </div>
 
         {/* Email CTA — after price cards, high intent */}
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         {/* States by region */}
         {Object.entries(REGION_ORDER).map(([region, slugs]) => (

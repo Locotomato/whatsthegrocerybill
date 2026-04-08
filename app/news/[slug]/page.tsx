@@ -1,4 +1,3 @@
-import LocoEmbed from '../../components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -151,7 +150,7 @@ function renderBody(body: string, slug: string) {
         }}>{text}</p>
       )
       if (!emailInserted) {
-        elements.push(<LocoEmbed />)
+        elements.push(<div data-loco-widget></div>)
         emailInserted = true
       }
       // Insert FinanceBuzz callout after 3rd paragraph

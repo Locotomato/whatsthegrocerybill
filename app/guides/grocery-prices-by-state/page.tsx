@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -38,7 +37,7 @@ export default function GroceryPricesByState() {
           A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here's how all 50 states compare — and why the gaps are so large.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>

@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -34,7 +33,7 @@ export default function WhatAffectsGroceryPrices() {
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f) => (

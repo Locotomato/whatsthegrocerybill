@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -35,7 +34,7 @@ export default function CheapestGroceryStoresCompared() {
           Where you shop matters more than what you buy. Switching from a traditional supermarket to Aldi or Walmart can save a family of four <strong style={{ color: '#fbbf24' }}>$150–250/month</strong> with zero change in what they eat.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <div style={{ marginTop: 32 }}>
           {stores.map((store) => (

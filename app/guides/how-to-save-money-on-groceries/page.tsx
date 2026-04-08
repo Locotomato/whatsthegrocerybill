@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -36,7 +35,7 @@ export default function HowToSaveMoneyOnGroceries() {
           The average American family spends <strong style={{ color: '#fbbf24' }}>$1,000–1,500/month</strong> on groceries. With food inflation still elevated, these 8 strategies can cut your bill by 20–30% without spending hours couponing.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <div style={{ marginTop: 32 }}>
           {tips.map((tip) => (

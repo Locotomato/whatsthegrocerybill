@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -36,7 +35,7 @@ export default function InflationAndYourGroceryBill() {
           Food prices have risen faster than overall inflation for three consecutive years. The average American family is spending <strong style={{ color: '#fbbf24' }}>$3,000–4,000 more per year</strong> on groceries than they were in 2021. Here's the full breakdown.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>
           Price Changes Since 2021 (BLS Data)

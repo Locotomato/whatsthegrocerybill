@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
@@ -36,7 +35,7 @@ export default function WhyAreEggPricesSoHigh() {
           The average dozen eggs now costs <strong style={{ color: '#fbbf24' }}>over $4.80</strong> — nearly triple what they cost in 2021. Here's the full breakdown of what's driving record egg prices, which states are hit hardest, and whether relief is coming.
         </p>
 
-        <LocoEmbed />
+        <div data-loco-widget></div>
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🦠 The Avian Flu Epidemic

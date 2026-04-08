@@ -1,4 +1,3 @@
-import LocoEmbed from '@/app/components/LocoEmbed'
 import Link from 'next/link'
 import ArticleSection from './components/ArticleSection'
 import NewsFeed from './components/NewsFeed'
@@ -111,7 +110,7 @@ export default async function Home() {
           </div>
 
           {/* Email Capture — above fold, before price grid */}
-          <LocoEmbed />
+          <div data-loco-widget></div>
 
           <div className="price-grid">
             {groceryItems.map((item) => {
