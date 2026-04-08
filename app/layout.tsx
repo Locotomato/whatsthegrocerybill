@@ -60,6 +60,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-04DFV0Z2NJ');
           `}
         </Script>
+        {/* NotifyAI push subscription widget */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(document, window) {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "https://trk-syntrex.com/scripts/push/script/w9gloymg2x?url=" + encodeURI(self.location.hostname) + "&alturl=" + encodeURI(self.location.pathname);
+  script.onload = function() { push_init(); push_subscribe(); };
+  document.getElementsByTagName("head")[0].appendChild(script);
+})(document, window);` }} />
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
