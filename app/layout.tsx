@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           async
           src="https://locotomato.com/embed.v1.js"
           data-partner="pub_0a5258il"
-          data-campaign="cmp_91a1d458"
+          data-campaign="cmp_ddb78ec4"
         />
         <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
