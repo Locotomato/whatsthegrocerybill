@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>",
   },
   alternates: { canonical: 'https://whatsthegrocerybill.com' },
+  verification: { other: { 'msvalidate.01': '0D15B458AA4C668217D58E0D5D9B8EB9' } },
   openGraph: {
     title: "What's the Grocery Bill?",
     description: 'Track grocery prices across the US — eggs, milk, beef, chicken, bread and more. Live data by state.',
