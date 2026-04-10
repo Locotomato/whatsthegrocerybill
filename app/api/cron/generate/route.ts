@@ -3,6 +3,7 @@ import { generateArticle, toSlug, type Article } from '../../../../lib/articleUt
 import { pickAuthor } from '../../../../lib/authors'
 import { postTweetV2, buildArticleTweet } from '../../../../lib/twitterOAuth2'
 import { getArticleVideo } from '../../../../lib/youtubeUtils'
+import { pingBingUrls } from '../../../../lib/bing-webmaster'
 
 export const dynamic     = 'force-dynamic'
 export const maxDuration = 300
@@ -246,11 +247,12 @@ export async function GET(req: NextRequest) {
     try { await getArticleVideo(article.slug, article.headline, article.tags ?? []) } catch {}
   }
 
-  // ── IndexNow ──────────────────────────────────────────────────────────────
+  // ── IndexNow + Bing Webmaster ───────────────────────────────────────────
   if (stored.length > 0) {
+    const INDEXNOW_KEY = '1aad7dfecb3488df56e98b3335b912a3'
+    const SITE = 'https://whatsthegrocerybill.com'
+    const publishedUrls = stored.map(a => `${SITE}/news/${a.slug}`)
     try {
-      const INDEXNOW_KEY = '1aad7dfecb3488df56e98b3335b912a3'
-      const SITE = 'https://whatsthegrocerybill.com'
       await fetch('https://api.indexnow.org/indexnow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -258,10 +260,11 @@ export async function GET(req: NextRequest) {
           host: 'whatsthegrocerybill.com',
           key: INDEXNOW_KEY,
           keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`,
-          urlList: stored.map(a => `${SITE}/news/${a.slug}`),
+          urlList: publishedUrls,
         }),
       })
     } catch (e) { console.error('[generate] IndexNow failed:', e) }
+    await pingBingUrls(publishedUrls, SITE)
   }
 
   console.log(`[generate] stored ${stored.length} | daily ${dailyCount + stored.length}/${dailyCap} | trending=${isTrending} | sources: twitter=${tweetSignals.length} news=${newsSignals.length}`)
