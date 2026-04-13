@@ -160,7 +160,7 @@ export default async function CityGasPricePage({ params }: Props) {
       <NavHeader active="prices" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 20px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 20px 80px' }}>
 
         {/* Breadcrumb */}
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 24, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
