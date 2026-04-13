@@ -11,15 +11,16 @@ interface Props {
  * Loads the Loco Tomato embed script globally, but skips:
  *   - / (homepage)
  *   - /authors and /authors/* (writer bio pages)
+ *   - /privacy, /terms, /about, /contact (legal / info pages)
  */
-const EXCLUDED_PATHS = ['/']
+const EXCLUDED_EXACT = ['/', '/privacy', '/terms', '/about', '/contact']
 const EXCLUDED_PREFIXES = ['/authors']
 
 export default function LocoScript({ partner, campaign }: Props) {
   const pathname = usePathname()
 
   useEffect(() => {
-    if (EXCLUDED_PATHS.includes(pathname)) return
+    if (EXCLUDED_EXACT.includes(pathname)) return
     if (EXCLUDED_PREFIXES.some((p) => pathname.startsWith(p))) return
     if (document.querySelector('[data-loco-injected]')) return
 
