@@ -21,7 +21,7 @@ export default function LocoEmbed({
       data-loco-widget
       data-campaign={campaignId}
       data-form-title={formTitle}
-      style={{ width: '100%' }}
+      style={{ width: '100%', marginBottom: 48 }}
     />
   )
 }
