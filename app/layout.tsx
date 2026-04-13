@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import Script from 'next/script'
+import LocoScript from '@/components/LocoScript'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -73,14 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
-        {/* Loco Tomato — plain script at end of body, fires after full DOM paint */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          async
-          src="https://locotomato.com/embed.v1.js"
-          data-partner="pub_0a5258il"
-          data-campaign="cmp_ddb78ec4"
-        />
+        {/* Loco Tomato — client component skips /authors pages */}
+        <LocoScript partner="pub_0a5258il" campaign="cmp_ddb78ec4" />
         <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
             © {new Date().getFullYear()} Magic Media Group LLC &nbsp;·&nbsp;
