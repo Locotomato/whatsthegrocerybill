@@ -32,7 +32,7 @@ export default function WarehouseClubPage({ club }: Props) {
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: F }}>
       <NavHeader active="grocery-prices" />
 
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 16px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 16px 80px' }}>
         {/* Breadcrumb */}
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>
           <Link href="/" style={{ color: C.muted, textDecoration: 'none' }}>Home</Link>
