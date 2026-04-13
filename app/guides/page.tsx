@@ -64,7 +64,7 @@ export default function GuidesPage() {
   return (
     <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
       <NavHeader active="guides" />
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 20px' }}>
         <Link href="/" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>← Home</Link>
 
         <div style={{ textAlign: 'center', margin: '24px 0 36px' }}>
