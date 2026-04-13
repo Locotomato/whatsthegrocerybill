@@ -230,7 +230,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Email CTA */}
-        <div data-loco-widget></div>
+        <div data-loco-widget style={{ marginBottom: 48 }}></div>
 
         {/* FAQ */}
         <div style={{ marginBottom: 40 }}>
