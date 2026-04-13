@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 
 interface Props {
+  theme?: string
   partner: string
   campaign: string
 }
@@ -16,7 +17,7 @@ interface Props {
 const EXCLUDED_EXACT = ['/', '/privacy', '/terms', '/about', '/contact']
 const EXCLUDED_PREFIXES = ['/authors']
 
-export default function LocoScript({ partner, campaign }: Props) {
+export default function LocoScript({ partner, campaign, theme }: Props) {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function LocoScript({ partner, campaign }: Props) {
     script.async = true
     script.setAttribute('data-partner', partner)
     script.setAttribute('data-campaign', campaign)
+    if (theme) script.setAttribute('data-theme', theme)
     script.setAttribute('data-loco-injected', partner)
     document.body.appendChild(script)
   }, [pathname, partner, campaign])
