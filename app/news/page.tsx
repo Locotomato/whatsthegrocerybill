@@ -67,7 +67,7 @@ export default function NewsArchive() {
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       <NavHeader active="news" />
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 80px' }}>
 
         {/* Nav */}
         <div style={{ marginBottom: 32 }}>
