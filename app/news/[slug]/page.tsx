@@ -85,8 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
 function renderBody(body: string, slug: string) {
-  const lines = body.split('
-')
+  const lines = body.split('\n')
   const elements: React.ReactNode[] = []
   let paraBuffer: string[] = []
   let emailInserted = false
