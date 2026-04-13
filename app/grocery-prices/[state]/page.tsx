@@ -133,7 +133,7 @@ export default async function StatePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '32px 20px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 20px 80px' }}>
 
         {/* Breadcrumb */}
         <div style={{ marginBottom: 24, display: 'flex', gap: 8, fontSize: 13, color: 'var(--muted)', flexWrap: 'wrap' }}>
