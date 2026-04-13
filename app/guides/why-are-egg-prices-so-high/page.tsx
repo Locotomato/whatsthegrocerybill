@@ -15,7 +15,7 @@ export default function WhyAreEggPricesSoHigh() {
   return (
     <main style={{ background: 'var(--bg)', minHeight: '100vh', color: 'var(--text)' }}>
       <NavHeader active="guides" />
-      <div style={{ maxWidth: 780, margin: '0 auto', padding: '40px 20px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 20px' }}>
 
         <div style={{ marginBottom: 16 }}>
           <Link href="/guides" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>
