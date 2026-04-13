@@ -85,7 +85,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
 function renderBody(body: string, slug: string) {
-  const lines = body.split('\n')
+  const lines = body.split('
+')
   const elements: React.ReactNode[] = []
   let paraBuffer: string[] = []
   let emailInserted = false
@@ -217,7 +218,7 @@ export default async function ArticlePage({ params }: Props) {
       </header>
 
       {/* ── Article content ── */}
-      <div style={{ maxWidth: 740, margin: '0 auto', padding: '32px 20px 80px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 80px' }}>
 
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" style={{ marginBottom: 24, fontSize: 13, color: 'var(--muted)', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
