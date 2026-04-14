@@ -55,7 +55,7 @@ export default function HowToSaveMoneyOnGroceries() {
           ))}
 
           {/* AFS Unit - mid-content */}
-          <AfsUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} />
+          <AfsUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} zone="mid-content" />
 
           {tips.slice(4).map((tip) => (
             <div key={tip.num} style={{
