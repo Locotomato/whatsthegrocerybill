@@ -282,19 +282,10 @@ export default async function StatePage({ params }: Props) {
             📰 Latest Grocery Price News
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { slug: 'grocery-prices-rising-again-what-shoppers-need-to-know-now', title: 'Grocery Prices Rising Again: What Shoppers Need to Know' },
-              { slug: 'grocery-prices-fall-again-what-shoppers-are-seeing-at-checkout', title: 'Grocery Prices Fall: What Shoppers Are Seeing at Checkout' },
-              { slug: 'grocery-prices-rising-food-inflation-hits-9-12-as-shoppers-face-empty-shelves', title: 'Food Inflation Hits 9–12% as Shoppers Face Empty Shelves' },
-            ].map(article => (
-              <Link key={article.slug} href={`/news/${article.slug}`} style={{
-                fontSize: 13, color: 'var(--blue)', textDecoration: 'none', fontWeight: 600,
-                display: 'flex', alignItems: 'center', gap: 6,
-              }}>
-                <span style={{ color: 'var(--muted)', fontSize: 11 }}>→</span>
-                {article.title}
-              </Link>
-            ))}
+            <Link href="/news" style={{ fontSize: 13, color: 'var(--blue)', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ color: 'var(--muted)', fontSize: 11 }}>→</span>
+              Latest Grocery Price News
+            </Link>
             <Link href="/news" style={{ fontSize: 12, color: 'var(--muted)', textDecoration: 'none', marginTop: 4 }}>
               View all grocery price news →
             </Link>

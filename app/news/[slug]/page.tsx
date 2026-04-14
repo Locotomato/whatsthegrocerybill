@@ -475,8 +475,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        {/* Source tweet */}
-        {article.source_tweet?.url && (
+        {/* Source tweet — only render if the URL contains a valid numeric tweet ID */}
+        {article.source_tweet?.url && /\/status\/\d+/.test(article.source_tweet.url) && (
           <a href={article.source_tweet.url} target="_blank" rel="noopener noreferrer" style={{
             display: 'block', marginTop: 40, padding: '16px 18px',
             background: '#fff', border: '1px solid var(--border)',
