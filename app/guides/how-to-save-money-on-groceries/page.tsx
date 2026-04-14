@@ -38,11 +38,26 @@ export default function HowToSaveMoneyOnGroceries() {
 
         <div data-loco-widget></div>
 
-        {/* AFS Unit Test */}
-        <AfsUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} />
-
         <div style={{ marginTop: 32 }}>
-          {tips.map((tip) => (
+          {tips.slice(0, 4).map((tip) => (
+            <div key={tip.num} style={{
+              display: 'flex', gap: 20, marginBottom: 28,
+              paddingBottom: 28, borderBottom: '1px solid var(--border)',
+            }}>
+              <div style={{ fontSize: 28, fontWeight: 900, color: 'rgba(74,222,128,0.2)', minWidth: 40, lineHeight: 1 }}>
+                {tip.num}
+              </div>
+              <div>
+                <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{tip.title}</h2>
+                <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
+              </div>
+            </div>
+          ))}
+
+          {/* AFS Unit - mid-content */}
+          <AfsUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} />
+
+          {tips.slice(4).map((tip) => (
             <div key={tip.num} style={{
               display: 'flex', gap: 20, marginBottom: 28,
               paddingBottom: 28, borderBottom: '1px solid var(--border)',
