@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} bg-gray-950`}>
         {children}
         {/* Loco Tomato — client component skips /authors pages */}
-        <LocoScript partner="pub_rs2wayi1" campaign="cmp_7d5e0dc3" theme="hero-light" />
+        <LocoScript partner="pub_rs2wayi1" campaign="cmp_db18b9c4" />
         <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
             © {new Date().getFullYear()} Magic Media Group LLC &nbsp;·&nbsp;
