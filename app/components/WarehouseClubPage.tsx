@@ -2,6 +2,7 @@
 import type { ClubData } from '../../lib/warehouseClubs'
 import Link from 'next/link'
 import NavHeader from './NavHeader'
+import { BRAND_STATES } from './WarehouseClubStatePage'
 
 const C = { bg: '#f8f9fa', card: '#ffffff', border: '#e5e7eb', red: '#dc2626', navy: '#1e3a5f', text: '#1f2937', muted: '#6b7280', green: '#16a34a', light: '#fef2f2' }
 const F = "'Inter', system-ui, sans-serif"
@@ -156,20 +157,16 @@ export default function WarehouseClubPage({ club }: Props) {
             Grocery prices vary by region. Select your state to see local context.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia',
-              'Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts',
-              'Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico',
-              'New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
-              'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'].map(state => {
-              const slug = state.toLowerCase().replace(/\s+/g, '-')
+            {(BRAND_STATES[club.slug] ?? []).map(slug => {
+              const label = slug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
               return (
                 <Link
-                  key={state}
+                  key={slug}
                   href={`/grocery-prices/${club.slug}/${slug}`}
                   style={{ fontSize: 13, color: C.navy, textDecoration: 'none', padding: '4px 10px',
                     background: '#f1f5f9', borderRadius: 6, border: `1px solid ${C.border}` }}
                 >
-                  {state}
+                  {label}
                 </Link>
               )
             })}

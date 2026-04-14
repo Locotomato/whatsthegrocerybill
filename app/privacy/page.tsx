@@ -27,6 +27,17 @@ export default function PrivacyPage() {
         <li>To comply with legal obligations</li>
       </ul>
 
+      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Third-Party Advertising</h2>
+      <p>We work with third-party advertising partners, including Google AdSense/Ad Manager, to serve ads on this Site. These partners may use cookies, web beacons, and similar technologies to collect information about your visits to this and other websites in order to provide interest-based advertising.</p>
+      <p>Google&apos;s use of advertising cookies enables it and its partners to serve ads based on your prior visits to this Site or other sites.</p>
+      <p><strong>Opting out of interest-based advertising:</strong> You may opt out of personalized advertising at any time using the following tools:</p>
+      <ul style={{ paddingLeft: 24 }}>
+        <li><a href="https://www.google.com/settings/ads" style={{ color: '#2563eb' }} target="_blank" rel="noopener noreferrer">Google Ads Settings</a></li>
+        <li><a href="https://optout.networkadvertising.org/" style={{ color: '#2563eb' }} target="_blank" rel="noopener noreferrer">Network Advertising Initiative (NAI) Opt-Out</a></li>
+        <li><a href="https://optout.aboutads.info/" style={{ color: '#2563eb' }} target="_blank" rel="noopener noreferrer">Digital Advertising Alliance (DAA) Opt-Out</a></li>
+      </ul>
+      <p>Opting out means you will no longer receive ads tailored to your interests, but you will still see ads.</p>
+
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Third-Party Services</h2>
       <p>We may use third-party analytics services (such as Google Analytics or Vercel Analytics) that collect data subject to their own privacy policies. We do not sell your personal information to third parties.</p>
 
