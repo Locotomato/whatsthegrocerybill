@@ -250,6 +250,9 @@ export default async function CityGroceryPricePage({ params }: Props) {
           </p>
         </div>
 
+        {/* Widget */}
+        <div data-loco-widget style={{ margin: '32px 0' }}></div>
+
         {/* FAQ */}
         <div style={{ marginBottom: 32 }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
