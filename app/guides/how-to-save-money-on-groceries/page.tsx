@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Script from 'next/script'
 import NavHeader from '../../components/NavHeader'
 
 export const metadata: Metadata = {
@@ -36,6 +37,17 @@ export default function HowToSaveMoneyOnGroceries() {
         </p>
 
         <div data-loco-widget></div>
+
+        {/* AFS Unit Test */}
+        <div id="loco-afs-container" style={{ margin: '32px 0' }}>
+          <Script 
+            src="https://locotomato.com/afs.js" 
+            data-partner="pub_rs2wayi1" 
+            data-campaign="cmp_db18b9c4" 
+            data-count="6"
+            strategy="afterInteractive"
+          />
+        </div>
 
         <div style={{ marginTop: 32 }}>
           {tips.map((tip) => (
