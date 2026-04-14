@@ -74,10 +74,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: "What's the Grocery Bill?", type: 'article',
       publishedTime: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
       authors: ['https://twitter.com/wtgbofficial'], tags: article.tags,
+      ...(article.imageUrl ? { images: [{ url: article.imageUrl, width: 1200, height: 630 }] } : {}),
     },
     twitter: {
       card: 'summary_large_image', site: '@wtgbofficial', creator: '@wtgbofficial',
       title: article.headline, description: article.subhead,
+      ...(article.imageUrl ? { images: [article.imageUrl] } : {}),
     },
     alternates: { canonical: url },
   }

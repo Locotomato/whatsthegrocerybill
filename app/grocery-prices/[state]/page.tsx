@@ -89,8 +89,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `Average grocery costs in ${name} vs national average. Updated monthly from BLS CPI data.`,
       url: `https://whatsthegrocerybill.com/grocery-prices/${state}`,
       siteName: "What's the Grocery Bill?",
+      type: 'website',
+      images: [{ url: 'https://whatsthegrocerybill.com/og/grocery-prices.png', width: 1200, height: 630 }],
     },
-    twitter: { card: 'summary', site: '@wtgbofficial', creator: '@wtgbofficial' },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@wtgbofficial',
+      creator: '@wtgbofficial',
+      title: `${name} Grocery Prices Today`,
+      description: `Average grocery costs in ${name} vs national average. Updated monthly from BLS CPI data.`,
+      images: ['https://whatsthegrocerybill.com/og/grocery-prices.png'],
+    },
     alternates: { canonical: `https://whatsthegrocerybill.com/grocery-prices/${state}` },
   }
 }

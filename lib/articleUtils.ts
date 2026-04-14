@@ -29,6 +29,7 @@ export interface Article {
     url: string
     created_at: string
   } | null
+  imageUrl?: string
   generated_at?: number
   created_at?: string
   publishedAt?: string

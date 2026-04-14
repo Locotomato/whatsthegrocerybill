@@ -28,8 +28,17 @@ export default function WarehouseClubPage({ club }: Props) {
     ? Math.ceil(parseInt(club.membershipCost.replace(/[^0-9]/g, '').slice(0, 3)) / (club.weeklyCartSavings * 4.3))
     : 0
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${club.name} Grocery Prices`,
+    url: `https://whatsthegrocerybill.com/grocery-prices/${club.slug}`,
+    description: club.metaDescription,
+  }
+
   return (
     <main style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: F }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <NavHeader active="grocery-prices" />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 16px 80px' }}>
