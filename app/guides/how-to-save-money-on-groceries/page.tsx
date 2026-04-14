@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Script from 'next/script'
 import NavHeader from '../../components/NavHeader'
 import AfsUnit from '../../components/AfsUnit'
 
@@ -37,6 +38,16 @@ export default function HowToSaveMoneyOnGroceries() {
         </p>
 
         <div data-loco-widget></div>
+
+        {/* AFS Unit */}
+        <div id="afs-unit" style={{ margin: '32px 0' }} />
+        <Script
+          src="https://locotomato.com/afs.js"
+          data-partner="pub_rs2wayi1"
+          data-campaign="cmp_db18b9c4"
+          data-count="6"
+          strategy="afterInteractive"
+        />
 
         <div style={{ marginTop: 32 }}>
           {tips.slice(0, 4).map((tip) => (
