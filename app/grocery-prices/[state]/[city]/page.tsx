@@ -50,12 +50,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const stateName = STATE_NAMES[stateSlug] ?? stateSlug
   const stateAbbr = STATE_ABBRS[stateSlug] ?? ''
   const statePrice = await getStatePrice(stateAbbr)
-  const cityPrice  = statePrice ? ((statePrice * 100 + city.adjustment) / 100).toFixed(3) : null
-  const priceStr   = cityPrice ? `$${cityPrice}/gal` : 'Live data'
+  const cityPrice  = statePrice ? ((statePrice * 100 + city.adjustment) / 100).toFixed(2) : null
+  const priceStr   = cityPrice ? `$${cityPrice}/wk` : 'Live data'
   const today      = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })
 
-  const title = `${city.name}, ${stateAbbr} Grocery Prices Today — ${priceStr} (${today})`
-  const desc  = `Current Grocery Prices in ${city.name}, ${stateName}. Regular unleaded averages ${priceStr} today. Compare to the ${stateName} state average and national average at the pump.`
+  const title = `Grocery Prices in ${city.name}, ${stateAbbr} — ${priceStr} (${today})`
+  const desc  = `How much does a week of groceries cost in ${city.name}, ${stateName}? The average weekly grocery basket is ${priceStr} today. Compare to the ${stateName} state average and find the cheapest stores near you.`
 
   return {
     title,
@@ -67,12 +67,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://whatsthegrocerybill.com/grocery-prices/${stateSlug}/${citySlug}`,
       siteName: "What's the Grocery Bill?",
       type: 'website',
+      images: [{ url: 'https://whatsthegrocerybill.com/og/grocery-prices.png', width: 1200, height: 630 }],
     },
-    twitter: { card: 'summary', title, description: desc, site: '@wtgbofficial' },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: desc,
+      site: '@wtgbofficial',
+      images: ['https://whatsthegrocerybill.com/og/grocery-prices.png'],
+    },
   }
 }
 
-export default async function CityGasPricePage({ params }: Props) {
+export default async function CityGroceryPricePage({ params }: Props) {
   const { state: stateSlug, city: citySlug } = await params
   const cities    = getCitiesForState(stateSlug)
   const city      = cities.find(c => c.slug === citySlug)
@@ -89,7 +96,7 @@ export default async function CityGasPricePage({ params }: Props) {
 
   // Determine price direction vs state avg
   const priceDiff = city.adjustment
-  const diffLabel = priceDiff > 0 ? `${priceDiff}¢ above` : priceDiff < 0 ? `${Math.abs(priceDiff)}¢ below` : 'at'
+  const diffLabel = priceDiff > 0 ? `$${(priceDiff / 100).toFixed(2)} above` : priceDiff < 0 ? `$${(Math.abs(priceDiff) / 100).toFixed(2)} below` : 'at'
 
   const siteUrl = `https://whatsthegrocerybill.com/grocery-prices/${stateSlug}/${citySlug}`
 
@@ -100,8 +107,8 @@ export default async function CityGasPricePage({ params }: Props) {
         '@type': 'WebPage',
         '@id': siteUrl,
         url: siteUrl,
-        name: `${city.name} Grocery Prices Today`,
-        description: `Current Grocery Prices in ${city.name}, ${stateName}`,
+        name: `Grocery Prices in ${city.name}, ${stateAbbr}`,
+        description: `How much does a week of groceries cost in ${city.name}, ${stateName}? Current grocery basket prices and store comparisons.`,
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
@@ -117,30 +124,30 @@ export default async function CityGasPricePage({ params }: Props) {
         mainEntity: [
           {
             '@type': 'Question',
-            name: `What is the average Grocery Price in ${city.name} today?`,
+            name: `How much does a week of groceries cost in ${city.name}?`,
             acceptedAnswer: {
               '@type': 'Answer',
               text: cityPrice
-                ? `The average regular unleaded Grocery Price in ${city.name}, ${stateName} is approximately $${cityPrice.toFixed(3)} per gallon as of ${today}. Prices at individual stations may vary by 5–15 cents.`
-                : `Grocery Prices in ${city.name} are updated daily. Check back for the latest figures.`,
+                ? `The estimated weekly grocery basket in ${city.name}, ${stateName} is approximately $${cityPrice.toFixed(2)} as of ${today}. This reflects a standard basket of staples including eggs, milk, bread, beef, chicken, and produce.`
+                : `Grocery prices in ${city.name} are updated regularly. Check back for the latest figures.`,
             },
           },
           {
             '@type': 'Question',
-            name: `How does ${city.name} compare to the ${stateName} state average?`,
+            name: `How do ${city.name} grocery prices compare to the ${stateName} average?`,
             acceptedAnswer: {
               '@type': 'Answer',
               text: statePrice
-                ? `${city.name} Grocery Prices are typically ${diffLabel} the ${stateName} state average of $${statePrice.toFixed(3)}/gal. Urban areas generally run higher due to higher operating costs and local taxes.`
+                ? `${city.name} grocery prices are typically ${diffLabel} the ${stateName} state average of $${statePrice.toFixed(2)}/wk. Urban areas generally run higher due to higher operating costs, real estate, and distribution expenses.`
                 : `${city.name} prices generally track the ${stateName} statewide average closely.`,
             },
           },
           {
             '@type': 'Question',
-            name: `Why are Grocery Prices in ${city.name} higher or lower than nearby cities?`,
+            name: `What are the cheapest grocery stores in ${city.name}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: `Grocery Prices vary by city due to local taxes, proximity to fuel terminals, station competition density, and operating costs. ${city.name} has ${priceDiff > 0 ? 'higher' : priceDiff < 0 ? 'lower' : 'similar'} prices compared to the ${stateName} average.`,
+              text: `Studies consistently rank Aldi and Lidl as the cheapest major grocery chains in most markets, typically 15–25% below average. Walmart Neighborhood Market and Walmart Supercenter are also consistently low-priced options in ${city.name}. Warehouse clubs like Costco and Sam's Club offer the best per-unit prices on bulk staples.`,
             },
           },
         ],
@@ -150,7 +157,7 @@ export default async function CityGasPricePage({ params }: Props) {
 
   const C = {
     bg: '#0b0d14', card: '#111827', border: 'rgba(255,255,255,0.07)',
-    red: '#ef4444', blue: '#3b82f6', text: '#f1f5f9', muted: '#64748b',
+    green: '#22c55e', blue: '#3b82f6', text: '#f1f5f9', muted: '#64748b',
     stone: '#94a3b8',
   }
   const F = "'Inter', system-ui, sans-serif"
@@ -166,6 +173,8 @@ export default async function CityGasPricePage({ params }: Props) {
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 24, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <Link href="/" style={{ color: C.muted, textDecoration: 'none' }}>Home</Link>
           <span>/</span>
+          <Link href="/grocery-prices" style={{ color: C.muted, textDecoration: 'none' }}>Grocery Prices</Link>
+          <span>/</span>
           <Link href={`/grocery-prices/${stateSlug}`} style={{ color: C.muted, textDecoration: 'none' }}>{stateName}</Link>
           <span>/</span>
           <span style={{ color: C.stone }}>{city.name}</span>
@@ -180,7 +189,7 @@ export default async function CityGasPricePage({ params }: Props) {
             </h1>
           </div>
           <p style={{ margin: 0, color: C.muted, fontSize: 15 }}>
-            Updated {today} · AAA data · Regular unleaded
+            Updated {today} · BLS CPI data · Weekly basket estimate
           </p>
         </div>
 
@@ -192,12 +201,12 @@ export default async function CityGasPricePage({ params }: Props) {
         }}>
           <div>
             <div style={{ fontSize: 13, color: C.muted, marginBottom: 6, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              {city.name} Avg · Regular
+              {city.name} · Weekly Basket
             </div>
-            <div style={{ fontSize: 52, fontWeight: 900, color: C.red, lineHeight: 1 }}>
-              {cityPrice ? `$${cityPrice.toFixed(3)}` : '—'}
+            <div style={{ fontSize: 52, fontWeight: 900, color: C.green, lineHeight: 1 }}>
+              {cityPrice ? `$${cityPrice.toFixed(2)}` : '—'}
             </div>
-            <div style={{ fontSize: 14, color: C.muted, marginTop: 6 }}>per gallon</div>
+            <div style={{ fontSize: 14, color: C.muted, marginTop: 6 }}>estimated weekly groceries</div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -207,7 +216,7 @@ export default async function CityGasPricePage({ params }: Props) {
                   {stateName} State Avg
                 </div>
                 <div style={{ fontSize: 22, fontWeight: 700, color: C.stone }}>
-                  ${statePrice.toFixed(3)}
+                  ${statePrice.toFixed(2)}/wk
                 </div>
                 <div style={{ fontSize: 12, color: priceDiff > 0 ? '#f97316' : priceDiff < 0 ? '#22c55e' : C.muted, marginTop: 2 }}>
                   {city.name} is {diffLabel} state avg
@@ -226,17 +235,18 @@ export default async function CityGasPricePage({ params }: Props) {
             Why Grocery Prices in {city.name} Vary
           </h2>
           <p style={{ margin: '0 0 10px', fontSize: 14, color: C.stone, lineHeight: 1.7 }}>
-            Grocery Prices in {city.name} reflect a mix of local taxes, distance to fuel distribution terminals,
-            station density, and real estate costs. {priceDiff > 0
-              ? `As an urban market, ${city.name} typically runs ${priceDiff}¢ above the ${stateName} statewide average.`
+            Grocery prices in {city.name} are shaped by local labor costs, store density and competition,
+            regional distribution distances, and the mix of national chains versus local grocers operating
+            in the area. {priceDiff > 0
+              ? `As a larger market, ${city.name} grocery prices run slightly above the ${stateName} statewide average — urban real estate and operating costs are the primary drivers.`
               : priceDiff < 0
-              ? `${city.name} benefits from lower operating costs, typically running ${Math.abs(priceDiff)}¢ below the ${stateName} state average.`
+              ? `${city.name} benefits from strong retail competition and lower operating costs, keeping prices slightly below the ${stateName} state average.`
               : `${city.name} prices closely track the ${stateName} state average.`}
           </p>
           <p style={{ margin: 0, fontSize: 14, color: C.stone, lineHeight: 1.7 }}>
-            Prices at individual stations can vary by 5–15 cents within the same city depending on
-            brand, location, and local competition. Use apps like Instacart to find the cheapest
-            station near you in {city.name}.
+            The store you choose matters as much as geography — Aldi and Walmart consistently
+            undercut traditional supermarkets by 15–25%, which can swing your weekly bill
+            significantly regardless of where you live in {city.name}.
           </p>
         </div>
 
@@ -247,18 +257,20 @@ export default async function CityGasPricePage({ params }: Props) {
           </h2>
           {[
             {
-              q: `What is the Grocery Price in ${city.name} right now?`,
+              q: `How much does a week of groceries cost in ${city.name}?`,
               a: cityPrice
-                ? `The average regular unleaded price in ${city.name}, ${stateName} is $${cityPrice.toFixed(3)}/gal as of ${today}. Station prices vary — expect a range of roughly $${(cityPrice - 0.10).toFixed(3)} to $${(cityPrice + 0.12).toFixed(3)} across the metro area.`
-                : `Grocery Prices in ${city.name} are updated daily. The area tracks the ${stateName} state average closely.`,
+                ? `The estimated weekly grocery basket in ${city.name}, ${stateName} is $${cityPrice.toFixed(2)} as of ${today}. This covers a standard household basket of staples — eggs, milk, bread, beef, chicken, butter, and fresh produce. Individual costs vary based on household size and store choice.`
+                : `Grocery prices in ${city.name} track the ${stateName} state average closely. Check the state page for the latest figures.`,
             },
             {
-              q: `Is gas cheaper in ${city.name} or the suburbs?`,
-              a: `Generally, suburban areas outside ${city.name} have slightly lower Grocery Prices due to lower operating costs and property taxes. If you're near a highway interchange or warehouse district, you may find lower prices than the city center.`,
+              q: `What are the cheapest grocery stores in ${city.name}?`,
+              a: `Aldi and Walmart Neighborhood Market consistently rank as the lowest-cost options in most ${stateName} markets, including ${city.name}. For bulk staples, Costco and Sam's Club offer strong per-unit value. Traditional chains like Kroger, Publix, and regional grocers typically run 10–20% higher on everyday items.`,
             },
             {
-              q: `When is the cheapest day to buy gas in ${city.name}?`,
-              a: `Nationwide data shows Monday and Tuesday tend to have slightly lower Grocery Prices before weekly demand picks up. Avoid buying gas Thursday through Saturday when prices are typically higher.`,
+              q: `How do ${city.name} grocery prices compare to the national average?`,
+              a: statePrice
+                ? `${city.name} grocery prices are ${diffLabel} the ${stateName} state average of $${statePrice.toFixed(2)}/wk. ${stateName} itself sits ${priceDiff > 0 ? 'above' : priceDiff < 0 ? 'below' : 'near'} the national average. Use our state comparison page for a full breakdown against all 50 states.`
+                : `${city.name} generally tracks the ${stateName} state average, which you can compare to all 50 states on our main grocery prices page.`,
             },
           ].map(({ q, a }) => (
             <div key={q} style={{
@@ -287,10 +299,10 @@ export default async function CityGasPricePage({ params }: Props) {
                       transition: 'border-color 0.15s',
                     }}>
                       <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 3 }}>{nc.name}</div>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: C.red }}>
-                        {ncPrice ? `$${ncPrice.toFixed(3)}` : '—'}
+                      <div style={{ fontSize: 18, fontWeight: 700, color: C.green }}>
+                        {ncPrice ? `$${ncPrice.toFixed(2)}` : '—'}
                       </div>
-                      <div style={{ fontSize: 11, color: C.muted }}>per gallon</div>
+                      <div style={{ fontSize: 11, color: C.muted }}>est. weekly basket</div>
                     </div>
                   </Link>
                 )
@@ -310,7 +322,7 @@ export default async function CityGasPricePage({ params }: Props) {
               {stateName} Statewide Average
             </div>
             <div style={{ fontSize: 13, color: C.muted }}>
-              See all cities and the full state breakdown
+              See all cities and the full state grocery breakdown
             </div>
           </div>
           <Link href={`/grocery-prices/${stateSlug}`} style={{
@@ -327,10 +339,10 @@ export default async function CityGasPricePage({ params }: Props) {
           borderRadius: 12, padding: '18px 22px', textAlign: 'center',
         }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 4 }}>
-            Get daily Grocery Price alerts
+            Get daily grocery price updates
           </div>
           <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>
-            Follow @wtgbofficial for price spikes, market analysis, and state-by-state updates.
+            Follow @wtgbofficial for price spikes, store deals, and state-by-state grocery trends.
           </div>
           <a href="https://twitter.com/intent/follow?screen_name=wtgbofficial"
             target="_blank" rel="noopener noreferrer"
