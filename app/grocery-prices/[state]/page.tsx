@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { slugToAbbr, toTitleCase, ALL_STATE_SLUGS } from '../../../lib/stateData'
 import NavHeader from '../../components/NavHeader'
+import AfsUnit from '../../../components/AfsUnit'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600
@@ -239,7 +240,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Email CTA */}
-        <div data-loco-widget style={{ marginBottom: 48 }}></div>
+        <AfsUnit />
 
         {/* FAQ */}
         <div style={{ marginBottom: 40 }}>
