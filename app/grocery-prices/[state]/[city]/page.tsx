@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { STATE_CITIES, getCitiesForState } from '../../../../lib/cities'
 import { STATE_ABBR, toTitleCase } from '../../../../lib/stateData'
 import NavHeader from '../../../components/NavHeader'
+import AfsUnit from '../../../../components/AfsUnit'
 
 // Helper maps derived from stateData
 const STATE_NAMES: Record<string, string> = Object.fromEntries(
@@ -251,7 +252,7 @@ export default async function CityGroceryPricePage({ params }: Props) {
         </div>
 
         {/* Widget */}
-        <div data-loco-widget style={{ margin: '32px 0' }}></div>
+        <AfsUnit />
 
         {/* FAQ */}
         <div style={{ marginBottom: 32 }}>
