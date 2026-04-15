@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ALL_STATE_SLUGS, STATE_ABBR, toTitleCase } from '../../lib/stateData'
 import NavHeader from '../components/NavHeader'
+import AfsUnit from '@/components/AfsUnit'
 
 export const revalidate = 3600
 
@@ -132,6 +133,8 @@ export default async function GroceryPricesIndex() {
 
         {/* Email CTA — after price cards, high intent */}
         <div data-loco-widget></div>
+
+        <AfsUnit />
 
         {/* States by region */}
         {Object.entries(REGION_ORDER).map(([region, slugs]) => (

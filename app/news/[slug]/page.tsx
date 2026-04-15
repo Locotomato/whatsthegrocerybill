@@ -5,6 +5,7 @@ import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type Ar
 import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 import FinanceBuzzCalloutWtgb from '../../components/FinanceBuzzCalloutWtgb'
+import AfsUnit from '@/components/AfsUnit'
 
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
 
@@ -346,6 +347,8 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
         </a>
+
+        <AfsUnit />
 
         {/* Body */}
         <article>{renderBody(article.body ?? '', slug)}</article>
