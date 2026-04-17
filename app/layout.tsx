@@ -18,6 +18,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "What's the Grocery Bill? | US Grocery Prices by State",
   description: 'Track grocery prices across the US — eggs, milk, beef, chicken, bread and more. Live data by state updated daily.',
+  metadataBase: new URL('https://whatsthegrocerybill.com'),
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>",
   },
