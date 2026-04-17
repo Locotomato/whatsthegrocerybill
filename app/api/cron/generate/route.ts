@@ -265,6 +265,10 @@ export async function GET(req: NextRequest) {
       })
     } catch (e) { console.error('[generate] IndexNow failed:', e) }
     await pingBingUrls(publishedUrls, SITE)
+    // Ping Google sitemap so GSC re-crawls sooner
+    try {
+      await fetch(`https://www.google.com/ping?sitemap=${SITE}/sitemap.xml`)
+    } catch (e) { console.error('[generate] Google sitemap ping failed:', e) }
   }
 
   console.log(`[generate] stored ${stored.length} | daily ${dailyCount + stored.length}/${dailyCap} | trending=${isTrending} | sources: twitter=${tweetSignals.length} news=${newsSignals.length}`)
