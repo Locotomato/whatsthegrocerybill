@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
@@ -269,8 +270,7 @@ export default async function ArticlePage({ params }: Props) {
               paddingBottom: 20, borderBottom: '2px solid var(--border)', marginBottom: 32,
             }}>
               <a href={`/authors#${fallbackAuthor.slug}`} style={{ flexShrink: 0, textDecoration: 'none' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={fallbackAuthor.avatarUrl}
                   alt={fallbackAuthor.name}
                   width={28}

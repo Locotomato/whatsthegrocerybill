@@ -87,6 +87,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href="/authors" style={{ color: '#9ca3af', textDecoration: 'none' }}>Our Writers</a>
           </p>
         </footer>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: "What's the Grocery Bill?",
+            url: 'https://whatsthegrocerybill.com',
+            logo: { '@type': 'ImageObject', url: 'https://whatsthegrocerybill.com/favicon.ico' },
+            description: 'Track grocery prices across the US — eggs, milk, beef, chicken, bread and more. Live data by state updated daily.',
+          }) }}
+        />
         <Analytics />
         <SpeedInsights />
       </body>

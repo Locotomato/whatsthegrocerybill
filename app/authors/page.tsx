@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { AUTHORS } from '@/lib/authors'
 
@@ -34,8 +35,7 @@ export default function AuthorsPage() {
               {/* Top row */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 20 }}>
                 <div style={{ width: 72, height: 72, borderRadius: 14, flexShrink: 0, overflow: 'hidden', border: `2px solid ${author.avatarColor}` }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={author.avatarUrl} alt={`${author.name} avatar`} width={72} height={72} style={{ width: '100%', height: '100%' }} />
+                  <Image src={author.avatarUrl} alt={`${author.name} avatar`} width={72} height={72} style={{ width: '100%', height: '100%' }} />
                 </div>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
