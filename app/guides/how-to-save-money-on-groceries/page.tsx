@@ -44,7 +44,7 @@ export default function HowToSaveMoneyOnGroceries() {
         <Script
           src="https://locotomato.com/afs.js"
           data-partner="pub_rs2wayi1"
-          data-campaign="cmp_db18b9c4"
+          data-campaign="cmp_8c54fcc7"
           data-count="6"
           strategy="afterInteractive"
         />
@@ -66,7 +66,7 @@ export default function HowToSaveMoneyOnGroceries() {
           ))}
 
           {/* RAD Unit - mid-content */}
-          <RadUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} zone="mid-content" />
+          <RadUnit partner="pub_rs2wayi1" campaign="cmp_8c54fcc7" count={6} zone="mid-content" />
 
           {tips.slice(4).map((tip) => (
             <div key={tip.num} style={{
