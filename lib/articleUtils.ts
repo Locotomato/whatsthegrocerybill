@@ -21,6 +21,7 @@ export interface Article {
   tags: string[]
   geo_tags?: string[] // US state names for geo SEO
   author?: string     // display name of the author persona
+  writer_id?: string  // one of the WRITERS[].id values
   source_tweet?: {
     id: string
     text: string
@@ -81,87 +82,156 @@ export async function fetchTweetById(tweetId: string, bearer: string): Promise<{
   }
 }
 
+const FLUFF_PHRASES = [
+  'in conclusion',
+  'ever-evolving',
+  "it's worth noting",
+  "it's important to understand",
+  'it is worth noting',
+  'it is important to understand',
+  'in summary',
+  'to summarize',
+  'needless to say',
+  'at the end of the day',
+]
+
+function isLowQualityDraft(body: string): boolean {
+  const lower = body.toLowerCase()
+  return FLUFF_PHRASES.some(phrase => lower.includes(phrase))
+}
+
+function countWords(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length
+}
+
+/** Compute a topic fingerprint tag from a headline for duplicate detection. */
+function topicFingerprintTag(headline: string): string {
+  const STOPWORDS = new Set([
+    'a','an','the','and','or','but','in','on','at','to','for','of','with',
+    'as','by','from','is','are','was','were','be','been','being','have',
+    'has','had','do','does','did','will','would','could','should','may',
+    'might','can','that','this','these','those','it','its','we','us','our',
+    'they','their','you','your','he','she','his','her','up','down','out',
+    'new','now','how','what','why','when','where','which','who','over','after',
+  ])
+  const words = headline
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !STOPWORDS.has(w))
+  const top5 = words.slice(0, 5).sort().join('|')
+  let hash = 0
+  for (let i = 0; i < top5.length; i++) {
+    hash = ((hash << 5) - hash + top5.charCodeAt(i)) | 0
+  }
+  return `fp:${Math.abs(hash).toString(16).slice(0, 12)}`
+}
+
 export async function generateArticle(
   tweet: { id: string; text: string; author: string; username: string; created_at: string },
   anthropicKey: string,
   direction: 'rising' | 'falling' = 'rising',
-  authorPersona?: string
+  authorPersona?: string,
+  existingFingerprintTags?: string[] // tags from recent DB articles for dupe detection
 ): Promise<Omit<Article, 'slug'> | null> {
+  const { assignWriter } = await import('./writers')
+  const writer = assignWriter(tweet.id)
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+
+  // Duplicate detection — check fingerprint against recent articles
+  const fingerprintTag = topicFingerprintTag(tweet.text)
+  if (existingFingerprintTags?.includes(fingerprintTag)) {
+    console.log(`[DUPE] topic already covered — fingerprint ${fingerprintTag}`)
+    return null
+  }
 
   const isRising = direction === 'rising'
 
-  // Direction-specific section content
   const headlineExample = isRising
     ? 'Egg Prices Hit Record High as Avian Flu Cuts US Supply by 20%'
     : 'Grocery Prices Drop for Third Week as Supply Chain Pressures Ease'
 
-  const whyItMatters = isRising
-    ? '## Why It Matters for Your Grocery Bill\n[2–3 sentences: connect the signal to what shoppers will see at checkout — which items will cost more, by how much, how fast this hits store shelves. Reference affected US regions if applicable.]'
-    : '## Why It Matters for Your Grocery Bill\n[2–3 sentences: explain what shoppers stand to gain — where savings will show up first, which stores move fastest, and which categories drop most. Reference affected US regions if applicable.]'
-
-  const meansForFamilies = isRising
-    ? '## What This Means for Families\n[2–3 sentences: concrete budget impact — weekly grocery bill change, which staples to swap (store brand, frozen vs fresh, bulk buying), how to offset the increase.]'
-    : '## What This Means for Families\n[2–3 sentences: concrete budget opportunity — where families can save the most, which swaps are now worth reversing (name brand vs store brand), ideal time to restock pantry staples.]'
-
-  const meansForOther = isRising
-    ? '## What This Means for Restaurants and Food Businesses\n[2–3 sentences: how rising ingredient costs flow through to menu prices and margins. Which restaurant categories (fast food, casual dining, school lunch) feel it first.]'
-    : '## What This Means for Restaurants and Food Businesses\n[2–3 sentences: how falling input costs create margin relief. Whether restaurants are likely to pass savings to consumers or absorb them. Which segments benefit most.]'
-
-  const shopperExpect = isRising
-    ? '## What Shoppers Should Expect\n[2–3 sentences: price outlook and timeline for how long this lasts, plus one concrete action — stock up now, delay big purchases, check Aldi/Walmart/Costco for deals.]'
-    : '## What Shoppers Should Expect\n[2–3 sentences: how long the relief may last, what could reverse it, plus one concrete action — best time to buy in bulk, which stores post the lowest prices first.]'
-
+  // Direction-specific FAQ templates
   const faqRising = [
-    { q: 'Why are grocery prices so high right now?', a: '2–3 sentence answer specific to this event.' },
-    { q: 'Which grocery items are most affected by rising prices?', a: '2–3 sentence answer with specific items and price ranges.' },
-    { q: 'How long will grocery prices stay elevated?', a: '2–3 sentence realistic outlook.' },
+    { q: 'Why are grocery prices so high right now?', a: 'Full 2–3 sentence answer specific to this event — not a template.' },
+    { q: 'Which grocery items are most affected by rising prices?', a: 'Full 2–3 sentence answer with specific items and price ranges.' },
+    { q: 'How long will grocery prices stay elevated?', a: 'Full 2–3 sentence realistic outlook.' },
+    { q: 'What can shoppers do to reduce their grocery bill?', a: 'Full 2–3 sentence practical answer with specific stores, substitutions, or timing tips.' },
   ]
   const faqFalling = [
-    { q: 'Why are grocery prices dropping right now?', a: '2–3 sentence answer specific to this event.' },
-    { q: 'Which grocery items are getting cheaper first?', a: '2–3 sentence answer with specific items and expected savings.' },
-    { q: 'How long will lower grocery prices last?', a: '2–3 sentence realistic outlook.' },
+    { q: 'Why are grocery prices dropping right now?', a: 'Full 2–3 sentence answer specific to this event — not a template.' },
+    { q: 'Which grocery items are getting cheaper first?', a: 'Full 2–3 sentence answer with specific items and expected savings.' },
+    { q: 'How long will lower grocery prices last?', a: 'Full 2–3 sentence realistic outlook.' },
+    { q: 'Which stores are passing savings on to shoppers fastest?', a: 'Full 2–3 sentence practical answer with specific retailers or categories.' },
   ]
   const faqTemplate = JSON.stringify(isRising ? faqRising : faqFalling, null, 2)
 
   // Static system prompt — cached by Anthropic between calls
-  const systemPrompt = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers.
+  const SYSTEM_PROMPT = `You are a senior consumer economics journalist writing for whatsthegrocerybill.com — a grocery price intelligence site tracking the cost of food across America for everyday shoppers, families, and budget-conscious consumers. Your job is to write substantive, deeply reported articles that give readers genuine insight into grocery price movements and what to do about them.
+
+CRITICAL QUALITY RULES:
+- Write REAL, INFORMATIVE content — no filler, no padding, no generic statements
+- Every section must add new, specific information not repeated elsewhere
+- Include real figures: price per unit, % changes, specific categories (eggs, milk, beef, chicken, bread, cereal, cooking oil)
+- Reference real organizations: USDA, BLS, ERS, NASS, Progressive Grocer, Reuters
+- Track these key grocery categories: eggs, milk, bread, chicken, beef, pork, produce, cereal, cooking oil
+- Tone: Consumer Reports meets Main Street — authoritative but friendly and practical
+- Never fabricate prices; hedge with "could", "may", "analysts expect" when uncertain
+- SEO: naturally include "grocery prices today", "cost of groceries", "average grocery bill" at least once each
 
 Return ONLY valid JSON — no markdown fences, no commentary:
 {
   "headline": "8–12 word headline with primary keyword near the front",
   "subhead": "One crisp sentence adding context. Include a price figure or % change if available.",
-  "body": "Full article body using the exact section structure provided in the user message — separate each section with \\n\\n",
-  "faqs": [array of 3 FAQ objects with q and a fields, using the templates provided in the user message],
+  "body": "Full article body — separate sections with \\n\\n — TARGET 1500–1700 WORDS TOTAL:
+
+## What's Happening
+[250 words — specific grocery market event. Price figures for affected categories. What changed, by how much, compared to what baseline.]
+
+## Why It Matters for Your Grocery Bill
+[250 words — checkout-level impact. Which items affected and by how much. How fast this hits store shelves vs. warehouse prices. Regional variation — which states or metro areas feel it first.]
+
+## What's Driving This
+[200 words — root causes. Be specific: weather events and affected growing regions, supply chain disruption details, avian flu flock numbers, drought impact on harvest yields, trade policy changes, tariff specifics, labor cost data.]
+
+## Historical Context
+[150 words — how this compares to prior price moves for these categories. Reference prior highs/lows with actual figures. Give readers perspective on whether this is unusual or routine.]
+
+## Category Breakdown
+[200 words — deep dive into the specific categories most affected. For each: current price range, direction, and how much it changed. Cover relevant items from: eggs, milk, beef, chicken, pork, produce, bread, cereal, cooking oil.]
+
+## What This Means for Families
+[200 words — concrete budget impact. How much more (or less) a typical weekly grocery run costs. Which substitutions make sense — store brand vs. name brand, frozen vs. fresh, bulk buying opportunities. Specific dollar savings where possible.]
+
+## What This Means for Restaurants and Food Businesses
+[150 words — how ingredient cost shifts flow through to menu prices and margins. Which restaurant categories (fast food, casual dining, school lunch, food trucks) feel it first. Whether consumers should expect menu price changes.]
+
+## What Shoppers Should Expect
+[150 words — price outlook and timeline. How long this may last. What could reverse it. One concrete action: best time to buy in bulk, which stores post the lowest prices first, apps like Flipp or Instacart for price comparison.]",
+  "faqs": [array of 4 FAQ objects provided in the user message — fill each answer with specifics for this event],
   "sources": [
-    2 or 3 authoritative outbound sources relevant to THIS specific article. Pick from real, well-known organizations:
+    2 or 3 authoritative outbound sources relevant to THIS specific article. Pick from:
     - For egg/poultry: USDA NASS (https://www.nass.usda.gov), CDC Avian Flu tracker (https://www.cdc.gov/bird-flu)
     - For general food inflation: BLS CPI Food (https://www.bls.gov/cpi/), USDA ERS (https://www.ers.usda.gov/topics/food-markets-prices/)
     - For supply chain/trade: USDA Foreign Agricultural Service (https://www.fas.usda.gov), Reuters (https://www.reuters.com/markets/commodities/)
     - For meat/beef: USDA AMS (https://www.ams.usda.gov/market-news/livestock-poultry-grain)
     - For produce: USDA AMS Fruit & Veg (https://www.ams.usda.gov/market-news/fruit-vegetable)
-    - For fuel/transport costs: EIA (https://www.eia.gov/petroleum/gasdiesel/)
-    Return as: [{"name": "Full Organization Name", "url": "https://exact-url.gov-or-org"}]
-    ONLY include sources from .gov, reuters.com, apnews.com, usda.gov, bls.gov, eia.gov — no random blogs
+    ONLY include sources from .gov, reuters.com, apnews.com, usda.gov, bls.gov, eia.gov
+    Return as: [{"name": "Full Organization Name", "url": "https://exact-url"}]
   ],
   "tags": ["5–7 tags: mix of topic tags (Egg Prices, Grocery Inflation, Food Costs) and question-style tags (Why are groceries so expensive, grocery price forecast 2025)"],
-  "geo_tags": ["list of US state names most relevant to this story — e.g. California, Texas, Florida"]
-}
+  "geo_tags": ["list of US state names most relevant to this story"]
+}`
 
-Rules:
-- Total body ~600–700 words across all sections
-- Track these key grocery categories: eggs, milk, bread, chicken, beef, pork, produce, cereal, cooking oil
-- Use specific numbers when available; if not available, use ranges or context
-- Tone: Consumer Reports meets Main Street — authoritative but friendly and practical
-- Never fabricate prices; hedge with "could", "may", "analysts expect" when uncertain
-- Each section header (##) must stay — they become H2 tags on the page
-- SEO: naturally include phrases like "grocery prices today", "cost of groceries", "average grocery bill" at least once each
-- The "What This Means for" sections MUST have concrete, actionable content — not vague filler`
+  const fullSystemPrompt = authorPersona ? `${authorPersona}\n\n${SYSTEM_PROMPT}` : SYSTEM_PROMPT
 
-  const fullSystemPrompt = authorPersona ? `${authorPersona}\n\n${systemPrompt}` : systemPrompt
+  const personaInstruction = authorPersona
+    ? `Write in a factual, data-backed, consumer-first voice.`
+    : `You are ${writer.name}, ${writer.title} at whatsthegrocerybill.com.\nWriting style: ${writer.styleNote}`
 
-  // Dynamic user prompt — changes per article call (tweet, direction, date, templates)
-  const userPrompt = `A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article based on this tweet.
+  const userPrompt = `${personaInstruction}
+
+A market signal just came in showing grocery prices are ${direction}. Write a fully SEO-optimized, in-depth article of 1500–1700 words. Every section must be substantive — no filler, no padding.
 
 TWEET: "${tweet.text}"
 SOURCE: @${tweet.username}
@@ -170,73 +240,131 @@ DIRECTION: prices ${direction}
 
 Use this headline style: "${headlineExample}"
 
-Use this exact body structure:
-
-## What's Happening
-[2–3 sentences on the specific grocery market event, include any price figures mentioned — eggs, milk, beef, chicken, bread, etc.]
-
-${whyItMatters}
-
-## What's Driving This
-[2–3 sentences on root cause: weather events, supply chain disruptions, avian flu, drought, trade policy, tariffs, inflation relief, harvest surplus, labor costs. Be specific.]
-
-${meansForFamilies}
-
-${meansForOther}
-
-${shopperExpect}
-
-Use these FAQ templates (fill in the specifics for this event):
+Use these FAQ templates (fill each answer with specifics for this event):
 ${faqTemplate}`
 
+  const makeRequest = async (temperature: number): Promise<string | null> => {
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': anthropicKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-beta': 'prompt-caching-2024-07-31',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 4000,
+          temperature,
+          system: [
+            {
+              type: 'text',
+              text: fullSystemPrompt,
+              cache_control: { type: 'ephemeral' },
+            },
+          ],
+          messages: [{ role: 'user', content: userPrompt }],
+        }),
+      })
+      if (!res.ok) return null
+      const data = await res.json()
+      return data.content?.[0]?.text?.trim() ?? null
+    } catch {
+      return null
+    }
+  }
+
+  const parseResponse = (raw: string) => {
+    const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim()
+    return JSON.parse(cleaned)
+  }
+
+  // Initial generation
+  let raw = await makeRequest(0.3)
+  if (!raw) return null
+
+  let parsed
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    parsed = parseResponse(raw)
+  } catch {
+    return null
+  }
+
+  // Quality gate: word count check
+  const wordCount = countWords(parsed.body ?? '')
+  if (wordCount < 1550) {
+    console.log(`[REPAIR] ${tweet.id} — ${wordCount} words, below 1550 floor. Running repair.`)
+    const repairPrompt = `The article body you wrote was only ${wordCount} words — it needs to be at least 1550 words.
+
+Expand the thinnest sections (Historical Context, Category Breakdown, What Shoppers Should Expect) to add more specific detail, data points, and context. Do not add padding or repeat what was already said — add genuinely new information. Return the complete updated JSON with the same structure.
+
+Current article:
+${raw}`
+
+    const repairRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': anthropicKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-beta': 'prompt-caching-2024-07-31',
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 2000,
-        system: [
-          {
-            type: 'text',
-            text: fullSystemPrompt,
-            cache_control: { type: 'ephemeral' },
-          },
-        ],
-        messages: [{ role: 'user', content: userPrompt }],
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        temperature: 0.2,
+        messages: [{ role: 'user', content: repairPrompt }],
       }),
     })
-    if (!res.ok) return null
-    const data = await res.json()
-    const raw = data.content?.[0]?.text?.trim()
-    if (!raw) return null
-    const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim()
-    const parsed = JSON.parse(cleaned)
-    return {
-      id: tweet.id,
-      headline: parsed.headline,
-      subhead: parsed.subhead,
-      body: parsed.body,
-      faqs: parsed.faqs ?? [],
-      sources: (parsed.sources ?? []).filter((s: any) => s?.name && s?.url),
-      tags: parsed.tags ?? [],
-      geo_tags: parsed.geo_tags ?? [],
-      source_tweet: {
-        id: tweet.id,
-        text: tweet.text,
-        author: tweet.author,
-        username: tweet.username,
-        url: `https://twitter.com/${tweet.username}/status/${tweet.id}`,
-        created_at: tweet.created_at,
-      },
-      generated_at: Date.now(),
+
+    if (repairRes.ok) {
+      const repairData = await repairRes.json()
+      const repairRaw = repairData.content?.[0]?.text?.trim()
+      if (repairRaw) {
+        try {
+          const repairParsed = parseResponse(repairRaw)
+          const repairWordCount = countWords(repairParsed.body ?? '')
+          if (repairWordCount >= 1550) {
+            parsed = repairParsed
+          } else {
+            console.log(`[SKIP] ${tweet.id} — repair produced ${repairWordCount} words, still below 1550. Skipping.`)
+            return null
+          }
+        } catch {
+          return null
+        }
+      }
     }
-  } catch {
+  }
+
+  // Fluff guard
+  if (isLowQualityDraft(parsed.body ?? '')) {
+    console.log(`[SKIP] ${tweet.id} — fluff phrases detected in body.`)
     return null
+  }
+
+  // Include fingerprint tag for future duplicate detection
+  const tags = [...(parsed.tags ?? []), fingerprintTag]
+
+  return {
+    id: tweet.id,
+    headline: parsed.headline,
+    subhead: parsed.subhead,
+    body: parsed.body,
+    faqs: parsed.faqs ?? [],
+    sources: (parsed.sources ?? []).filter((s: any) => s?.name && s?.url),
+    tags,
+    geo_tags: parsed.geo_tags ?? [],
+    source_tweet: {
+      id: tweet.id,
+      text: tweet.text,
+      author: tweet.author,
+      username: tweet.username,
+      url: `https://twitter.com/${tweet.username}/status/${tweet.id}`,
+      created_at: tweet.created_at,
+    },
+    writer_id: writer.id,
+    author: writer.name,
+    generated_at: Date.now(),
   }
 }
