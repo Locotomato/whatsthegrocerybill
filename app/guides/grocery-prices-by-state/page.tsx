@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'Grocery Prices by State 2025: Which States Pay Most & Least | What\'s the Grocery Bill?',
@@ -40,7 +40,7 @@ export default function GroceryPricesByState() {
 
         <div data-loco-widget></div>
 
-        <AfsUnit />
+        <RadUnit />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>

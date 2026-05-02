@@ -39,10 +39,10 @@ export default function HowToSaveMoneyOnGroceries() {
 
         <div data-loco-widget></div>
 
-        {/* AFS Unit */}
-        <div id="afs-unit" style={{ margin: '32px 0' }} />
+        {/* RAD Unit */}
+        <div id="rad-unit" style={{ margin: '32px 0' }} />
         <Script
-          src="https://locotomato.com/afs.js"
+          src="https://locotomato.com/rad.js"
           data-partner="pub_rs2wayi1"
           data-campaign="cmp_8c54fcc7"
           data-count="6"

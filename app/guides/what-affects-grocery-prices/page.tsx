@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'What Determines Grocery Prices? | What\'s the Grocery Bill?',
@@ -36,7 +36,7 @@ export default function WhatAffectsGroceryPrices() {
 
         <div data-loco-widget></div>
 
-        <AfsUnit />
+        <RadUnit />
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f) => (

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'How Inflation Is Hitting Your Grocery Bill in 2025 | What\'s the Grocery Bill?',
@@ -38,7 +38,7 @@ export default function InflationAndYourGroceryBill() {
 
         <div data-loco-widget></div>
 
-        <AfsUnit />
+        <RadUnit />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>
           Price Changes Since 2021 (BLS Data)

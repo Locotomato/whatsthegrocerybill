@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'Why Are Egg Prices So High in 2025? | What\'s the Grocery Bill?',
@@ -38,7 +38,7 @@ export default function WhyAreEggPricesSoHigh() {
 
         <div data-loco-widget></div>
 
-        <AfsUnit />
+        <RadUnit />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🦠 The Avian Flu Epidemic

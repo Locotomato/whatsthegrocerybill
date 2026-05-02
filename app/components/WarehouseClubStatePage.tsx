@@ -1,7 +1,7 @@
 import type { ClubData } from '../../lib/warehouseClubs'
 import Link from 'next/link'
 import NavHeader from './NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 const C = { bg: '#f8f9fa', card: '#ffffff', border: '#e5e7eb', red: '#dc2626', navy: '#1e3a5f', text: '#1f2937', muted: '#6b7280', green: '#16a34a', light: '#fef2f2' }
 const F = "'Inter', system-ui, sans-serif"
@@ -180,7 +180,7 @@ export default function WarehouseClubStatePage({ club, stateSlug, stateAbbr }: P
           </div>
         </div>
 
-        <AfsUnit />
+        <RadUnit />
 
         {/* Regional context */}
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px', marginBottom: 24 }}>

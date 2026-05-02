@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '@/components/AfsUnit'
+import RadUnit from '@/components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'Cheapest Grocery Stores in 2025: Aldi vs Walmart vs Kroger vs Costco | What\'s the Grocery Bill?',
@@ -37,7 +37,7 @@ export default function CheapestGroceryStoresCompared() {
 
         <div data-loco-widget></div>
 
-        <AfsUnit />
+        <RadUnit />
 
         <div style={{ marginTop: 32 }}>
           {stores.map((store) => (

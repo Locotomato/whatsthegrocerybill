@@ -15,7 +15,7 @@ export default function RadUnit({ partner, campaign, count = 6, zone }: RadUnitP
 
   useEffect(() => {
     if (!containerRef.current) return
-    
+
     // Check if this zone already has an iframe
     if (containerRef.current.querySelector('iframe')) return
 
@@ -26,7 +26,7 @@ export default function RadUnit({ partner, campaign, count = 6, zone }: RadUnitP
     script.setAttribute('data-count', String(count))
     script.setAttribute('data-zone', zoneId)
     script.async = true
-    
+
     containerRef.current.appendChild(script)
   }, [partner, campaign, count, zoneId])
 
