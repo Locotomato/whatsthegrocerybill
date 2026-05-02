@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Script from 'next/script'
 import NavHeader from '../../components/NavHeader'
-import AfsUnit from '../../components/AfsUnit'
+import RadUnit from '../../components/RadUnit'
 
 export const metadata: Metadata = {
   title: 'How to Save Money on Groceries in 2025 | What\'s the Grocery Bill?',
@@ -65,8 +65,8 @@ export default function HowToSaveMoneyOnGroceries() {
             </div>
           ))}
 
-          {/* AFS Unit - mid-content */}
-          <AfsUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} zone="mid-content" />
+          {/* RAD Unit - mid-content */}
+          <RadUnit partner="pub_rs2wayi1" campaign="cmp_db18b9c4" count={6} zone="mid-content" />
 
           {tips.slice(4).map((tip) => (
             <div key={tip.num} style={{
