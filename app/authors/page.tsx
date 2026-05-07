@@ -6,6 +6,7 @@ import { AUTHORS } from '@/lib/authors'
 export const metadata: Metadata = {
   title: "Our Cartoon Editorial Bureau | What's the Grocery Bill?",
   description: 'Meet Grub, Cluck, and Penny — the cartoon characters tracking grocery prices for whatsthegrocerybill.com.',
+  robots: { index: false, follow: true },
 }
 
 export default function AuthorsPage() {
