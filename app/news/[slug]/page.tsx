@@ -106,10 +106,6 @@ function renderBody(body: string, slug: string) {
           margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
         }}>{text}</p>
       )
-      if (!emailInserted) {
-        elements.push(<div data-loco-widget></div>)
-        emailInserted = true
-      }
       // Insert FinanceBuzz callout after 3rd paragraph
       if (paraCount === 3 && !fbInserted) {
         elements.push(<FinanceBuzzCalloutWtgb key="fb-callout" slug={slug} />)
@@ -348,8 +344,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
         </a>
-
-        <RadUnit />
 
         {/* Body */}
         <article>{renderBody(article.body ?? '', slug)}</article>

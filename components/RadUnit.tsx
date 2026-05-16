@@ -14,7 +14,7 @@ export default function RadUnit() {
     script.src = 'https://locotomato.com/rad.js'
     script.setAttribute('data-partner', 'pub_rs2wayi1')
     script.setAttribute('data-campaign', 'cmp_8c54fcc7')
-    script.setAttribute('data-count', '6')
+    script.setAttribute('data-count', '4')
     script.async = true
     containerRef.current.appendChild(script)
   }, [])
