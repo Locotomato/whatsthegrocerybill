@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }
           }(document.createElement('script'),
           document.getElementsByTagName('script')[0],
-          '//cdn.taboola.com/libtrc/broadburst-miiqmagicmedia-network/loader.js',
+          '//cdn.taboola.com/libtrc/broadburst-guides/loader.js',
           'tb_loader_script');
           if(window.performance && typeof window.performance.mark == 'function')
             {window.performance.mark('tbl_ic');}
