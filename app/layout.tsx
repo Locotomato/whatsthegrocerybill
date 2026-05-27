@@ -52,24 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5654466404460919"
           crossOrigin="anonymous"
         />
-        {/* Taboola loader */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          window._taboola = window._taboola || [];
-          _taboola.push({article:'auto'});
-          !function (e, f, u, i) {
-            if (!document.getElementById(i)){
-              e.async = 1;
-              e.src = u;
-              e.id = i;
-              f.parentNode.insertBefore(e, f);
-            }
-          }(document.createElement('script'),
-          document.getElementsByTagName('script')[0],
-          '//cdn.taboola.com/libtrc/broadburst-guides/loader.js',
-          'tb_loader_script');
-          if(window.performance && typeof window.performance.mark == 'function')
-            {window.performance.mark('tbl_ic');}
-        ` }} />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-04DFV0Z2NJ"
           strategy="afterInteractive"
@@ -82,14 +64,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-04DFV0Z2NJ');
           `}
         </Script>
-        {/* NotifyAI push subscription widget */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(document, window) {
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "https://trk-syntrex.com/scripts/push/script/w9gloymg2x?url=" + encodeURI(self.location.hostname) + "&alturl=" + encodeURI(self.location.pathname);
-  script.onload = function() { push_init(); push_subscribe(); };
-  document.getElementsByTagName("head")[0].appendChild(script);
-})(document, window);` }} />
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
@@ -118,11 +92,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <Analytics />
         <SpeedInsights />
-        {/* Taboola flush — must be at end of body */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          window._taboola = window._taboola || [];
-          _taboola.push({flush: true});
-        ` }} />
       </body>
     </html>
   )
