@@ -16,7 +16,7 @@ export default function EditorialPolicyPage() {
       <p style={{ color: '#666', marginBottom: 32 }}>Last updated: June 5, 2026</p>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Responsible Editor</h2>
-      <p>All editorial content published on {siteName} is overseen by the Managing Editor, {siteName}, who is responsible for ensuring accuracy, fairness, and adherence to the standards described on this page. The Managing Editor reports to the editorial leadership of {company}.</p>
+      <p>All editorial content published on {siteName} is overseen by <strong>Michael Spitaleri</strong>, Founder and Editor-in-Chief, who is responsible for ensuring accuracy, fairness, and adherence to the standards described on this page.</p>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Our Editorial Mission</h2>
       <p>{siteName} provides independent editorial coverage of U.S. grocery prices, food-cost trends, and consumer spending analysis. Our goal is to give consumers clear, data-driven information about grocery costs — what they are, why they change, and how to save money on food.</p>
