@@ -97,7 +97,19 @@ const FLUFF_PHRASES = [
 
 function isLowQualityDraft(body: string): boolean {
   const lower = body.toLowerCase()
-  return FLUFF_PHRASES.some(phrase => lower.includes(phrase))
+  if (FLUFF_PHRASES.some(phrase => lower.includes(phrase))) return true
+
+  // ── Information-gain checks (LOC-382) ────────────────────────────────────
+  // Require a "Data Snapshot" section
+  if (!lower.includes('data snapshot')) return true
+  // Require at least one specific number (dollar amount, percentage, or large figure)
+  const hasSpecificData = /\$[\d,]+(\.\d+)?|\d+(\.\d+)?%|\d{1,3}(,\d{3})+/.test(body)
+  if (!hasSpecificData) return true
+  // Require at least one authoritative source reference in body
+  const hasAuthoritativeRef = /usda|bls\.gov|ers\.usda|nass\.usda|bls\.gov\/cpi|ams\.usda/i.test(body)
+  if (!hasAuthoritativeRef) return true
+
+  return false
 }
 
 function countWords(text: string): number {
@@ -187,6 +199,9 @@ Return ONLY valid JSON — no markdown fences, no commentary:
 
 ## What's Happening
 [250 words — specific grocery market event. Price figures for affected categories. What changed, by how much, compared to what baseline.]
+
+## Data Snapshot
+[150 words — MANDATORY proprietary data section. Include at least one computed or sourced data point not available in the original signal. Examples: current BLS CPI Food at Home index value and month-over-month change, USDA ERS retail food price forecasts, NASS weekly egg/milk/beef spot prices, year-over-year % change for specific categories. Reference the .gov source inline (e.g., "according to BLS CPI data" or "USDA ERS projects"). This section must contain at least one specific dollar figure, percentage, or index number.]
 
 ## Why It Matters for Your Grocery Bill
 [250 words — checkout-level impact. Which items affected and by how much. How fast this hits store shelves vs. warehouse prices. Regional variation — which states or metro areas feel it first.]
