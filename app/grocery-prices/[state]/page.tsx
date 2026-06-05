@@ -137,11 +137,36 @@ export default async function StatePage({ params }: Props) {
     })),
   }
 
+  const datasetLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: `${stateName} Grocery Price Index`,
+    description: `BLS Consumer Price Index data for grocery and food-at-home prices in ${stateName}, compared to the national average.`,
+    url: `https://whatsthegrocerybill.com/grocery-prices/${state}`,
+    creator: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
+    distribution: { '@type': 'DataDownload', contentUrl: `https://whatsthegrocerybill.com/grocery-prices/${state}`, encodingFormat: 'text/html' },
+    temporalCoverage: new Date().getFullYear().toString(),
+    spatialCoverage: { '@type': 'Place', name: stateName },
+    isBasedOn: 'https://www.bls.gov/cpi/',
+  }
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://whatsthegrocerybill.com' },
+      { '@type': 'ListItem', position: 2, name: 'Grocery Prices by State', item: 'https://whatsthegrocerybill.com/grocery-prices' },
+      { '@type': 'ListItem', position: 3, name: stateName },
+    ],
+  }
+
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
       <NavHeader active="prices" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 20px 80px' }}>
 
