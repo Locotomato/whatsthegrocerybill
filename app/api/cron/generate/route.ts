@@ -203,8 +203,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, note: 'daily_cap_reached', dailyCap, dailyCount, isTrending })
   }
 
-  // Per-run limit: max 3 at a time
-  const perRunLimit = Math.min(3, remaining)
+  // Per-run limit: max 2 at a time (LOC-382: capped to 1-2 per run until quality bar met)
+  const perRunLimit = Math.min(2, remaining)
 
   // Deduplicate against already-seen signals
   const newSignals: typeof allSignals = []
