@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
@@ -267,18 +266,15 @@ export default async function ArticlePage({ params }: Props) {
               paddingBottom: 20, borderBottom: '2px solid var(--border)', marginBottom: 32,
             }}>
               <a href={`/authors#${fallbackAuthor.slug}`} style={{ flexShrink: 0, textDecoration: 'none' }}>
-                <Image
-                  src={fallbackAuthor.avatarUrl}
-                  alt={fallbackAuthor.name}
-                  width={28}
-                  height={28}
+                <span
                   style={{
                     width: 28, height: 28, borderRadius: '50%',
-                    background: fallbackAuthor.avatarColor,
-                    border: `2px solid ${fallbackAuthor.avatarColor}44`,
-                    display: 'block',
+                    background: '#1e3a5f',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
-                />
+                >
+                  <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>MS</span>
+                </span>
               </a>
               <div>
                 <a href={`/authors#${fallbackAuthor.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
