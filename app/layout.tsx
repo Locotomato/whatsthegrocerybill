@@ -66,6 +66,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-04DFV0Z2NJ');
           `}
         </Script>
+        {/* Taboola loader */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          window._taboola = window._taboola || [];
+          _taboola.push({article:'auto'});
+          !function (e, f, u, i) {
+            if (!document.getElementById(i)){
+              e.async = 1;
+              e.src = u;
+              e.id = i;
+              f.parentNode.insertBefore(e, f);
+            }
+          }(document.createElement('script'),
+          document.getElementsByTagName('script')[0],
+          '//cdn.taboola.com/libtrc/broadburst-guides/loader.js',
+          'tb_loader_script');
+          if(window.performance && typeof window.performance.mark == 'function')
+            {window.performance.mark('tbl_ic');}
+        ` }} />
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
@@ -94,6 +112,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <Analytics />
         <SpeedInsights />
+        {/* Taboola flush — must be at end of body */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          window._taboola = window._taboola || [];
+          _taboola.push({flush: true});
+        ` }} />
       </body>
     </html>
   )
