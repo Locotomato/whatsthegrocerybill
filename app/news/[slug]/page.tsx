@@ -6,6 +6,7 @@ import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 import FinanceBuzzCalloutWtgb from '../../components/FinanceBuzzCalloutWtgb'
 import RadUnit from '@/components/RadUnit'
+import TaboolaWidget from '@/components/TaboolaWidget'
 
 
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
@@ -343,6 +344,8 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Body */}
         <article>{renderBody(article.body ?? '', slug)}</article>
+        {/* Taboola — mid-article */}
+        <TaboolaWidget type="mid-article" />
 
         {/* State links */}
         {linkedStates.length > 0 && (
@@ -543,6 +546,8 @@ export default async function ArticlePage({ params }: Props) {
             <Link href="/" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none', fontWeight: 500 }}>← Live prices</Link>
           </div>
         </div>
+        {/* Taboola — article feed */}
+        <TaboolaWidget type="article-feed" />
       </div>
     </main>
   )
