@@ -4,9 +4,10 @@ import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
 import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
-import FinanceBuzzCalloutWtgb from '../../components/FinanceBuzzCalloutWtgb'
-import RadUnit from '@/components/RadUnit'
-import TaboolaWidget from '@/components/TaboolaWidget'
+import LocoFormZone from '@/components/LocoFormZone'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 
 const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
@@ -89,13 +90,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
-function renderBody(body: string, slug: string) {
+function renderBody(body: string) {
   const lines = body.split('\n')
   const elements: React.ReactNode[] = []
   let paraBuffer: string[] = []
-  let emailInserted = false
   let paraCount = 0
-  let fbInserted = false
+  const inserted = { rad: false, banner1: false, banner2: false }
 
   function flushPara() {
     const text = paraBuffer.join(' ').trim()
@@ -106,10 +106,20 @@ function renderBody(body: string, slug: string) {
           margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
         }}>{text}</p>
       )
-      // Insert FinanceBuzz callout after 3rd paragraph
-      if (paraCount === 3 && !fbInserted) {
-        elements.push(<FinanceBuzzCalloutWtgb key="fb-callout" slug={slug} />)
-        fbInserted = true
+      // RAD zone after paragraph 4
+      if (paraCount === 4 && !inserted.rad) {
+        elements.push(<LocoRadZone key="rad-zone" />)
+        inserted.rad = true
+      }
+      // Banner #1 after paragraph 7
+      if (paraCount === 7 && !inserted.banner1) {
+        elements.push(<LocoBannerZone key="banner-1" campaign="cmp_afc21e11" zone="in-content" />)
+        inserted.banner1 = true
+      }
+      // Banner #2 after paragraph 10
+      if (paraCount === 10 && !inserted.banner2) {
+        elements.push(<LocoBannerZone key="banner-2" campaign="cmp_83fa7322" zone="in-content-2" />)
+        inserted.banner2 = true
       }
     }
     paraBuffer = []
@@ -141,6 +151,12 @@ function renderBody(body: string, slug: string) {
     }
   }
   flushPara()
+
+  // For short articles: inject any zones that didn't fire at their natural positions
+  if (!inserted.rad) elements.push(<LocoRadZone key="rad-zone" />)
+  if (!inserted.banner1) elements.push(<LocoBannerZone key="banner-1" campaign="cmp_afc21e11" zone="in-content" />)
+  if (!inserted.banner2) elements.push(<LocoBannerZone key="banner-2" campaign="cmp_83fa7322" zone="in-content-2" />)
+
   return elements
 }
 
@@ -342,10 +358,11 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         </a>
 
-        {/* Body */}
-        <article>{renderBody(article.body ?? '', slug)}</article>
-        {/* Taboola — mid-article */}
-        <TaboolaWidget type="mid-article" />
+        {/* Loco form zone — top of article */}
+        <LocoFormZone />
+
+        {/* Body — RAD + Banner zones injected inline by renderBody */}
+        <article>{renderBody(article.body ?? '')}</article>
 
         {/* State links */}
         {linkedStates.length > 0 && (
@@ -546,8 +563,8 @@ export default async function ArticlePage({ params }: Props) {
             <Link href="/" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none', fontWeight: 500 }}>← Live prices</Link>
           </div>
         </div>
-        {/* Taboola — article feed */}
-        <TaboolaWidget type="article-feed" />
+        {/* Loco tab zone — end of article */}
+        <LocoTabZone />
       </div>
     </main>
   )

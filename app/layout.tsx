@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import Script from 'next/script'
-import LocoScript from '@/components/LocoScript'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -45,15 +44,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Preconnect to locotomato.com — starts TCP/TLS handshake early for faster widget load */}
         <link rel="preconnect" href="https://locotomato.com" />
         <link rel="dns-prefetch" href="https://locotomato.com" />
-        {/* Google AdSense account verification meta tag */}
-        <meta name="google-adsense-account" content="ca-pub-5654466404460919" />
-        {/* AdSense — plain script tag so Google's crawler sees it in raw HTML */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5654466404460919"
-          crossOrigin="anonymous"
-        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-04DFV0Z2NJ"
           strategy="afterInteractive"
@@ -66,29 +56,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-04DFV0Z2NJ');
           `}
         </Script>
-        {/* Taboola loader */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          window._taboola = window._taboola || [];
-          _taboola.push({article:'auto'});
-          !function (e, f, u, i) {
-            if (!document.getElementById(i)){
-              e.async = 1;
-              e.src = u;
-              e.id = i;
-              f.parentNode.insertBefore(e, f);
-            }
-          }(document.createElement('script'),
-          document.getElementsByTagName('script')[0],
-          '//cdn.taboola.com/libtrc/broadburst-guides/loader.js',
-          'tb_loader_script');
-          if(window.performance && typeof window.performance.mark == 'function')
-            {window.performance.mark('tbl_ic');}
-        ` }} />
+        <Script
+          src="https://locotomato.com/embed.v1.js"
+          data-partner="pub_rs2wayi1"
+          data-campaign="cmp_4e9852d2"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${inter.className} bg-gray-950`}>
         {children}
-        {/* Loco Tomato — client component skips /authors pages */}
-        <LocoScript partner="pub_rs2wayi1" campaign="cmp_8c54fcc7" />
         <footer style={{ borderTop: '1px solid #1f2937', marginTop: 48, padding: '20px 24px', textAlign: 'center' }}>
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>
             © {new Date().getFullYear()} Magic Media Group LLC &nbsp;·&nbsp;
@@ -112,11 +88,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <Analytics />
         <SpeedInsights />
-        {/* Taboola flush — must be at end of body */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          window._taboola = window._taboola || [];
-          _taboola.push({flush: true});
-        ` }} />
       </body>
     </html>
   )

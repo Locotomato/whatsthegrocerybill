@@ -144,7 +144,6 @@ export default async function Home() {
             })}
           </div>
 
-          <div data-loco-widget style={{ marginTop: 32, marginBottom: 8 }}></div>
         </div>
 
         {/* Divider */}
