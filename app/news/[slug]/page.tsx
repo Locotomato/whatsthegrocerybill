@@ -4,12 +4,10 @@ import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
 import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
-import FinanceBuzzCalloutWtgb from '../../components/FinanceBuzzCalloutWtgb'
-import RadUnit from '@/components/RadUnit'
-import TaboolaWidget from '@/components/TaboolaWidget'
-
-
-const GIVEAWAY_BASE = 'https://1mjav.com/?E=JQ%2bhcGmfPo0nZW%2bHDj0eJlRdpCAq4UCy&s1='
+import LocoFormZone from '@/components/LocoFormZone'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const revalidate = 86400
 
@@ -88,14 +86,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+const LOCO_PARTNER = 'pub_rs2wayi1'
+
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
-function renderBody(body: string, slug: string) {
+function renderBody(body: string) {
   const lines = body.split('\n')
   const elements: React.ReactNode[] = []
   let paraBuffer: string[] = []
-  let emailInserted = false
   let paraCount = 0
-  let fbInserted = false
+  let radInserted = false
+  let bannerInserted = false
 
   function flushPara() {
     const text = paraBuffer.join(' ').trim()
@@ -106,10 +106,15 @@ function renderBody(body: string, slug: string) {
           margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
         }}>{text}</p>
       )
-      // Insert FinanceBuzz callout after 3rd paragraph
-      if (paraCount === 3 && !fbInserted) {
-        elements.push(<FinanceBuzzCalloutWtgb key="fb-callout" slug={slug} />)
-        fbInserted = true
+      // Insert RAD #1 after 3rd paragraph
+      if (paraCount === 3 && !radInserted) {
+        elements.push(<LocoRadZone key="rad-1" partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />)
+        radInserted = true
+      }
+      // Insert BANNER #1 after 6th paragraph
+      if (paraCount === 6 && !bannerInserted) {
+        elements.push(<LocoBannerZone key="banner-1" partner={LOCO_PARTNER} campaign="cmp_afc21e11" shape="vertical" />)
+        bannerInserted = true
       }
     }
     paraBuffer = []
@@ -304,48 +309,14 @@ export default async function ArticlePage({ params }: Props) {
           )
         })()}
 
-        {/* 🎁 Grocery Card Giveaway CTA — TOP */}
-        <a
-          href={`${GIVEAWAY_BASE}${encodeURIComponent(article.slug)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'block', marginBottom: 32, padding: '20px 24px',
-            background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
-            borderRadius: 14, textDecoration: 'none',
-            boxShadow: '0 4px 14px rgba(22,163,74,0.35)',
-            border: '1px solid #14532d',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>🛒</div>
-            <div style={{ flex: 1, minWidth: 180 }}>
-              <div style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-                color: '#bbf7d0', textTransform: 'uppercase', marginBottom: 4,
-              }}>Daily Giveaway — Starting April 1st</div>
-              <div style={{
-                fontSize: 20, fontWeight: 900, color: '#fff',
-                lineHeight: 1.2, marginBottom: 4, letterSpacing: '-0.02em',
-              }}>Win a $100 Grocery Gift Card</div>
-              <div style={{ fontSize: 14, color: '#d1fae5', lineHeight: 1.5 }}>
-                One winner every single day. Enter free — takes 30 seconds.
-              </div>
-            </div>
-            <div style={{
-              background: '#fff', color: '#16a34a', fontSize: 14, fontWeight: 800,
-              padding: '11px 22px', borderRadius: 30, whiteSpace: 'nowrap',
-              flexShrink: 0, letterSpacing: '-0.01em',
-            }}>
-              Enter to Win →
-            </div>
-          </div>
-        </a>
+        {/* FORM — top of article */}
+        <LocoFormZone partner={LOCO_PARTNER} campaign="cmp_4e9852d2" theme="hero-classic" />
 
-        {/* Body */}
-        <article>{renderBody(article.body ?? '', slug)}</article>
-        {/* Taboola — mid-article */}
-        <TaboolaWidget type="mid-article" />
+        {/* Body — RAD #1 and BANNER #1 injected inline by renderBody */}
+        <article>{renderBody(article.body ?? '')}</article>
+
+        {/* RAD #2 — after article body */}
+        <LocoRadZone partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />
 
         {/* State links */}
         {linkedStates.length > 0 && (
@@ -388,7 +359,8 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        {/* End email capture — widget inserted mid-article via elements.push above */}
+        {/* BANNER #2 — in-content */}
+        <LocoBannerZone partner={LOCO_PARTNER} campaign="cmp_83fa7322" shape="vertical" />
 
         {/* YouTube embed */}
         {video && (
@@ -546,8 +518,8 @@ export default async function ArticlePage({ params }: Props) {
             <Link href="/" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none', fontWeight: 500 }}>← Live prices</Link>
           </div>
         </div>
-        {/* Taboola — article feed */}
-        <TaboolaWidget type="article-feed" />
+        {/* TAB — end of article */}
+        <LocoTabZone partner={LOCO_PARTNER} campaign="cmp_e0ef7110" count={6} />
       </div>
     </main>
   )
