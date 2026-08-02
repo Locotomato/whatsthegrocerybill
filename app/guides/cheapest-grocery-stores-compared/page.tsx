@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import RadUnit from '@/components/RadUnit'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'Cheapest Grocery Stores in 2025: Aldi vs Walmart vs Kroger vs Costco | What\'s the Grocery Bill?',
@@ -35,30 +37,34 @@ export default function CheapestGroceryStoresCompared() {
           Where you shop matters more than what you buy. Switching from a traditional supermarket to Aldi or Walmart can save a family of four <strong style={{ color: '#fbbf24' }}>$150–250/month</strong> with zero change in what they eat.
         </p>
 
-        <div data-loco-widget></div>
-
-        <RadUnit />
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32 }}>
-          {stores.map((store) => (
-            <div key={store.name} style={{
-              display: 'flex', gap: 16, marginBottom: 20,
-              padding: '18px 20px',
-              background: '#fafafa',
-              border: '1px solid var(--border)',
-              borderRadius: 12,
-            }}>
-              <div style={{ fontSize: 24, fontWeight: 900, color: 'rgba(74,222,128,0.25)', minWidth: 28 }}>
-                {store.rank}
-              </div>
-              <div>
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>{store.name}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600 }}>{store.score}</span>
+          {stores.map((store, i) => (
+            <div key={store.name}>
+              <div style={{
+                display: 'flex', gap: 16, marginBottom: 20,
+                padding: '18px 20px',
+                background: '#fafafa',
+                border: '1px solid var(--border)',
+                borderRadius: 12,
+              }}>
+                <div style={{ fontSize: 24, fontWeight: 900, color: 'rgba(74,222,128,0.25)', minWidth: 28 }}>
+                  {store.rank}
                 </div>
-                <p style={{ color: 'var(--subtle)', fontSize: 14, lineHeight: 1.6, margin: '0 0 6px' }}>{store.note}</p>
-                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>{store.savings}</div>
+                <div>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)' }}>{store.name}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600 }}>{store.score}</span>
+                  </div>
+                  <p style={{ color: 'var(--subtle)', fontSize: 14, lineHeight: 1.6, margin: '0 0 6px' }}>{store.note}</p>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>{store.savings}</div>
+                </div>
               </div>
+              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
             </div>
           ))}
         </div>

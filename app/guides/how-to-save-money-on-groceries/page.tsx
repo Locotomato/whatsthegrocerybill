@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Script from 'next/script'
 import NavHeader from '../../components/NavHeader'
-import RadUnit from '../../components/RadUnit'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'How to Save Money on Groceries in 2025 | What\'s the Grocery Bill?',
@@ -37,49 +38,27 @@ export default function HowToSaveMoneyOnGroceries() {
           The average American family spends <strong style={{ color: '#fbbf24' }}>$1,000–1,500/month</strong> on groceries. With food inflation still elevated, these 8 strategies can cut your bill by 20–30% without spending hours couponing.
         </p>
 
-        <div data-loco-widget></div>
-
-        {/* RAD Unit */}
-        <div id="rad-unit" style={{ margin: '32px 0' }} />
-        <Script
-          src="https://locotomato.com/rad.js"
-          data-partner="pub_rs2wayi1"
-          data-campaign="cmp_8c54fcc7"
-          data-count="6"
-          strategy="afterInteractive"
-        />
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32 }}>
-          {tips.slice(0, 4).map((tip) => (
-            <div key={tip.num} style={{
-              display: 'flex', gap: 20, marginBottom: 28,
-              paddingBottom: 28, borderBottom: '1px solid var(--border)',
-            }}>
-              <div style={{ fontSize: 28, fontWeight: 900, color: 'rgba(74,222,128,0.2)', minWidth: 40, lineHeight: 1 }}>
-                {tip.num}
+          {tips.map((tip, i) => (
+            <div key={tip.num}>
+              <div style={{
+                display: 'flex', gap: 20, marginBottom: 28,
+                paddingBottom: 28, borderBottom: '1px solid var(--border)',
+              }}>
+                <div style={{ fontSize: 28, fontWeight: 900, color: 'rgba(74,222,128,0.2)', minWidth: 40, lineHeight: 1 }}>
+                  {tip.num}
+                </div>
+                <div>
+                  <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{tip.title}</h2>
+                  <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
+                </div>
               </div>
-              <div>
-                <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{tip.title}</h2>
-                <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
-              </div>
-            </div>
-          ))}
-
-          {/* RAD Unit - mid-content */}
-          <RadUnit partner="pub_rs2wayi1" campaign="cmp_8c54fcc7" count={6} zone="mid-content" />
-
-          {tips.slice(4).map((tip) => (
-            <div key={tip.num} style={{
-              display: 'flex', gap: 20, marginBottom: 28,
-              paddingBottom: 28, borderBottom: '1px solid var(--border)',
-            }}>
-              <div style={{ fontSize: 28, fontWeight: 900, color: 'rgba(74,222,128,0.2)', minWidth: 40, lineHeight: 1 }}>
-                {tip.num}
-              </div>
-              <div>
-                <h2 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>{tip.title}</h2>
-                <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{tip.body}</p>
-              </div>
+              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
             </div>
           ))}
         </div>

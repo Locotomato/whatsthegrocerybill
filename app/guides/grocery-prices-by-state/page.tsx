@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import RadUnit from '@/components/RadUnit'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'Grocery Prices by State 2025: Which States Pay Most & Least | What\'s the Grocery Bill?',
@@ -35,42 +37,53 @@ export default function GroceryPricesByState() {
           Grocery Prices by State: 2025 Guide
         </h1>
         <p style={{ color: 'var(--subtle)', fontSize: 15, marginBottom: 32, lineHeight: 1.6 }}>
-          A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here's how all 50 states compare — and why the gaps are so large.
+          A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here&apos;s how all 50 states compare — and why the gaps are so large.
         </p>
 
-        <div data-loco-widget></div>
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
-        <RadUnit />
-
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest & Lowest Cost States</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest &amp; Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>
-          {STATE_DATA.map((s) => (
-            <div key={s.state} style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '12px 16px', marginBottom: 8,
-              background: '#fafafa',
-              border: '1px solid var(--border)',
-              borderRadius: 10, flexWrap: 'wrap', gap: 8,
-            }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', minWidth: 110 }}>{s.state}</span>
-              <span style={{ fontSize: 13, color: 'var(--muted)', flex: 1 }}>{s.note}</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: s.color }}>
-                {s.tier === 'highest' ? '🔴 Most Expensive' : s.tier === 'high' ? '🟠 Above Average' : '🟢 Below Average'}
-              </span>
+          {STATE_DATA.map((s, i) => (
+            <div key={s.state}>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '12px 16px', marginBottom: 8,
+                background: '#fafafa',
+                border: '1px solid var(--border)',
+                borderRadius: 10, flexWrap: 'wrap', gap: 8,
+              }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', minWidth: 110 }}>{s.state}</span>
+                <span style={{ fontSize: 13, color: 'var(--muted)', flex: 1 }}>{s.note}</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: s.color }}>
+                  {s.tier === 'highest' ? '🔴 Most Expensive' : s.tier === 'high' ? '🟠 Above Average' : '🟢 Below Average'}
+                </span>
+              </div>
+              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
             </div>
           ))}
         </div>
+
+        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Do Grocery Prices Vary So Much by State?</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           <strong>Transportation costs</strong> are the biggest variable — Hawaii and Alaska pay a massive premium simply because everything has to be shipped long distances. In the continental US, states far from major distribution centers pay more.
         </p>
+
+        <LocoTabZone partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />
+
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
-          <strong>State regulations</strong> matter for specific categories. California's Prop 12 cage-free mandate adds $1–2/dozen to egg prices statewide. Local minimum wages and labor laws affect store operating costs.
+          <strong>State regulations</strong> matter for specific categories. California&apos;s Prop 12 cage-free mandate adds $1–2/dozen to egg prices statewide. Local minimum wages and labor laws affect store operating costs.
         </p>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 32 }}>
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
+
+        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>
