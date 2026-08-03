@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import RadUnit from '@/components/RadUnit'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'How Inflation Is Hitting Your Grocery Bill in 2025 | What\'s the Grocery Bill?',
@@ -36,9 +38,7 @@ export default function InflationAndYourGroceryBill() {
           Food prices have risen faster than overall inflation for three consecutive years. The average American family is spending <strong style={{ color: '#fbbf24' }}>$3,000–4,000 more per year</strong> on groceries than they were in 2021. Here's the full breakdown.
         </p>
 
-        <div data-loco-widget></div>
-
-        <RadUnit />
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>
           Price Changes Since 2021 (BLS Data)
@@ -53,6 +53,8 @@ export default function InflationAndYourGroceryBill() {
           ))}
         </div>
 
+        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
+
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Food Inflation Is So Persistent</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           Unlike durable goods where price spikes often reverse, food prices tend to be "sticky" — they rise quickly when input costs increase but rarely fall back to prior levels. Grocery chains need to rebuild margins after absorbing supply shocks, and labor costs remain elevated.
@@ -61,10 +63,14 @@ export default function InflationAndYourGroceryBill() {
           The three biggest drivers of sustained food inflation since 2021: <strong>energy costs</strong> (affects every step of the supply chain), <strong>supply chain disruptions</strong> (shipping, packaging), and <strong>commodity price shocks</strong> (grain, edible oils, fertilizer — worsened by the Ukraine war).
         </p>
 
+        <LocoTabZone partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />
+
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>What to Expect in 2025</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           The USDA projects overall food-at-home prices to increase <strong style={{ color: '#fbbf24' }}>2–3% in 2025</strong> — a slowdown from recent years but still above the historical 1.5% average. Eggs remain the wild card; avian flu outbreaks can spike prices 50–100% in weeks.
         </p>
+
+        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>

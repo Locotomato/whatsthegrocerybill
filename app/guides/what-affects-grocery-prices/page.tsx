@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
-import RadUnit from '@/components/RadUnit'
+import LocoRadZone from '@/components/LocoRadZone'
+import LocoBannerZone from '@/components/LocoBannerZone'
+import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'What Determines Grocery Prices? | What\'s the Grocery Bill?',
@@ -34,17 +36,21 @@ export default function WhatAffectsGroceryPrices() {
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
-        <div data-loco-widget></div>
-
-        <RadUnit />
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32 }}>
-          {factors.map((f) => (
-            <div key={f.title} style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid var(--border)' }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 10 }}>
-                {f.emoji} {f.title}
-              </h2>
-              <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{f.body}</p>
+          {factors.map((f, i) => (
+            <div key={f.title}>
+              <div style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid var(--border)' }}>
+                <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 10 }}>
+                  {f.emoji} {f.title}
+                </h2>
+                <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{f.body}</p>
+              </div>
+              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
             </div>
           ))}
         </div>

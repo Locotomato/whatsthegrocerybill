@@ -91,31 +91,18 @@ const LOCO_PARTNER = 'pub_rs2wayi1'
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
 function renderBody(body: string) {
   const lines = body.split('\n')
-  const elements: React.ReactNode[] = []
+  const blocks: React.ReactNode[] = []
   let paraBuffer: string[] = []
-  let paraCount = 0
-  let radInserted = false
-  let bannerInserted = false
+  let blockIdx = 0
 
   function flushPara() {
     const text = paraBuffer.join(' ').trim()
     if (text) {
-      paraCount++
-      elements.push(
-        <p key={`p-${elements.length}`} style={{
+      blocks.push(
+        <p key={`p-${blockIdx++}`} style={{
           margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
         }}>{text}</p>
       )
-      // Insert RAD #1 after 3rd paragraph
-      if (paraCount === 3 && !radInserted) {
-        elements.push(<LocoRadZone key="rad-1" partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />)
-        radInserted = true
-      }
-      // Insert BANNER #1 after 6th paragraph
-      if (paraCount === 6 && !bannerInserted) {
-        elements.push(<LocoBannerZone key="banner-1" partner={LOCO_PARTNER} campaign="cmp_afc21e11" shape="vertical" />)
-        bannerInserted = true
-      }
     }
     paraBuffer = []
   }
@@ -124,16 +111,16 @@ function renderBody(body: string) {
     const trimmed = line.trim()
     if (trimmed.startsWith('### ')) {
       flushPara()
-      elements.push(
-        <h3 key={`h3-${elements.length}`} style={{
+      blocks.push(
+        <h3 key={`h3-${blockIdx++}`} style={{
           margin: '28px 0 8px', fontSize: 19, fontWeight: 700,
           color: 'var(--text)', letterSpacing: '-0.01em',
         }}>{trimmed.replace('### ', '')}</h3>
       )
     } else if (trimmed.startsWith('## ')) {
       flushPara()
-      elements.push(
-        <h2 key={`h2-${elements.length}`} style={{
+      blocks.push(
+        <h2 key={`h2-${blockIdx++}`} style={{
           margin: '36px 0 10px', fontSize: 22, fontWeight: 800,
           color: 'var(--text)', letterSpacing: '-0.02em',
           paddingBottom: 10, borderBottom: '2px solid var(--red-border)',
@@ -146,7 +133,25 @@ function renderBody(body: string) {
     }
   }
   flushPara()
-  return elements
+
+  // Interleave ads after every block: RAD → Banner A → TAB → Banner B
+  const result: React.ReactNode[] = []
+  blocks.forEach((block, i) => {
+    result.push(block)
+    if (i < blocks.length - 1) {
+      const slot = i % 4
+      if (slot === 0) {
+        result.push(<LocoRadZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />)
+      } else if (slot === 1) {
+        result.push(<LocoBannerZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_afc21e11" shape="vertical" />)
+      } else if (slot === 2) {
+        result.push(<LocoTabZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e0ef7110" count={6} />)
+      } else {
+        result.push(<LocoBannerZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_83fa7322" shape="vertical" />)
+      }
+    }
+  })
+  return result
 }
 
 function formatDate(iso: string) {
