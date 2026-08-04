@@ -53,7 +53,7 @@ export default function InflationAndYourGroceryBill() {
           ))}
         </div>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
+        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Food Inflation Is So Persistent</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
@@ -70,7 +70,7 @@ export default function InflationAndYourGroceryBill() {
           The USDA projects overall food-at-home prices to increase <strong style={{ color: '#fbbf24' }}>2–3% in 2025</strong> — a slowdown from recent years but still above the historical 1.5% average. Eggs remain the wild card; avian flu outbreaks can spike prices 50–100% in weeks.
         </p>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />
+        <LocoBannerZone />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/why-are-egg-prices-so-high" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Why Are Egg Prices So High?</Link>

@@ -143,11 +143,11 @@ function renderBody(body: string) {
       if (slot === 0) {
         result.push(<LocoRadZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />)
       } else if (slot === 1) {
-        result.push(<LocoBannerZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_afc21e11" shape="vertical" />)
+        result.push(<LocoBannerZone key={`ad-${i}`} />)
       } else if (slot === 2) {
         result.push(<LocoTabZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e0ef7110" count={6} />)
       } else {
-        result.push(<LocoBannerZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_83fa7322" shape="vertical" />)
+        result.push(<LocoBannerZone key={`ad-${i}`} />)
       }
     }
   })
@@ -365,7 +365,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* BANNER #2 — in-content */}
-        <LocoBannerZone partner={LOCO_PARTNER} campaign="cmp_83fa7322" shape="vertical" />
+        <LocoBannerZone />
 
         {/* YouTube embed */}
         {video && (

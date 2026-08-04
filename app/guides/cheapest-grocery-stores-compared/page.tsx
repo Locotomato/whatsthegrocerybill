@@ -62,9 +62,9 @@ export default function CheapestGroceryStoresCompared() {
                 </div>
               </div>
               {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
-              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} />}
               {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
-              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} />}
             </div>
           ))}
         </div>
