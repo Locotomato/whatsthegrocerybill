@@ -60,14 +60,14 @@ export default function GroceryPricesByState() {
                 </span>
               </div>
               {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
-              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />}
+              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} />}
               {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
-              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />}
+              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} />}
             </div>
           ))}
         </div>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
+        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Do Grocery Prices Vary So Much by State?</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
@@ -83,7 +83,7 @@ export default function GroceryPricesByState() {
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />
+        <LocoBannerZone />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>

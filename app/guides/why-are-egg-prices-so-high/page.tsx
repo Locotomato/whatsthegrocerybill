@@ -50,7 +50,7 @@ export default function WhyAreEggPricesSoHigh() {
           When a flock tests positive, the entire farm is depopulated — sometimes tens of millions of birds at once. Restocking takes 6–12 months minimum. Supply has never fully recovered between outbreaks.
         </p>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
+        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           📈 Feed and Energy Costs
@@ -74,7 +74,7 @@ export default function WhyAreEggPricesSoHigh() {
           Midwest states close to major egg-producing farms — Iowa, Ohio, Indiana — tend to see the lowest retail prices. Iowa alone produces about <strong>1 in 7 eggs</strong> consumed in the US.
         </p>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_83fa7322" shape="vertical" />
+        <LocoBannerZone />
 
         {/* Price callout box */}
         <div style={{
@@ -115,7 +115,7 @@ export default function WhyAreEggPricesSoHigh() {
           <li><strong style={{ color: 'var(--red)' }}>Local farms and co-ops</strong> — in many areas, buying directly from small local farms is now cheaper than supermarket prices.</li>
         </ul>
 
-        <LocoBannerZone partner="pub_rs2wayi1" campaign="cmp_afc21e11" shape="vertical" />
+        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           📅 When Will Egg Prices Come Down?
