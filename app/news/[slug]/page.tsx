@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation'
 import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
 import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
-import LocoFormZone from '@/components/LocoFormZone'
 import LocoRadZone from '@/components/LocoRadZone'
 
 export const revalidate = 86400
@@ -328,9 +327,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )
         })()}
-
-        {/* FORM — top of article */}
-        <LocoFormZone partner={LOCO_PARTNER} campaign="cmp_4e9852d2" theme="hero-classic" />
 
         {/* Article Body — PubGuru in-content ads every 3 paragraphs (primary real estate) */}
         <article>{renderBody(article.body ?? '')}</article>
