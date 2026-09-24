@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
 import LocoRadZone from '@/components/LocoRadZone'
-import LocoBannerZone from '@/components/LocoBannerZone'
-import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'Grocery Prices by State 2025: Which States Pay Most & Least | What\'s the Grocery Bill?',
@@ -40,7 +38,10 @@ export default function GroceryPricesByState() {
           A family spending $1,000/month on groceries in Iowa would spend <strong style={{ color: '#fbbf24' }}>$1,480/month in Hawaii</strong> buying the exact same items. Here&apos;s how all 50 states compare — and why the gaps are so large.
         </p>
 
-        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
+        {/* PubGuru — top of content */}
+        <div style={{ minHeight: 90, margin: '0 0 1.5rem' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content1"></pubguru>' }}
+        />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 16 }}>Highest &amp; Lowest Cost States</h2>
         <div style={{ marginBottom: 28 }}>
@@ -59,23 +60,25 @@ export default function GroceryPricesByState() {
                   {s.tier === 'highest' ? '🔴 Most Expensive' : s.tier === 'high' ? '🟠 Above Average' : '🟢 Below Average'}
                 </span>
               </div>
-              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
-              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} />}
-              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
-              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} />}
+              {/* PubGuru after every 3rd state entry */}
+              {(i + 1) % 3 === 0 && i < STATE_DATA.length - 1 && (
+                <div
+                  style={{ minHeight: 90, margin: '0.5rem 0' }}
+                  dangerouslySetInnerHTML={{
+                    __html: `<pubguru data-pg-ad="${
+                      i === 2 ? 'whatsthegrocerybill_in-content2' : 'whatsthegrocerybill_in-content3'
+                    }"></pubguru>`
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
-
-        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>Why Do Grocery Prices Vary So Much by State?</h2>
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           <strong>Transportation costs</strong> are the biggest variable — Hawaii and Alaska pay a massive premium simply because everything has to be shipped long distances. In the continental US, states far from major distribution centers pay more.
         </p>
-
-        <LocoTabZone partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />
-
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           <strong>State regulations</strong> matter for specific categories. California&apos;s Prop 12 cage-free mandate adds $1–2/dozen to egg prices statewide. Local minimum wages and labor laws affect store operating costs.
         </p>
@@ -83,7 +86,8 @@ export default function GroceryPricesByState() {
           <strong>Local competition</strong> plays a role too — states with dense Aldi and Lidl penetration see lower prices across the board as competitors match their pricing.
         </p>
 
-        <LocoBannerZone />
+        {/* Loco RAD — below content */}
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/grocery-prices" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ See Live Data by State</Link>
