@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
 import LocoRadZone from '@/components/LocoRadZone'
-import LocoBannerZone from '@/components/LocoBannerZone'
-import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'Why Are Egg Prices So High in 2025? | What\'s the Grocery Bill?',
@@ -38,7 +36,10 @@ export default function WhyAreEggPricesSoHigh() {
           The average dozen eggs now costs <strong style={{ color: '#fbbf24' }}>over $4.80</strong> — nearly triple what they cost in 2021. Here's the full breakdown of what's driving record egg prices, which states are hit hardest, and whether relief is coming.
         </p>
 
-        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
+        {/* PubGuru — top of content */}
+        <div style={{ minHeight: 90, margin: '0 0 1.5rem' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content1"></pubguru>' }}
+        />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🦠 The Avian Flu Epidemic
@@ -50,7 +51,10 @@ export default function WhyAreEggPricesSoHigh() {
           When a flock tests positive, the entire farm is depopulated — sometimes tens of millions of birds at once. Restocking takes 6–12 months minimum. Supply has never fully recovered between outbreaks.
         </p>
 
-        <LocoBannerZone />
+        {/* PubGuru — mid content */}
+        <div style={{ minHeight: 90, margin: '1.5rem 0' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content2"></pubguru>' }}
+        />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           📈 Feed and Energy Costs
@@ -62,7 +66,10 @@ export default function WhyAreEggPricesSoHigh() {
           Energy costs for climate-controlled laying facilities have also risen. These input costs don't disappear even when egg prices briefly dip.
         </p>
 
-        <LocoTabZone partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />
+        {/* PubGuru — lower content */}
+        <div style={{ minHeight: 90, margin: '1.5rem 0' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content3"></pubguru>' }}
+        />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🗺 Which States Are Hit Hardest?
@@ -73,8 +80,6 @@ export default function WhyAreEggPricesSoHigh() {
         <p style={{ color: '#d1d5db', lineHeight: 1.7, marginBottom: 16 }}>
           Midwest states close to major egg-producing farms — Iowa, Ohio, Indiana — tend to see the lowest retail prices. Iowa alone produces about <strong>1 in 7 eggs</strong> consumed in the US.
         </p>
-
-        <LocoBannerZone />
 
         {/* Price callout box */}
         <div style={{
@@ -102,8 +107,6 @@ export default function WhyAreEggPricesSoHigh() {
           </div>
         </div>
 
-        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
-
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           🛒 How to Save on Eggs Right Now
         </h2>
@@ -114,8 +117,6 @@ export default function WhyAreEggPricesSoHigh() {
           <li><strong style={{ color: 'var(--red)' }}>Substitute when cooking</strong> — for baking, applesauce, mashed banana, or commercial egg replacers work in many recipes.</li>
           <li><strong style={{ color: 'var(--red)' }}>Local farms and co-ops</strong> — in many areas, buying directly from small local farms is now cheaper than supermarket prices.</li>
         </ul>
-
-        <LocoBannerZone />
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginTop: 36, marginBottom: 12 }}>
           📅 When Will Egg Prices Come Down?
@@ -133,8 +134,6 @@ export default function WhyAreEggPricesSoHigh() {
           Most forecasts put the national average at <strong style={{ color: 'var(--red)' }}>$3.50–$4.00/dozen</strong> by end of 2025 if no major new outbreak occurs. That's still double the pre-pandemic norm.
         </p>
 
-        <LocoTabZone partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />
-
         {/* FAQ */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, marginTop: 16 }}>
           <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', marginBottom: 20 }}>Frequently Asked Questions</h2>
@@ -149,6 +148,9 @@ export default function WhyAreEggPricesSoHigh() {
             </div>
           ))}
         </div>
+
+        {/* Loco RAD — below content */}
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>

@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
 import LocoRadZone from '@/components/LocoRadZone'
-import LocoBannerZone from '@/components/LocoBannerZone'
-import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'Cheapest Grocery Stores in 2025: Aldi vs Walmart vs Kroger vs Costco | What\'s the Grocery Bill?',
@@ -37,7 +35,10 @@ export default function CheapestGroceryStoresCompared() {
           Where you shop matters more than what you buy. Switching from a traditional supermarket to Aldi or Walmart can save a family of four <strong style={{ color: '#fbbf24' }}>$150–250/month</strong> with zero change in what they eat.
         </p>
 
-        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
+        {/* PubGuru — top of content */}
+        <div style={{ minHeight: 90, margin: '0 0 1.5rem' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content1"></pubguru>' }}
+        />
 
         <div style={{ marginTop: 32 }}>
           {stores.map((store, i) => (
@@ -61,10 +62,17 @@ export default function CheapestGroceryStoresCompared() {
                   <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>{store.savings}</div>
                 </div>
               </div>
-              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
-              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} />}
-              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
-              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} />}
+              {/* PubGuru after every 3rd store */}
+              {(i + 1) % 3 === 0 && i < stores.length - 1 && (
+                <div
+                  style={{ minHeight: 90, margin: '0.5rem 0' }}
+                  dangerouslySetInnerHTML={{
+                    __html: `<pubguru data-pg-ad="${
+                      i === 2 ? 'whatsthegrocerybill_in-content2' : 'whatsthegrocerybill_in-content3'
+                    }"></pubguru>`
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -75,6 +83,9 @@ export default function CheapestGroceryStoresCompared() {
             Shop Aldi or Lidl for staples (eggs, dairy, canned goods, snacks, produce). Buy meat at Costco when on sale and freeze it. Use Walmart or Kroger for items Aldi doesn't carry. This hybrid approach captures the savings of discount stores while maintaining selection.
           </p>
         </div>
+
+        {/* Loco RAD — below content */}
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/how-to-save-money-on-groceries" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ 8 Ways to Save on Groceries</Link>

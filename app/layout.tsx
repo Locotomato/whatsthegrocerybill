@@ -44,6 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Preconnect to locotomato.com — starts TCP/TLS handshake early for faster widget load */}
         <link rel="preconnect" href="https://locotomato.com" />
         <link rel="dns-prefetch" href="https://locotomato.com" />
+        {/* MonetizeMore / PubGuru ad management */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script type="text/javascript" async src="//c.pubguru.net/pg.whatsthegrocerybill.js" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-04DFV0Z2NJ"
           strategy="afterInteractive"

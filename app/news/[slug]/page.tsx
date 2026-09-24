@@ -6,8 +6,6 @@ import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 import LocoFormZone from '@/components/LocoFormZone'
 import LocoRadZone from '@/components/LocoRadZone'
-import LocoBannerZone from '@/components/LocoBannerZone'
-import LocoTabZone from '@/components/LocoTabZone'
 
 export const revalidate = 86400
 
@@ -91,18 +89,21 @@ const LOCO_PARTNER = 'pub_rs2wayi1'
 /** Render markdown-lite body (## H2, ### H3, blank lines = paragraph breaks) */
 function renderBody(body: string) {
   const lines = body.split('\n')
-  const blocks: React.ReactNode[] = []
+  const blocks: Array<{ node: React.ReactNode; isParagraph: boolean }> = []
   let paraBuffer: string[] = []
   let blockIdx = 0
 
   function flushPara() {
     const text = paraBuffer.join(' ').trim()
     if (text) {
-      blocks.push(
-        <p key={`p-${blockIdx++}`} style={{
-          margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
-        }}>{text}</p>
-      )
+      blocks.push({
+        node: (
+          <p key={`p-${blockIdx++}`} style={{
+            margin: '0 0 18px', fontSize: 17, lineHeight: 1.8, color: '#374151',
+          }}>{text}</p>
+        ),
+        isParagraph: true,
+      })
     }
     paraBuffer = []
   }
@@ -111,21 +112,27 @@ function renderBody(body: string) {
     const trimmed = line.trim()
     if (trimmed.startsWith('### ')) {
       flushPara()
-      blocks.push(
-        <h3 key={`h3-${blockIdx++}`} style={{
-          margin: '28px 0 8px', fontSize: 19, fontWeight: 700,
-          color: 'var(--text)', letterSpacing: '-0.01em',
-        }}>{trimmed.replace('### ', '')}</h3>
-      )
+      blocks.push({
+        node: (
+          <h3 key={`h3-${blockIdx++}`} style={{
+            margin: '28px 0 8px', fontSize: 19, fontWeight: 700,
+            color: 'var(--text)', letterSpacing: '-0.01em',
+          }}>{trimmed.replace('### ', '')}</h3>
+        ),
+        isParagraph: false,
+      })
     } else if (trimmed.startsWith('## ')) {
       flushPara()
-      blocks.push(
-        <h2 key={`h2-${blockIdx++}`} style={{
-          margin: '36px 0 10px', fontSize: 22, fontWeight: 800,
-          color: 'var(--text)', letterSpacing: '-0.02em',
-          paddingBottom: 10, borderBottom: '2px solid var(--red-border)',
-        }}>{trimmed.replace('## ', '')}</h2>
-      )
+      blocks.push({
+        node: (
+          <h2 key={`h2-${blockIdx++}`} style={{
+            margin: '36px 0 10px', fontSize: 22, fontWeight: 800,
+            color: 'var(--text)', letterSpacing: '-0.02em',
+            paddingBottom: 10, borderBottom: '2px solid var(--red-border)',
+          }}>{trimmed.replace('## ', '')}</h2>
+        ),
+        isParagraph: false,
+      })
     } else if (trimmed === '') {
       flushPara()
     } else {
@@ -134,20 +141,28 @@ function renderBody(body: string) {
   }
   flushPara()
 
-  // Interleave ads after every block: RAD → Banner A → TAB → Banner B
+  // Inject PubGuru ads after every 3rd paragraph (primary real estate).
+  // No inline Loco units — RAD unit is placed below the article body.
   const result: React.ReactNode[] = []
-  blocks.forEach((block, i) => {
-    result.push(block)
-    if (i < blocks.length - 1) {
-      const slot = i % 4
-      if (slot === 0) {
-        result.push(<LocoRadZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />)
-      } else if (slot === 1) {
-        result.push(<LocoBannerZone key={`ad-${i}`} />)
-      } else if (slot === 2) {
-        result.push(<LocoTabZone key={`ad-${i}`} partner={LOCO_PARTNER} campaign="cmp_e0ef7110" count={6} />)
-      } else {
-        result.push(<LocoBannerZone key={`ad-${i}`} />)
+  let pCount = 0
+  blocks.forEach(({ node, isParagraph }, i) => {
+    result.push(node)
+    if (isParagraph) {
+      pCount++
+      const pgSlot =
+        pCount === 3 ? 'whatsthegrocerybill_in-content1' :
+        pCount === 6 ? 'whatsthegrocerybill_in-content2' :
+        (pCount >= 9 && (pCount - 9) % 3 === 0) ? 'whatsthegrocerybill_in-content3' :
+        null
+      if (pgSlot) {
+        result.push(
+          <div
+            key={`pg-${i}`}
+            className="pubguru-ad-slot"
+            style={{ minHeight: '90px', margin: '1.5rem 0' }}
+            dangerouslySetInnerHTML={{ __html: `<pubguru data-pg-ad="${pgSlot}"></pubguru>` }}
+          />
+        )
       }
     }
   })
@@ -317,11 +332,13 @@ export default async function ArticlePage({ params }: Props) {
         {/* FORM — top of article */}
         <LocoFormZone partner={LOCO_PARTNER} campaign="cmp_4e9852d2" theme="hero-classic" />
 
-        {/* Body — RAD #1 and BANNER #1 injected inline by renderBody */}
+        {/* Article Body — PubGuru in-content ads every 3 paragraphs (primary real estate) */}
         <article>{renderBody(article.body ?? '')}</article>
 
-        {/* RAD #2 — after article body */}
-        <LocoRadZone partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />
+        {/* Loco RAD unit — below content, after PubGuru ads */}
+        <div style={{ marginTop: 32, marginBottom: 24 }}>
+          <LocoRadZone partner={LOCO_PARTNER} campaign="cmp_e14b1866" count={4} />
+        </div>
 
         {/* State links */}
         {linkedStates.length > 0 && (
@@ -363,9 +380,6 @@ export default async function ArticlePage({ params }: Props) {
             </Link>
           </div>
         )}
-
-        {/* BANNER #2 — in-content */}
-        <LocoBannerZone />
 
         {/* YouTube embed */}
         {video && (
@@ -523,8 +537,6 @@ export default async function ArticlePage({ params }: Props) {
             <Link href="/" style={{ fontSize: 13, color: 'var(--muted)', textDecoration: 'none', fontWeight: 500 }}>← Live prices</Link>
           </div>
         </div>
-        {/* TAB — end of article */}
-        <LocoTabZone partner={LOCO_PARTNER} campaign="cmp_e0ef7110" count={6} />
       </div>
     </main>
   )

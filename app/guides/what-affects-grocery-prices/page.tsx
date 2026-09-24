@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import NavHeader from '../../components/NavHeader'
 import LocoRadZone from '@/components/LocoRadZone'
-import LocoBannerZone from '@/components/LocoBannerZone'
-import LocoTabZone from '@/components/LocoTabZone'
 
 export const metadata: Metadata = {
   title: 'What Determines Grocery Prices? | What\'s the Grocery Bill?',
@@ -36,7 +34,10 @@ export default function WhatAffectsGroceryPrices() {
           By the time food reaches your cart, it's passed through farmers, processors, distributors, and retailers — each adding cost. Here's how grocery prices are actually set, and what makes them go up or down.
         </p>
 
-        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
+        {/* PubGuru — top of content */}
+        <div style={{ minHeight: 90, margin: '0 0 1.5rem' }}
+          dangerouslySetInnerHTML={{ __html: '<pubguru data-pg-ad="whatsthegrocerybill_in-content1"></pubguru>' }}
+        />
 
         <div style={{ marginTop: 32 }}>
           {factors.map((f, i) => (
@@ -47,13 +48,23 @@ export default function WhatAffectsGroceryPrices() {
                 </h2>
                 <p style={{ color: 'var(--subtle)', lineHeight: 1.7, margin: 0 }}>{f.body}</p>
               </div>
-              {i % 4 === 0 && <LocoRadZone key={`rad-${i}`} partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />}
-              {i % 4 === 1 && <LocoBannerZone key={`ban-a-${i}`} />}
-              {i % 4 === 2 && <LocoTabZone key={`tab-${i}`} partner="pub_rs2wayi1" campaign="cmp_e0ef7110" count={6} />}
-              {i % 4 === 3 && <LocoBannerZone key={`ban-b-${i}`} />}
+              {/* PubGuru after every 3rd factor */}
+              {(i + 1) % 3 === 0 && i < factors.length - 1 && (
+                <div
+                  style={{ minHeight: 90, margin: '0.5rem 0' }}
+                  dangerouslySetInnerHTML={{
+                    __html: `<pubguru data-pg-ad="${
+                      i === 2 ? 'whatsthegrocerybill_in-content2' : 'whatsthegrocerybill_in-content3'
+                    }"></pubguru>`
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
+
+        {/* Loco RAD — below content */}
+        <LocoRadZone partner="pub_rs2wayi1" campaign="cmp_e14b1866" count={4} />
 
         <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <Link href="/guides/inflation-and-your-grocery-bill" style={{ color: 'var(--red)', fontSize: 13, textDecoration: 'none' }}>→ Inflation and Your Grocery Bill</Link>
