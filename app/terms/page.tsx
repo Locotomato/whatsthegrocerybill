@@ -14,6 +14,8 @@ export default function TermsPage() {
 
       <p>These Terms of Service (&quot;Terms&quot;) govern your use of <strong>whatsthegrocerybill.com</strong> (the &quot;Site&quot;), operated by Magic Media Group LLC (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). By accessing or using the Site you agree to be bound by these Terms. If you do not agree, do not use the Site.</p>
 
+      <p>I agree to receive marketing emails from ConsumerAffairs at the email address I provided. I understand I can unsubscribe at any time.</p>
+
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>1. About the Site</h2>
       <p>The Site publishes informational content about U.S. grocery prices, food cost trends, household budgeting, and related consumer topics. Content includes articles, data visualizations, state-by-state comparisons, and price-tracking tools derived from publicly available datasets such as the Bureau of Labor Statistics Consumer Price Index and the USDA Economic Research Service.</p>
 
