@@ -34,7 +34,7 @@ export default function AuthorsPage() {
           {/* Top row */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 20 }}>
             <div style={{ width: 72, height: 72, borderRadius: 14, flexShrink: 0, background: '#1e3a5f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: '#fff', fontSize: 24, fontWeight: 800 }}>MS</span>
+              <span style={{ color: '#fff', fontSize: 24, fontWeight: 800 }}>AI</span>
             </div>
             <div>
               <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1e3a5f', margin: 0, letterSpacing: '-0.02em' }}>{editor.name}</h2>
@@ -71,7 +71,7 @@ export default function AuthorsPage() {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Organization',
-              name: editor.name,
+              name: editor.name,
             }),
           }}
         />

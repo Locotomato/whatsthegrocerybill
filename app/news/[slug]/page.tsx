@@ -298,7 +298,7 @@ export default async function ArticlePage({ params }: Props) {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                 >
-                  <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>MS</span>
+                  <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>AI</span>
                 </span>
               </a>
               <div>
