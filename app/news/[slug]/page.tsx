@@ -195,7 +195,7 @@ export default async function ArticlePage({ params }: Props) {
     headline: article.headline, description: article.subhead,
     datePublished: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
     dateModified: new Date(article.publishedAt ?? article.generated_at ?? Date.now()).toISOString(),
-    author: { '@type': 'Person', name: 'Michael Spitaleri', jobTitle: 'Editor-in-Chief', url: 'https://whatsthegrocerybill.com/authors#michael-spitaleri' },
+    author: { '@type': 'Organization', name: "What's The Grocery Bill AI Writer", url: 'https://whatsthegrocerybill.com/authors' },
     publisher: { '@type': 'Organization', name: "What's the Grocery Bill?", url: 'https://whatsthegrocerybill.com' },
     url: articleUrl, mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
     keywords: [...(article.tags ?? []), ...(article.geo_tags ?? []).map(s => `${s} Grocery Prices`)].join(', '),

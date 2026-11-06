@@ -15,8 +15,8 @@ export default function EditorialPolicyPage() {
       <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Editorial Policy</h1>
       <p style={{ color: '#666', marginBottom: 32 }}>Last updated: June 5, 2026</p>
 
-      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Responsible Editor</h2>
-      <p>All editorial content published on {siteName} is overseen by <strong>Michael Spitaleri</strong>, Founder and Editor-in-Chief, who is responsible for ensuring accuracy, fairness, and adherence to the standards described on this page.</p>
+      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Who Writes This Site</h2>
+      <p>Content on What&apos;s The Grocery Bill is written by an AI system under the byline What&apos;s The Grocery Bill AI Writer. The site is published by Magic Media Group LLC, which is responsible for the standards on this page.</p>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Our Editorial Mission</h2>
       <p>{siteName} provides independent editorial coverage of U.S. grocery prices, food-cost trends, and consumer spending analysis. Our goal is to give consumers clear, data-driven information about grocery costs — what they are, why they change, and how to save money on food.</p>
@@ -31,16 +31,15 @@ export default function EditorialPolicyPage() {
       </ul>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>AI Disclosure</h2>
-      <p>Our editorial team uses AI writing tools to assist with data analysis, research, and initial content drafting. All AI-assisted content is reviewed and edited by our editorial team against our content standards before publication. AI tools are never used as the sole author of published content. We disclose AI assistance on our <a href="/authors" style={{ color: '#2563eb' }}>Authors page</a>.</p>
+      <p>Articles on What&apos;s The Grocery Bill are written by AI. They are drafted automatically from public news and data sources and published without a person reviewing each one first. Read more on our <a href="/authors" style={{ color: '#2563eb' }}>Authors page</a>.</p>
 
-      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Review Process</h2>
-      <p>Every article published on {siteName} goes through a multi-step review process:</p>
+      <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>How Content Is Published</h2>
+      <p>How content gets published on What&apos;s The Grocery Bill:</p>
       <ol style={{ paddingLeft: 24 }}>
         <li><strong>Research:</strong> Topics are sourced from BLS data releases, USDA reports, retailer pricing trends, reader questions, and current food-market developments.</li>
-        <li><strong>Drafting:</strong> Content is drafted by our editorial team, sometimes with AI assistance for data analysis and structuring.</li>
-        <li><strong>Fact-check:</strong> Price data and market claims are verified against primary sources (BLS, USDA, retailer data) before publication.</li>
-        <li><strong>Editorial review:</strong> The Managing Editor reviews each article for accuracy, clarity, and compliance with our editorial standards.</li>
-        <li><strong>Ongoing updates:</strong> Published articles are reviewed periodically and updated when grocery prices, market conditions, or retailer data change.</li>
+        <li><strong>Drafting:</strong> An AI system writes the draft.</li>
+        <li><strong>Publishing:</strong> Content is published automatically. A person does not review each piece first.</li>
+        <li><strong>Corrections:</strong> Errors reported to us are reviewed and corrected, as described on our Corrections page.</li>
       </ol>
 
       <h2 style={{ fontSize: 22, fontWeight: 600, marginTop: 32, marginBottom: 12 }}>Editorial Independence</h2>

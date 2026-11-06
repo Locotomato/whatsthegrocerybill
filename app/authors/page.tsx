@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { AUTHORS } from '@/lib/authors'
 
 export const metadata: Metadata = {
-  title: "About the Editor | What's the Grocery Bill?",
-  description: 'Meet Michael Spitaleri, editor-in-chief of What\'s the Grocery Bill. Learn about our AI-assisted editorial process and data-driven grocery price coverage.',
+  title: "About Our AI Writer | What's the Grocery Bill?",
+  description: "How What's The Grocery Bill articles are written: by AI, published automatically, with corrections on request.",
 }
 
 export default function AuthorsPage() {
@@ -18,13 +18,13 @@ export default function AuthorsPage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div style={{ display: 'inline-block', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 999, padding: '6px 18px', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#1d4ed8', marginBottom: 16 }}>
-            Editorial Leadership
+            How We Write
           </div>
           <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: 900, letterSpacing: '-0.02em', color: '#0f172a', margin: '0 0 14px' }}>
-            About the Editor
+            About Our AI Writer
           </h1>
           <p style={{ fontSize: 16, color: '#64748b', lineHeight: 1.7, maxWidth: 540, margin: '0 auto' }}>
-            Our grocery price coverage is produced using AI-assisted drafting tools under the editorial oversight of a named, real editor. All content is reviewed and fact-checked against official data before publication.
+            What&apos;s The Grocery Bill articles are written by AI and published automatically, without a person reviewing each one before it goes live. They can contain errors or go out of date, so confirm anything important with BLS and USDA.
           </p>
         </div>
 
@@ -70,14 +70,8 @@ export default function AuthorsPage() {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'Person',
-              name: editor.name,
-              jobTitle: editor.credential,
-              worksFor: {
-                '@type': 'Organization',
-                name: "What's the Grocery Bill",
-                url: 'https://whatsthegrocerybill.com',
-              },
+              '@type': 'Organization',
+              name: editor.name,
             }),
           }}
         />
@@ -85,7 +79,7 @@ export default function AuthorsPage() {
         {/* Disclosure */}
         <div style={{ marginTop: 40, padding: '20px 24px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, textAlign: 'center' }}>
           <p style={{ color: '#64748b', fontSize: 13, lineHeight: 1.7, margin: 0 }}>
-            Content on What&apos;s the Grocery Bill is produced using AI-assisted drafting tools under editorial oversight.
+            Content on What&apos;s the Grocery Bill is written by AI and published automatically, without a person reviewing each article first.
             All price data is sourced from BLS, USDA, and EIA. We never fabricate statistics.
             Published by{' '}
             <a href="https://magicmediagroup.co" style={{ color: '#1d4ed8', textDecoration: 'underline' }} target="_blank" rel="noopener noreferrer">Magic Media Group LLC</a>.
