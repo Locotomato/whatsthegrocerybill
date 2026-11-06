@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateArticle, toSlug, type Article } from '../../../../lib/articleUtils'
-import { pickAuthor } from '../../../../lib/authors'
+import { generateSourcedArticle, toSlug, type Article } from '../../../../lib/articleUtils'
+import { decodeEntities, readSource } from '../../../../lib/sourcedDraft'
 import { postTweetV2, buildArticleTweet } from '../../../../lib/twitterOAuth2'
 import { getArticleVideo } from '../../../../lib/youtubeUtils'
 import { pingBingUrls } from '../../../../lib/bing-webmaster'
@@ -8,7 +8,6 @@ import { pingBingUrls } from '../../../../lib/bing-webmaster'
 export const dynamic     = 'force-dynamic'
 export const maxDuration = 300
 
-const BEARER      = process.env.TWITTER_BEARER_TOKEN
 const ANTHROPIC   = process.env.ANTHROPIC_API_KEY
 const CRON_SECRET = process.env.CRON_SECRET
 
@@ -17,9 +16,13 @@ const DAILY_CAP_NORMAL   = 6   // 3–6 articles per day by default
 const DAILY_CAP_TRENDING = 12  // unlock more if signals are very hot (avg score ≥ 3)
 const TRENDING_THRESHOLD = 3
 
-// ── Twitter signal config ─────────────────────────────────────────────────────
-const QUERY = '(grocery prices OR egg prices OR food prices OR grocery inflation OR "cost of groceries" OR "grocery bill" OR milk prices OR beef prices OR chicken prices OR bread prices) (rising OR up OR down OR high OR record OR surge OR drop OR inflation OR tariff OR cheaper OR falling OR lower OR relief OR expensive) -is:retweet lang:en'
+const MAX_SOURCE_AGE_DAYS = 10
+const MAX_DRAFTS_PER_RUN = 5
+const MAX_RESOLVE_FAILURES = 3 // Google refuses some Vercel IPs, so stop asking after a few
+const RUN_TIME_BUDGET_MS = 200_000
+const SEEN_TTL_SECONDS = 60 * 60 * 24 * 120 // longer than an article lives, so stories don't repeat
 
+// ── Signal scoring ────────────────────────────────────────────────────────────
 const UP_WORDS   = ['spike','surge','rise','rising','jump','soar','higher','increase','shortage',
                     'disruption','crisis','record','expensive','inflation','tariff','tax','worst','all-time']
 const DOWN_WORDS = ['drop','fall','falling','decline','lower','decrease','cheap','cheapest','plunge',
@@ -36,7 +39,7 @@ function sentimentScore(text: string): number {
 // ── News RSS feeds ────────────────────────────────────────────────────────────
 const NEWS_FEEDS = [
   { url: 'https://feeds.reuters.com/reuters/businessNews', source: 'Reuters Business' },
-  { url: 'https://news.google.com/rss/search?q=grocery+prices+OR+food+inflation+OR+egg+prices+OR+supermarket+prices+US&hl=en-US&gl=US&ceid=US:en', source: 'Google News' },
+  { url: 'https://news.google.com/rss/search?q=grocery+prices+OR+food+inflation+OR+egg+prices+OR+supermarket+prices+US+when:7d&hl=en-US&gl=US&ceid=US:en', source: 'Google News' },
   { url: 'https://www.usda.gov/rss/home.xml', source: 'USDA' },
   { url: 'https://progressivegrocer.com/rss.xml', source: 'Progressive Grocer' },
   { url: 'https://www.supermarketnews.com/rss/all', source: 'Supermarket News' },
@@ -49,10 +52,10 @@ const GROCERY_KEYWORDS = [
   'food stamp','snap','usda','agriculture','farm price','commodity price',
 ]
 
-async function fetchNewsSignals(): Promise<Array<{
-  id: string; text: string; author: string; username: string; created_at: string; score: number
-}>> {
-  const signals: Array<{ id: string; text: string; author: string; username: string; created_at: string; score: number }> = []
+type Signal = { id: string; title: string; link: string; feed: string; pubDate: Date | null; score: number }
+
+async function fetchNewsSignals(): Promise<Signal[]> {
+  const signals: Signal[] = []
 
   for (const feed of NEWS_FEEDS) {
     try {
@@ -70,8 +73,9 @@ async function fetchNewsSignals(): Promise<Array<{
                       ?? block.match(/<title>(.*?)<\/title>/)?.[1] ?? '').trim()
         const desc    = (block.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/)?.[1]
                       ?? block.match(/<description>(.*?)<\/description>/)?.[1] ?? '').replace(/<[^>]+>/g, '').trim()
-        const pubDate = block.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] ?? new Date().toISOString()
-        if (!title) continue
+        const published = new Date(block.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] ?? '')
+        const link    = (block.match(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/)?.[1] ?? '').trim()
+        if (!title || !link) continue
 
         const combined = `${title} ${desc}`.toLowerCase()
         const relevant = GROCERY_KEYWORDS.some(kw => combined.includes(kw))
@@ -80,13 +84,11 @@ async function fetchNewsSignals(): Promise<Array<{
         const score = sentimentScore(`${title} ${desc}`)
         if (score === 0) continue
 
-        const id   = `news_${Buffer.from(title).toString('base64').slice(0, 32)}`
-        const text = desc ? `${title}. ${desc.slice(0, 200)}` : title
+        const id = `news_${Buffer.from(title).toString('base64').slice(0, 32)}`
 
         signals.push({
-          id, text, author: feed.source,
-          username: feed.source.toLowerCase().replace(/\W+/g, ''),
-          created_at: pubDate, score,
+          id, title: decodeEntities(title), link: decodeEntities(link), feed: feed.source,
+          pubDate: isNaN(published.getTime()) ? null : published, score,
         })
       }
     } catch (e) {
@@ -95,45 +97,6 @@ async function fetchNewsSignals(): Promise<Array<{
   }
 
   return signals.sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
-}
-
-// Twitter is a supplemental signal only — max 15 results, skip gracefully on any error
-async function fetchSignalTweets(): Promise<Array<{
-  id: string; text: string; author: string; username: string; created_at: string; score: number
-}>> {
-  if (!BEARER) return []
-  try {
-    const params = new URLSearchParams({
-      query: QUERY, max_results: '15',
-      'tweet.fields': 'created_at,author_id',
-      expansions: 'author_id', 'user.fields': 'username,name',
-    })
-    const res = await fetch(`https://api.twitter.com/2/tweets/search/recent?${params}`, {
-      headers: { Authorization: `Bearer ${BEARER}` },
-      signal: AbortSignal.timeout(8000),
-    })
-    if (!res.ok) {
-      console.warn('[generate] Twitter fetch skipped:', res.status)
-      return []
-    }
-    const json = await res.json() as any
-    const users: Record<string, { name: string; username: string }> = {}
-    for (const u of json.includes?.users ?? []) users[u.id] = u
-
-    return (json.data ?? [])
-      .map((t: any) => ({
-        id: t.id, text: t.text,
-        author:    users[t.author_id]?.name     ?? 'Unknown',
-        username:  users[t.author_id]?.username ?? 'unknown',
-        created_at: t.created_at,
-        score: sentimentScore(t.text),
-      }))
-      .filter((t: any) => t.score !== 0)
-      .sort((a: any, b: any) => Math.abs(b.score) - Math.abs(a.score))
-  } catch (e) {
-    console.warn('[generate] Twitter fetch error (skipping):', e)
-    return []
-  }
 }
 
 // ─── KV helpers ───────────────────────────────────────────────────────────────
@@ -175,21 +138,15 @@ export async function GET(req: NextRequest) {
   const dailyCountKey = `wtgb:daily:count:${today}`
   const dailyCount    = (await kvGet<number>(dailyCountKey)) ?? 0
 
-  // Google News RSS is primary. Twitter is supplemental — runs in parallel but skipped on failure.
-  const [newsSignals, tweetSignals] = await Promise.all([
-    fetchNewsSignals(),
-    fetchSignalTweets(),
-  ])
+  const signals = await fetchNewsSignals()
 
-  // Merge: news first (primary), Twitter supplements; deduplicate by id
-  const seenIds = new Set<string>()
-  const allSignals: typeof tweetSignals = []
-  for (const s of [...newsSignals, ...tweetSignals]) {
-    if (!seenIds.has(s.id)) { seenIds.add(s.id); allSignals.push(s) }
-  }
+  // Old items were being rewritten as if they were current news.
+  const isFresh = (s: Signal) => s.pubDate !== null && (Date.now() - s.pubDate.getTime()) / 86_400_000 <= MAX_SOURCE_AGE_DAYS
+  const allSignals = signals.filter(isFresh)
+  const skipped = { stale: signals.length - allSignals.length, seen: 0, unreadable: 0 }
 
   if (allSignals.length === 0) {
-    return NextResponse.json({ ok: false, note: 'no_signals', sources: { twitter: tweetSignals.length, news: newsSignals.length } })
+    return NextResponse.json({ ok: false, note: 'no_signals', news: signals.length, skipped })
   }
 
   // Determine if we're in trending mode
@@ -206,32 +163,34 @@ export async function GET(req: NextRequest) {
   // Per-run limit: max 2 at a time (LOC-382: capped to 1-2 per run until quality bar met)
   const perRunLimit = Math.min(2, remaining)
 
-  // Deduplicate against already-seen signals
-  const newSignals: typeof allSignals = []
-  for (const s of allSignals.slice(0, 30)) {
-    if (await kvExists(`wtgb:signal:seen:${s.id}`)) continue
-    newSignals.push(s)
-    if (newSignals.length >= perRunLimit) break
-  }
-
-  if (newSignals.length === 0) {
-    return NextResponse.json({ ok: true, note: 'all_signals_already_seen', stored: 0, dailyCount })
-  }
-
   // ── Generate articles ─────────────────────────────────────────────────────
-  const articleAuthors = newSignals.map(s => pickAuthor(s.score > 0 ? 'rising' : 'falling', s.text))
-  const results = await Promise.allSettled(
-    newSignals.map((s, i) => generateArticle(s, ANTHROPIC!, s.score > 0 ? 'rising' : 'falling', articleAuthors[i].promptPersona))
-  )
-
+  // A failed draft publishes nothing. Its signal stays seen so it isn't drafted again.
   const stored: Article[] = []
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i]
-    if (r.status !== 'fulfilled' || !r.value) continue
-    const article: Article = { ...r.value, author: articleAuthors[i].name, slug: toSlug(r.value.headline, r.value.id), publishedAt: new Date().toISOString() }
+  const startedAt = Date.now()
+  let drafts = 0
+  let resolveFailures = 0
+  for (const s of allSignals) {
+    if (stored.length >= perRunLimit || drafts >= MAX_DRAFTS_PER_RUN || Date.now() - startedAt > RUN_TIME_BUDGET_MS) break
+    if (await kvExists(`wtgb:signal:seen:${s.id}`)) { skipped.seen++; continue }
+
+    // An unreadable source may work on a later run, so it isn't marked seen.
+    if (resolveFailures >= MAX_RESOLVE_FAILURES && s.link.includes('news.google.com')) { skipped.unreadable++; continue }
+    const source = await readSource(s.link)
+    if (!source.ok) {
+      console.warn(`[generate] Skipped "${s.title}": ${source.reason}`)
+      if (source.reason === 'could not resolve publisher URL') resolveFailures++
+      skipped.unreadable++
+      continue
+    }
+    await kvSet(`wtgb:signal:seen:${s.id}`, 1, SEEN_TTL_SECONDS)
+
+    drafts++
+    const generated = await generateSourcedArticle({ ...s, pubDate: s.pubDate as Date }, source.value)
+    if (!generated) continue
+
+    const article: Article = { ...generated, slug: toSlug(generated.headline, generated.id) }
     await kvSet(`wtgb:article:${article.slug}`, article, 60 * 60 * 24 * 60)
     await kvLpush('wtgb:articles:index', article.slug)
-    await kvSet(`wtgb:signal:seen:${newSignals[i].id}`, 1, 60 * 60 * 24 * 7)
     stored.push(article)
   }
 
@@ -271,7 +230,7 @@ export async function GET(req: NextRequest) {
     } catch (e) { console.error('[generate] Google sitemap ping failed:', e) }
   }
 
-  console.log(`[generate] stored ${stored.length} | daily ${dailyCount + stored.length}/${dailyCap} | trending=${isTrending} | sources: twitter=${tweetSignals.length} news=${newsSignals.length}`)
+  console.log(`[generate] stored ${stored.length} of ${drafts} drafts | daily ${dailyCount + stored.length}/${dailyCap} | trending=${isTrending} | news=${signals.length}`)
   return NextResponse.json({
     ok: true,
     stored: stored.length,
@@ -279,8 +238,9 @@ export async function GET(req: NextRequest) {
     dailyCap,
     isTrending,
     remaining: remaining - stored.length,
-    sources: { twitter: tweetSignals.length, news: newsSignals.length },
-    directions: newSignals.slice(0, stored.length).map(s => s.score > 0 ? 'rising' : 'falling'),
+    drafts,
+    news: signals.length,
+    skipped,
     headlines: stored.map(a => a.headline),
   })
 }

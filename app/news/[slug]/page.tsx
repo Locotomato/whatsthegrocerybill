@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { tweetIdFromSlug, fetchTweetById, generateArticle, type Article, type ArticleSource } from '../../../lib/articleUtils'
+import { type Article, type ArticleSource } from '../../../lib/articleUtils'
 import { findAuthor, AUTHORS } from '../../../lib/authors'
 import { getArticleVideo, type YouTubeVideo } from '../../../lib/youtubeUtils'
 import LocoRadZone from '@/components/LocoRadZone'
@@ -31,28 +31,10 @@ const STATE_SLUGS: Record<string, string> = {
 async function getArticle(slug: string): Promise<Article | null> {
   try {
     const { kv } = await import('@vercel/kv')
-    const cached = await kv.get<Article>(`wtgb:article:${slug}`)
-    if (cached) return cached
-  } catch { /* fall through */ }
-
-  const bearer       = process.env.TWITTER_BEARER_TOKEN
-  const anthropicKey = process.env.ANTHROPIC_API_KEY
-  if (!bearer || !anthropicKey) return null
-  const tweetId = tweetIdFromSlug(slug)
-  if (!tweetId) return null
-  const tweet = await fetchTweetById(tweetId, bearer)
-  if (!tweet) return null
-  const article = await generateArticle(tweet, anthropicKey)
-  if (!article) return null
-  const full: Article = { ...article, slug } as Article
-
-  try {
-    const { kv } = await import('@vercel/kv')
-    await kv.set(`wtgb:article:${slug}`, full, { ex: 60 * 60 * 24 * 60 })
-    await kv.lpush('wtgb:articles:index', slug)
-  } catch { /* non-fatal */ }
-
-  return full
+    return await kv.get<Article>(`wtgb:article:${slug}`)
+  } catch {
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
